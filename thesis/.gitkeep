@@ -1,0 +1,10 @@
+# Thư mục chứa tài liệu luận văn
+
+Thư mục này dùng để lưu trữ:
+- File Word (.docx) - Báo cáo luận văn
+- File PowerPoint (.pptx) - Slide thuyết trình
+- Các tài liệu liên quan khác
+
+## Hướng dẫn
+1. Thêm file Word/PowerPoint vào thư mục này
+2. Commit và push lên GitHub để lưu trữ
