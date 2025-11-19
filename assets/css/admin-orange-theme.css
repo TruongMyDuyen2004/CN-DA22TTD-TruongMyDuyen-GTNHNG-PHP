@@ -1,0 +1,175 @@
+/* ===================================
+   ADMIN ORANGE THEME - FORCE OVERRIDE
+   Ghi đè tất cả màu tím thành màu cam
+   =================================== */
+
+/* Sidebar Header - Orange Gradient */
+.sidebar-header {
+    background: linear-gradient(135deg, #f97316 0%, #ea580c 100%) !important;
+}
+
+/* Admin Info Box - Orange Gradient */
+.admin-info {
+    background: linear-gradient(135deg, #f97316 0%, #ea580c 100%) !important;
+}
+
+/* Nav Item Active State - Orange */
+.nav-item.active {
+    background: linear-gradient(90deg, rgba(249, 115, 22, 0.12), rgba(255, 107, 53, 0.05)) !important;
+    color: #f97316 !important;
+}
+
+.nav-item.active::before {
+    background: linear-gradient(135deg, #f97316 0%, #ea580c 100%) !important;
+}
+
+.nav-item:hover {
+    background: linear-gradient(90deg, rgba(249, 115, 22, 0.08), transparent) !important;
+    color: #f97316 !important;
+}
+
+.nav-item:hover::before {
+    background: linear-gradient(135deg, #f97316 0%, #ea580c 100%) !important;
+}
+
+/* Page Header Icon - Orange */
+.page-header h1 i,
+.admin-header h1 i {
+    background: linear-gradient(135deg, #f97316 0%, #ea580c 100%) !important;
+}
+
+/* Stat Cards - Orange Theme */
+.stat-card::before {
+    background: radial-gradient(circle, rgba(249, 115, 22, 0.08) 0%, transparent 70%) !important;
+}
+
+.stat-icon {
+    background: linear-gradient(135deg, #f97316 0%, #ea580c 100%) !important;
+}
+
+.stat-card .stat-icon {
+    background: linear-gradient(135deg, #f97316 0%, #ea580c 100%) !important;
+}
+
+.stat-content h3,
+.stat-info h3 {
+    color: #f97316 !important;
+}
+
+/* Buttons - Orange */
+.btn-primary {
+    background: linear-gradient(135deg, #f97316 0%, #ea580c 100%) !important;
+}
+
+.btn-icon:hover {
+    background: linear-gradient(135deg, #f97316 0%, #ea580c 100%) !important;
+}
+
+/* Table Header - Orange */
+.data-table thead {
+    background: linear-gradient(135deg, #f97316 0%, #ea580c 100%) !important;
+}
+
+/* Card Header Icons - Orange */
+.card-header i,
+.card-header h2 i,
+.card-header h3 i {
+    color: #f97316 !important;
+}
+
+/* Filter Buttons - Orange */
+.filter-btn:hover {
+    border-color: #f97316 !important;
+    color: #f97316 !important;
+}
+
+.filter-btn.active {
+    background: linear-gradient(135deg, #f97316 0%, #ea580c 100%) !important;
+    color: white !important;
+}
+
+/* Form Focus - Orange */
+.form-group select:focus,
+.form-group input:focus,
+.form-group textarea:focus {
+    border-color: #f97316 !important;
+    box-shadow: 0 0 0 4px rgba(249, 115, 22, 0.1) !important;
+}
+
+/* Links and Hover States - Orange */
+a:hover {
+    color: #f97316 !important;
+}
+
+/* Badge Primary - Orange */
+.badge-primary {
+    background: linear-gradient(135deg, rgba(249, 115, 22, 0.15), rgba(234, 88, 12, 0.1)) !important;
+    color: #f97316 !important;
+    border: 1px solid rgba(249, 115, 22, 0.3) !important;
+}
+
+.badge-primary::before {
+    background: #f97316 !important;
+}
+
+/* Notification Badge - Keep Red */
+.badge-notification {
+    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%) !important;
+}
+
+/* Override any purple/violet colors */
+[style*="667eea"],
+[style*="764ba2"],
+[style*="rgb(102, 126, 234)"],
+[style*="rgb(118, 75, 162)"] {
+    background: linear-gradient(135deg, #f97316 0%, #ea580c 100%) !important;
+}
+
+/* Specific overrides for stat cards with inline styles */
+.stat-card:nth-child(1) .stat-icon[style],
+.stat-card:nth-child(2) .stat-icon[style],
+.stat-card:nth-child(3) .stat-icon[style],
+.stat-card:nth-child(4) .stat-icon[style] {
+    background: linear-gradient(135deg, #f97316 0%, #ea580c 100%) !important;
+}
+
+/* Reviews page specific */
+.stat-card.total {
+    border-left-color: #f97316 !important;
+}
+
+.stat-card.rating {
+    border-left-color: #f97316 !important;
+}
+
+.menu-item-thumb {
+    background: linear-gradient(135deg, #f97316 0%, #ea580c 100%) !important;
+}
+
+.comments-count i {
+    color: #f97316 !important;
+}
+
+.review-comments-section {
+    border-left-color: #f97316 !important;
+}
+
+.review-comments-toggle:hover {
+    border-color: #f97316 !important;
+    color: #f97316 !important;
+}
+
+/* Modal Header - Orange */
+.modal-header {
+    background: linear-gradient(135deg, #f97316 0%, #ea580c 100%) !important;
+}
+
+/* Detail Label Icons - Orange */
+.detail-label i {
+    color: #f97316 !important;
+}
+
+/* Customers page stat icons */
+.stat-card .stat-icon[style*="linear-gradient"] {
+    background: linear-gradient(135deg, #f97316 0%, #ea580c 100%) !important;
+}

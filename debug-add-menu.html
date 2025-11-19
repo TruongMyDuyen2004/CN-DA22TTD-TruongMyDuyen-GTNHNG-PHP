@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug Thêm Món</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            padding: 2rem;
+            background: #f3f4f6;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .box {
+            background: white;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h1 { color: #1f2937; margin-bottom: 1rem; }
+        h2 { color: #374151; margin-bottom: 0.5rem; font-size: 1.2rem; }
+        .btn {
+            padding: 0.75rem 1.5rem;
+            background: #f97316;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            margin-right: 0.5rem;
+        }
+        .btn:hover { background: #ea580c; }
+        .btn-secondary {
+            background: #6b7280;
+        }
+        .btn-secondary:hover {
+            background: #4b5563;
+        }
+        #console {
+            background: #1f2937;
+            color: #10b981;
+            padding: 1rem;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #374151;
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #f97316;
+        }
+        .success { color: #10b981; }
+        .error { color: #ef4444; }
+        .warning { color: #f59e0b; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 Debug Chức Năng Thêm Món</h1>
+        
+        <div class="box">
+            <h2>📋 Console Log</h2>
+            <div id="console"></div>
+            <button onclick="clearConsole()" class="btn btn-secondary" style="margin-top: 0.5rem;">Xóa Console</button>
+        </div>
+
+        <div class="box">
+            <h2>🧪 Test Actions</h2>
+            <button onclick="testFetch()" class="btn">Test Fetch API</button>
+            <button onclick="testFormData()" class="btn">Test FormData</button>
+            <button onclick="testAPI()" class="btn">Test API Endpoint</button>
+        </div>
+
+        <div class="box">
+            <h2>📝 Test Form Thêm Món</h2>
+            <form id="testForm">
+                <div class="form-group">
+                    <label>Tên món *</label>
+                    <input type="text" name="name" value="Test món" required>
+                </div>
+                
+                <div class="form-group">
+                    <label>Giá *</label>
+                    <input type="number" name="price" value="50000" required>
+                </div>
+                
+                <div class="form-group">
+                    <label>Danh mục ID *</label>
+                    <input type="number" name="category_id" value="1" required>
+                </div>
+                
+                <div class="form-group">
+                    <label>Mô tả</label>
+                    <textarea name="description" rows="2">Mô tả test</textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" name="is_available" value="1" checked>
+                        Còn món
+                    </label>
+                </div>
+                
+                <button type="submit" class="btn">Submit Form</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const consoleDiv = document.getElementById('console');
+        
+        function log(message, type = 'info') {
+            const time = new Date().toLocaleTimeString();
+            const colors = {
+                info: '#10b981',
+                error: '#ef4444',
+                warning: '#f59e0b',
+                success: '#10b981'
+            };
+            
+            const line = document.createElement('div');
+            line.style.color = colors[type] || colors.info;
+            line.textContent = `[${time}] ${message}`;
+            consoleDiv.appendChild(line);
+            consoleDiv.scrollTop = consoleDiv.scrollHeight;
+        }
+        
+        function clearConsole() {
+            consoleDiv.innerHTML = '';
+            log('Console cleared');
+        }
+        
+        // Test Fetch API
+        async function testFetch() {
+            log('Testing Fetch API...', 'info');
+            
+            try {
+                const response = await fetch('admin/api/add-menu-item.php', {
+                    method: 'GET'
+                });
+                
+                log('✅ Fetch successful', 'success');
+                log('Status: ' + response.status);
+                log('Content-Type: ' + response.headers.get('content-type'));
+                
+                const text = await response.text();
+                log('Response: ' + text.substring(0, 100));
+            } catch (error) {
+                log('❌ Fetch failed: ' + error.message, 'error');
+            }
+        }
+        
+        // Test FormData
+        function testFormData() {
+            log('Testing FormData...', 'info');
+            
+            const form = document.getElementById('testForm');
+            const formData = new FormData(form);
+            
+            log('FormData entries:', 'info');
+            for (let [key, value] of formData.entries()) {
+                log(`  ${key}: ${value}`);
+            }
+            
+            log('✅ FormData created successfully', 'success');
+        }
+        
+        // Test API
+        async function testAPI() {
+            log('Testing API endpoint...', 'info');
+            
+            const form = document.getElementById('testForm');
+            const formData = new FormData(form);
+            
+            // Add timestamp to name
+            formData.set('name', 'Test món ' + Date.now());
+            formData.set('name_en', 'Test Dish');
+            formData.set('description_en', 'Test description');
+            
+            log('Sending POST request...', 'info');
+            
+            try {
+                const response = await fetch('admin/api/add-menu-item.php', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                log('Response status: ' + response.status, 'info');
+                
+                const contentType = response.headers.get('content-type');
+                log('Content-Type: ' + contentType, 'info');
+                
+                if (contentType && contentType.includes('application/json')) {
+                    const data = await response.json();
+                    log('Response JSON:', 'info');
+                    log(JSON.stringify(data, null, 2));
+                    
+                    if (data.success) {
+                        log('✅ API call successful!', 'success');
+                        log('New item ID: ' + data.id, 'success');
+                    } else {
+                        log('❌ API returned error: ' + data.message, 'error');
+                        if (data.debug) {
+                            log('Debug info: ' + JSON.stringify(data.debug), 'warning');
+                        }
+                    }
+                } else {
+                    const text = await response.text();
+                    log('❌ Response is not JSON:', 'error');
+                    log(text.substring(0, 500), 'error');
+                }
+            } catch (error) {
+                log('❌ Error: ' + error.message, 'error');
+                log('Stack: ' + error.stack, 'error');
+            }
+        }
+        
+        // Form submit handler
+        document.getElementById('testForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            log('Form submitted', 'info');
+            await testAPI();
+        });
+        
+        // Initial log
+        log('Debug page loaded', 'success');
+        log('Ready to test!', 'info');
+    </script>
+</body>
+</html>

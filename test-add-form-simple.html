@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Form Thêm Món Đơn Giản</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            padding: 2rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        h1 {
+            color: #1f2937;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        label {
+            display: block;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 0.5rem;
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        button {
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+        .result {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            border-radius: 8px;
+            display: none;
+        }
+        .result.success {
+            background: #d1fae5;
+            color: #065f46;
+            border: 2px solid #10b981;
+        }
+        .result.error {
+            background: #fee2e2;
+            color: #991b1b;
+            border: 2px solid #ef4444;
+        }
+        .console {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            background: #1f2937;
+            color: #10b981;
+            border-radius: 8px;
+            font-family: monospace;
+            font-size: 0.9rem;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🍽️ Test Form Thêm Món</h1>
+        
+        <form id="testForm">
+            <div class="form-group">
+                <label>Tên món (Tiếng Việt) *</label>
+                <input type="text" name="name" required value="Test món <?php echo time(); ?>">
+            </div>
+            
+            <div class="form-group">
+                <label>Tên món (Tiếng Anh)</label>
+                <input type="text" name="name_en" value="Test Dish">
+            </div>
+            
+            <div class="form-group">
+                <label>Giá (VNĐ) *</label>
+                <input type="number" name="price" required value="50000" min="0" step="1000">
+            </div>
+            
+            <div class="form-group">
+                <label>Danh mục * (ID)</label>
+                <input type="number" name="category_id" required value="1" min="1">
+                <small style="color: #6b7280;">Nhập ID danh mục (thường là 1, 2, 3...)</small>
+            </div>
+            
+            <div class="form-group">
+                <label>Mô tả (Tiếng Việt)</label>
+                <textarea name="description" rows="2">Mô tả test</textarea>
+            </div>
+            
+            <div class="form-group">
+                <label>Mô tả (Tiếng Anh)</label>
+                <textarea name="description_en" rows="2">Test description</textarea>
+            </div>
+            
+            <div class="form-group">
+                <label style="display: flex; align-items: center; gap: 0.5rem;">
+                    <input type="checkbox" name="is_available" value="1" checked style="width: auto;">
+                    <span>Món ăn đang có sẵn</span>
+                </label>
+            </div>
+            
+            <button type="submit">➕ Thêm món</button>
+        </form>
+        
+        <div id="result" class="result"></div>
+        
+        <div class="console" id="console">
+            <strong>Console Log:</strong><br>
+            <div id="log">Chờ submit form...</div>
+        </div>
+    </div>
+
+    <script>
+        function log(message) {
+            const logDiv = document.getElementById('log');
+            const time = new Date().toLocaleTimeString();
+            logDiv.innerHTML += `<br>[${time}] ${message}`;
+            console.log(message);
+        }
+
+        document.getElementById('testForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            log('🔵 Form submitted');
+            
+            const formData = new FormData(this);
+            const resultDiv = document.getElementById('result');
+            
+            // Log form data
+            log('📝 Form data:');
+            for (let [key, value] of formData.entries()) {
+                log(`  ${key}: ${value}`);
+            }
+            
+            resultDiv.style.display = 'block';
+            resultDiv.className = 'result';
+            resultDiv.innerHTML = '⏳ Đang gửi request...';
+            
+            try {
+                log('🌐 Sending request to admin/api/add-menu-item.php');
+                
+                const response = await fetch('admin/api/add-menu-item.php', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                log(`📡 Response status: ${response.status}`);
+                log(`📡 Response OK: ${response.ok}`);
+                
+                const contentType = response.headers.get('content-type');
+                log(`📄 Content-Type: ${contentType}`);
+                
+                if (!contentType || !contentType.includes('application/json')) {
+                    const text = await response.text();
+                    log('❌ Response is not JSON!');
+                    log('Response text: ' + text.substring(0, 200));
+                    
+                    resultDiv.className = 'result error';
+                    resultDiv.innerHTML = '❌ Lỗi: Server không trả về JSON<br><br>' + 
+                                         '<strong>Response:</strong><br>' + 
+                                         text.substring(0, 500);
+                    return;
+                }
+                
+                const data = await response.json();
+                log('✅ Received JSON response');
+                log('Response data: ' + JSON.stringify(data, null, 2));
+                
+                if (data.success) {
+                    resultDiv.className = 'result success';
+                    resultDiv.innerHTML = '✅ ' + data.message + '<br>ID món mới: ' + data.id;
+                    log('✅ SUCCESS!');
+                    
+                    // Reset form
+                    setTimeout(() => {
+                        location.reload();
+                    }, 2000);
+                } else {
+                    resultDiv.className = 'result error';
+                    let errorMsg = '❌ Lỗi: ' + data.message;
+                    
+                    if (data.debug) {
+                        errorMsg += '<br><br><strong>Debug:</strong><br>' + JSON.stringify(data.debug, null, 2);
+                    }
+                    
+                    resultDiv.innerHTML = errorMsg;
+                    log('❌ ERROR: ' + data.message);
+                }
+                
+            } catch (error) {
+                log('❌ Catch error: ' + error.message);
+                log('Error stack: ' + error.stack);
+                
+                resultDiv.className = 'result error';
+                resultDiv.innerHTML = '❌ Có lỗi xảy ra: ' + error.message + 
+                                     '<br><br>Vui lòng kiểm tra Console log ở trên';
+            }
+        });
+        
+        log('✅ Page loaded');
+    </script>
+</body>
+</html>
