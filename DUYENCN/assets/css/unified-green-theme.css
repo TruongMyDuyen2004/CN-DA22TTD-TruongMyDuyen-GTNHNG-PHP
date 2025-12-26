@@ -1,0 +1,1871 @@
+/* =============================================
+   UNIFIED GREEN & WHITE THEME - MODERN 2024
+   Giao diện hiện đại với màu xanh lá
+   ============================================= */
+
+/* CSS Variables cho dễ quản lý */
+:root {
+    --primary-green: #22c55e;
+    --primary-dark: #16a34a;
+    --primary-darker: #15803d;
+    --primary-light: rgba(34, 197, 94, 0.1);
+    --primary-glow: rgba(34, 197, 94, 0.15);
+    --text-dark: #1f2937;
+    --text-gray: #4b5563;
+    --text-light: #6b7280;
+    --bg-white: #ffffff;
+    --bg-light: #f8fafc;
+    --bg-gray: #f1f5f9;
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.04);
+    --shadow-md: 0 4px 20px rgba(0, 0, 0, 0.06);
+    --shadow-lg: 0 8px 40px rgba(0, 0, 0, 0.08);
+    --shadow-green: 0 8px 30px rgba(34, 197, 94, 0.2);
+    --radius-sm: 12px;
+    --radius-md: 16px;
+    --radius-lg: 24px;
+    --radius-xl: 32px;
+    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* =============================================
+   1. ABOUT INTRO SECTION - MODERN STYLE
+   ============================================= */
+body.dark-theme .about-intro,
+body.dark-theme .about-intro-modern {
+    background: var(--bg-white) !important;
+    padding: 6rem 2rem !important;
+    position: relative !important;
+}
+
+body.dark-theme .about-intro::before,
+body.dark-theme .about-intro-modern::before {
+    display: none !important;
+}
+
+/* Section Header Modern */
+body.dark-theme .about-intro .section-header-center h2,
+body.dark-theme .about-intro h2 {
+    color: var(--text-dark) !important;
+    font-size: clamp(2rem, 4vw, 2.8rem) !important;
+    font-weight: 700 !important;
+    letter-spacing: -0.02em !important;
+    text-shadow: none !important;
+}
+
+body.dark-theme .about-intro .section-subtitle {
+    color: var(--text-gray) !important;
+    font-size: 1.1rem !important;
+    line-height: 1.7 !important;
+    max-width: 600px !important;
+    margin: 0 auto !important;
+}
+
+/* Modern Badge */
+body.dark-theme .section-badge {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 0.5rem !important;
+    padding: 0.6rem 1.5rem !important;
+    background: var(--primary-light) !important;
+    border: none !important;
+    border-radius: 100px !important;
+    color: var(--primary-green) !important;
+    font-size: 0.85rem !important;
+    font-weight: 600 !important;
+    letter-spacing: 0.05em !important;
+    margin-bottom: 1.5rem !important;
+    backdrop-filter: blur(10px) !important;
+}
+
+/* Feature Rows - Modern Card Style */
+body.dark-theme .feature-row {
+    background: var(--bg-white) !important;
+    border: 1px solid rgba(0, 0, 0, 0.04) !important;
+    border-radius: var(--radius-md) !important;
+    padding: 1.5rem !important;
+    transition: var(--transition) !important;
+    box-shadow: var(--shadow-sm) !important;
+}
+
+body.dark-theme .feature-row:hover {
+    background: var(--bg-white) !important;
+    border-color: var(--primary-glow) !important;
+    box-shadow: var(--shadow-md), 0 0 0 1px var(--primary-glow) !important;
+    transform: translateY(-4px) !important;
+}
+
+body.dark-theme .feature-icon {
+    width: 52px !important;
+    height: 52px !important;
+    background: linear-gradient(135deg, var(--primary-green) 0%, var(--primary-dark) 100%) !important;
+    border-radius: var(--radius-sm) !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    box-shadow: var(--shadow-green) !important;
+}
+
+body.dark-theme .feature-icon i {
+    color: #fff !important;
+    font-size: 1.2rem !important;
+}
+
+body.dark-theme .feature-text h4 {
+    color: var(--text-dark) !important;
+    font-weight: 600 !important;
+    font-size: 1.1rem !important;
+    margin-bottom: 0.3rem !important;
+}
+
+body.dark-theme .feature-text p {
+    color: var(--text-light) !important;
+    font-size: 0.95rem !important;
+    line-height: 1.5 !important;
+}
+
+body.dark-theme .feature-row:hover .feature-text h4 {
+    color: var(--primary-green) !important;
+}
+
+/* Stats - Modern với màu đậm và hiệu ứng */
+body.dark-theme .intro-stat-item {
+    background: linear-gradient(135deg, var(--primary-green) 0%, var(--primary-dark) 100%) !important;
+    border: none !important;
+    border-radius: var(--radius-md) !important;
+    padding: 2rem 2.5rem !important;
+    text-align: center !important;
+    transition: var(--transition) !important;
+    box-shadow: 0 10px 30px rgba(34, 197, 94, 0.3) !important;
+    position: relative !important;
+    overflow: hidden !important;
+}
+
+/* Hiệu ứng shine */
+body.dark-theme .intro-stat-item::before {
+    content: '' !important;
+    position: absolute !important;
+    top: 0 !important;
+    left: -100% !important;
+    width: 100% !important;
+    height: 100% !important;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent) !important;
+    transition: left 0.5s ease !important;
+}
+
+body.dark-theme .intro-stat-item:hover::before {
+    left: 100% !important;
+}
+
+/* Hiệu ứng pattern nền */
+body.dark-theme .intro-stat-item::after {
+    content: '' !important;
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    background: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M20 20c0-5.5-4.5-10-10-10s-10 4.5-10 10 4.5 10 10 10 10-4.5 10-10zm10 0c0-5.5-4.5-10-10-10s-10 4.5-10 10 4.5 10 10 10 10-4.5 10-10z'/%3E%3C/g%3E%3C/svg%3E") !important;
+    pointer-events: none !important;
+}
+
+body.dark-theme .intro-stat-item:hover {
+    transform: translateY(-8px) scale(1.02) !important;
+    box-shadow: 0 20px 50px rgba(34, 197, 94, 0.4) !important;
+}
+
+body.dark-theme .intro-stat-item .stat-icon {
+    color: #ffffff !important;
+    font-size: 2rem !important;
+    margin-bottom: 0.75rem !important;
+    position: relative !important;
+    z-index: 1 !important;
+    display: block !important;
+    opacity: 0.9 !important;
+}
+
+body.dark-theme .intro-stat-item .stat-icon i {
+    color: #ffffff !important;
+}
+
+body.dark-theme .intro-stat-item .stat-value {
+    color: #ffffff !important;
+    font-size: 2.5rem !important;
+    font-weight: 800 !important;
+    display: block !important;
+    position: relative !important;
+    z-index: 1 !important;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.1) !important;
+}
+
+body.dark-theme .intro-stat-item .stat-label {
+    color: rgba(255, 255, 255, 0.9) !important;
+    font-size: 0.9rem !important;
+    font-weight: 500 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.05em !important;
+    position: relative !important;
+    z-index: 1 !important;
+    margin-top: 0.25rem !important;
+}
+
+/* Animation cho từng stat item */
+body.dark-theme .intro-stat-item:nth-child(1) {
+    animation: statPulse 3s ease-in-out infinite !important;
+    animation-delay: 0s !important;
+}
+
+body.dark-theme .intro-stat-item:nth-child(2) {
+    animation: statPulse 3s ease-in-out infinite !important;
+    animation-delay: 0.5s !important;
+}
+
+body.dark-theme .intro-stat-item:nth-child(3) {
+    animation: statPulse 3s ease-in-out infinite !important;
+    animation-delay: 1s !important;
+}
+
+body.dark-theme .intro-stat-item:nth-child(4) {
+    animation: statPulse 3s ease-in-out infinite !important;
+    animation-delay: 1.5s !important;
+}
+
+@keyframes statPulse {
+    0%, 100% {
+        box-shadow: 0 10px 30px rgba(34, 197, 94, 0.3);
+    }
+    50% {
+        box-shadow: 0 15px 40px rgba(34, 197, 94, 0.45);
+    }
+}
+
+/* Modern Buttons */
+body.dark-theme .intro-buttons .btn-primary {
+    background: linear-gradient(135deg, var(--primary-green) 0%, var(--primary-dark) 100%) !important;
+    color: #fff !important;
+    border: none !important;
+    padding: 1rem 2rem !important;
+    border-radius: var(--radius-sm) !important;
+    font-weight: 600 !important;
+    box-shadow: var(--shadow-green) !important;
+    transition: var(--transition) !important;
+}
+
+body.dark-theme .intro-buttons .btn-primary:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 12px 35px rgba(34, 197, 94, 0.35) !important;
+}
+
+body.dark-theme .intro-buttons .btn-outline {
+    background: transparent !important;
+    color: var(--primary-green) !important;
+    border: 2px solid var(--primary-green) !important;
+    padding: 0.9rem 2rem !important;
+    border-radius: var(--radius-sm) !important;
+    font-weight: 600 !important;
+    transition: var(--transition) !important;
+}
+
+body.dark-theme .intro-buttons .btn-outline:hover {
+    background: var(--primary-green) !important;
+    color: #fff !important;
+    transform: translateY(-2px) !important;
+}
+
+/* Experience Badge Modern */
+body.dark-theme .experience-badge {
+    background: linear-gradient(135deg, var(--primary-green) 0%, var(--primary-dark) 100%) !important;
+    border-radius: var(--radius-md) !important;
+    padding: 1.5rem !important;
+    box-shadow: var(--shadow-green) !important;
+}
+
+body.dark-theme .experience-badge .exp-number,
+body.dark-theme .experience-badge .exp-text {
+    color: #fff !important;
+}
+
+/* =============================================
+   2. MENU PREVIEW SECTION - MODERN CARDS
+   ============================================= */
+body.dark-theme .menu-preview {
+    background: var(--bg-gray) !important;
+    padding: 6rem 2rem !important;
+}
+
+body.dark-theme .menu-preview::before,
+body.dark-theme .menu-preview::after {
+    display: none !important;
+}
+
+body.dark-theme .menu-preview .section-header h2 {
+    color: var(--text-dark) !important;
+    font-size: clamp(2rem, 4vw, 2.8rem) !important;
+    font-weight: 700 !important;
+    letter-spacing: -0.02em !important;
+    text-shadow: none !important;
+}
+
+body.dark-theme .menu-preview .section-subtitle {
+    color: var(--text-gray) !important;
+}
+
+/* Menu Cards - Modern Style */
+body.dark-theme .menu-preview-item {
+    background: var(--bg-white) !important;
+    border: none !important;
+    border-radius: var(--radius-lg) !important;
+    overflow: hidden !important;
+    box-shadow: var(--shadow-sm) !important;
+    transition: var(--transition) !important;
+}
+
+body.dark-theme .menu-preview-item:hover {
+    box-shadow: var(--shadow-lg) !important;
+    transform: translateY(-8px) !important;
+}
+
+body.dark-theme .menu-preview-image {
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0 !important;
+    overflow: hidden !important;
+}
+
+body.dark-theme .menu-preview-image img {
+    transition: transform 0.5s ease !important;
+}
+
+body.dark-theme .menu-preview-item:hover .menu-preview-image img {
+    transform: scale(1.08) !important;
+}
+
+body.dark-theme .menu-preview-content {
+    padding: 1.5rem !important;
+}
+
+body.dark-theme .menu-preview-content h4 {
+    color: var(--text-dark) !important;
+    font-weight: 600 !important;
+    font-size: 1.15rem !important;
+    margin-bottom: 0.5rem !important;
+    transition: var(--transition) !important;
+}
+
+body.dark-theme .menu-preview-content p {
+    color: var(--text-light) !important;
+    font-size: 0.9rem !important;
+    line-height: 1.5 !important;
+}
+
+body.dark-theme .menu-preview-item:hover .menu-preview-content h4 {
+    color: var(--primary-green) !important;
+}
+
+body.dark-theme .price-tag {
+    color: var(--primary-green) !important;
+    font-weight: 700 !important;
+    font-size: 1.2rem !important;
+    -webkit-text-fill-color: var(--primary-green) !important;
+}
+
+body.dark-theme .menu-preview-footer .old-price {
+    color: #9ca3af !important;
+    text-decoration: line-through !important;
+    font-size: 0.9rem !important;
+}
+
+/* Discount Badge Modern */
+body.dark-theme .discount-badge {
+    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%) !important;
+    color: #fff !important;
+    padding: 0.4rem 0.8rem !important;
+    border-radius: 8px !important;
+    font-size: 0.8rem !important;
+    font-weight: 600 !important;
+}
+
+/* View Menu Button - Modern */
+body.dark-theme .btn-view-menu {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 0.75rem !important;
+    background: linear-gradient(135deg, var(--primary-green) 0%, var(--primary-dark) 100%) !important;
+    color: #fff !important;
+    border: none !important;
+    padding: 1rem 2.5rem !important;
+    border-radius: var(--radius-sm) !important;
+    font-weight: 600 !important;
+    font-size: 1rem !important;
+    box-shadow: var(--shadow-green) !important;
+    transition: var(--transition) !important;
+}
+
+body.dark-theme .btn-view-menu:hover {
+    transform: translateY(-3px) !important;
+    box-shadow: 0 15px 40px rgba(34, 197, 94, 0.35) !important;
+}
+
+body.dark-theme .btn-view-menu::before {
+    display: none !important;
+}
+
+body.dark-theme .btn-view-menu i {
+    transition: transform 0.3s ease !important;
+}
+
+body.dark-theme .btn-view-menu:hover i {
+    transform: translateX(4px) !important;
+}
+
+/* =============================================
+   3. CTA SECTION - MODERN GLASSMORPHISM
+   ============================================= */
+body.dark-theme .cta-section-modern {
+    background: var(--bg-white) !important;
+    padding: 6rem 2rem !important;
+    min-height: auto !important;
+}
+
+body.dark-theme .cta-background,
+body.dark-theme .cta-overlay,
+body.dark-theme .cta-particles {
+    display: none !important;
+}
+
+body.dark-theme .cta-content-modern {
+    background: linear-gradient(135deg, var(--primary-green) 0%, var(--primary-dark) 100%) !important;
+    border: none !important;
+    border-radius: var(--radius-xl) !important;
+    padding: 4rem !important;
+    box-shadow: var(--shadow-green), 0 25px 60px rgba(34, 197, 94, 0.25) !important;
+    position: relative !important;
+    overflow: hidden !important;
+}
+
+/* Subtle pattern overlay */
+body.dark-theme .cta-content-modern::before {
+    content: '' !important;
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E") !important;
+    pointer-events: none !important;
+}
+
+body.dark-theme .cta-title {
+    color: #fff !important;
+    font-size: clamp(1.8rem, 4vw, 2.5rem) !important;
+    font-weight: 700 !important;
+    letter-spacing: -0.02em !important;
+    text-shadow: none !important;
+    position: relative !important;
+    z-index: 1 !important;
+}
+
+body.dark-theme .cta-subtitle {
+    color: rgba(255, 255, 255, 0.9) !important;
+    font-size: 1.1rem !important;
+    position: relative !important;
+    z-index: 1 !important;
+}
+
+body.dark-theme .cta-icon {
+    background: rgba(255, 255, 255, 0.2) !important;
+    backdrop-filter: blur(10px) !important;
+    border-radius: 50% !important;
+    width: 70px !important;
+    height: 70px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+body.dark-theme .cta-icon i {
+    color: #fff !important;
+    font-size: 1.5rem !important;
+}
+
+body.dark-theme .cta-icon-ring {
+    border: 2px solid rgba(255, 255, 255, 0.2) !important;
+}
+
+body.dark-theme .cta-btn-modern {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 0.75rem !important;
+    background: #fff !important;
+    color: var(--primary-green) !important;
+    padding: 1.2rem 2.5rem !important;
+    border-radius: var(--radius-sm) !important;
+    font-weight: 600 !important;
+    font-size: 1rem !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15) !important;
+    transition: var(--transition) !important;
+    position: relative !important;
+    z-index: 1 !important;
+}
+
+body.dark-theme .cta-btn-modern:hover {
+    background: var(--bg-light) !important;
+    transform: translateY(-3px) !important;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2) !important;
+}
+
+body.dark-theme .cta-btn-modern span,
+body.dark-theme .cta-btn-modern i {
+    color: var(--primary-green) !important;
+}
+
+body.dark-theme .cta-btn-modern .btn-arrow {
+    transition: transform 0.3s ease !important;
+}
+
+body.dark-theme .cta-btn-modern:hover .btn-arrow {
+    transform: translateX(4px) !important;
+}
+
+/* =============================================
+   4. SECTION DIVIDER - MODERN MINIMAL
+   ============================================= */
+body.dark-theme .section-divider {
+    background: linear-gradient(180deg, var(--bg-white) 0%, var(--bg-gray) 100%) !important;
+    padding: 0 !important;
+    height: 100px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    position: relative !important;
+}
+
+body.dark-theme .section-divider-2 {
+    background: linear-gradient(180deg, var(--bg-gray) 0%, var(--bg-white) 100%) !important;
+}
+
+body.dark-theme .divider-line {
+    flex: 1 !important;
+    max-width: 150px !important;
+    height: 1px !important;
+    background: linear-gradient(90deg, transparent, rgba(34, 197, 94, 0.3), transparent) !important;
+}
+
+body.dark-theme .divider-icon {
+    width: 56px !important;
+    height: 56px !important;
+    background: var(--bg-white) !important;
+    border: 2px solid var(--primary-glow) !important;
+    border-radius: 50% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    box-shadow: var(--shadow-md) !important;
+    margin: 0 1.5rem !important;
+}
+
+body.dark-theme .divider-icon i {
+    color: var(--primary-green) !important;
+    font-size: 1.2rem !important;
+}
+
+/* =============================================
+   5. SCROLL BUTTONS - MODERN STYLE
+   ============================================= */
+body.dark-theme .section-scroll {
+    width: 48px !important;
+    height: 48px !important;
+    background: var(--bg-white) !important;
+    border: 2px solid var(--primary-glow) !important;
+    border-radius: 50% !important;
+    color: var(--primary-green) !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    cursor: pointer !important;
+    transition: var(--transition) !important;
+    box-shadow: var(--shadow-md) !important;
+    position: absolute !important;
+    bottom: 2rem !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    z-index: 10 !important;
+    animation: float 3s ease-in-out infinite !important;
+}
+
+body.dark-theme .section-scroll:hover {
+    background: var(--primary-green) !important;
+    border-color: var(--primary-green) !important;
+    color: #fff !important;
+    transform: translateX(-50%) translateY(-4px) !important;
+    box-shadow: var(--shadow-green) !important;
+}
+
+body.dark-theme .section-scroll i {
+    color: inherit !important;
+    font-size: 1rem !important;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateX(-50%) translateY(0); }
+    50% { transform: translateX(-50%) translateY(-8px); }
+}
+
+/* =============================================
+   6. FEATURES/STATS SECTION - MODERN
+   ============================================= */
+body.dark-theme .features {
+    background: var(--bg-white) !important;
+    padding: 4rem 2rem !important;
+    border-top: 1px solid rgba(0, 0, 0, 0.04) !important;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.04) !important;
+}
+
+body.dark-theme .features::before {
+    display: none !important;
+}
+
+body.dark-theme .feature-card,
+body.dark-theme .stat-card {
+    background: var(--bg-white) !important;
+    border: 1px solid rgba(0, 0, 0, 0.04) !important;
+    border-radius: var(--radius-md) !important;
+    padding: 2rem !important;
+    text-align: center !important;
+    transition: var(--transition) !important;
+    box-shadow: var(--shadow-sm) !important;
+}
+
+body.dark-theme .feature-card:hover,
+body.dark-theme .stat-card:hover {
+    transform: translateY(-4px) !important;
+    box-shadow: var(--shadow-md) !important;
+    border-color: var(--primary-glow) !important;
+}
+
+body.dark-theme .feature-card i,
+body.dark-theme .stat-card i {
+    color: var(--primary-green) !important;
+    font-size: 2rem !important;
+    margin-bottom: 1rem !important;
+}
+
+body.dark-theme .feature-card h3,
+body.dark-theme .stat-card h3,
+body.dark-theme .feature-card .stat-number {
+    color: var(--primary-green) !important;
+    font-size: 2rem !important;
+    font-weight: 700 !important;
+}
+
+body.dark-theme .feature-card p,
+body.dark-theme .stat-card p,
+body.dark-theme .feature-card .stat-label {
+    color: var(--text-light) !important;
+    font-size: 0.9rem !important;
+}
+
+/* =============================================
+   7. SECTION HEADERS - MODERN TYPOGRAPHY
+   ============================================= */
+body.dark-theme .section-header,
+body.dark-theme .section-header-center {
+    text-align: center !important;
+    margin-bottom: 3.5rem !important;
+    position: relative !important;
+}
+
+body.dark-theme .section-header h2,
+body.dark-theme .section-header-center h2 {
+    color: var(--text-dark) !important;
+    font-size: clamp(2rem, 4vw, 2.8rem) !important;
+    font-weight: 700 !important;
+    letter-spacing: -0.02em !important;
+    margin-bottom: 1rem !important;
+    line-height: 1.2 !important;
+}
+
+body.dark-theme .section-subtitle {
+    color: var(--text-gray) !important;
+    font-size: 1.1rem !important;
+    max-width: 600px !important;
+    margin: 0 auto !important;
+    line-height: 1.7 !important;
+}
+
+/* =============================================
+   8. INTRO STATS GRID - MODERN LAYOUT
+   ============================================= */
+body.dark-theme .intro-stats {
+    display: grid !important;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)) !important;
+    gap: 1.5rem !important;
+    margin-top: 3rem !important;
+    padding-top: 3rem !important;
+    border-top: 1px solid rgba(0, 0, 0, 0.06) !important;
+}
+
+/* =============================================
+   9. ABOUT INTRO GRID - MODERN LAYOUT
+   ============================================= */
+body.dark-theme .about-intro-grid {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 4rem !important;
+    align-items: center !important;
+}
+
+body.dark-theme .about-intro-image {
+    position: relative !important;
+    border-radius: var(--radius-lg) !important;
+    overflow: hidden !important;
+    box-shadow: var(--shadow-lg) !important;
+}
+
+body.dark-theme .about-intro-image img {
+    width: 100% !important;
+    height: auto !important;
+    display: block !important;
+    transition: transform 0.5s ease !important;
+}
+
+body.dark-theme .about-intro-image:hover img {
+    transform: scale(1.05) !important;
+}
+
+body.dark-theme .features-list {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 1rem !important;
+}
+
+/* =============================================
+   10. RESPONSIVE DESIGN
+   ============================================= */
+@media (max-width: 992px) {
+    body.dark-theme .about-intro-grid {
+        grid-template-columns: 1fr !important;
+        gap: 2.5rem !important;
+    }
+    
+    body.dark-theme .cta-content-modern {
+        padding: 3rem 2rem !important;
+    }
+}
+
+@media (max-width: 768px) {
+    body.dark-theme .about-intro,
+    body.dark-theme .menu-preview,
+    body.dark-theme .cta-section-modern {
+        padding: 4rem 1.5rem !important;
+    }
+    
+    body.dark-theme .intro-stats {
+        grid-template-columns: repeat(2, 1fr) !important;
+    }
+    
+    body.dark-theme .section-divider {
+        height: 60px !important;
+    }
+    
+    body.dark-theme .divider-icon {
+        width: 44px !important;
+        height: 44px !important;
+    }
+}
+
+@media (max-width: 480px) {
+    body.dark-theme .intro-stats {
+        grid-template-columns: 1fr !important;
+    }
+    
+    body.dark-theme .cta-content-modern {
+        padding: 2.5rem 1.5rem !important;
+        border-radius: var(--radius-lg) !important;
+    }
+}
+
+/* =============================================
+   11. MENU PREVIEW GRID - MODERN
+   ============================================= */
+body.dark-theme .menu-preview-grid {
+    display: grid !important;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)) !important;
+    gap: 2rem !important;
+    margin-bottom: 3rem !important;
+}
+
+body.dark-theme .menu-preview-cta {
+    text-align: center !important;
+    margin-top: 2rem !important;
+}
+
+/* =============================================
+   12. RATING STARS - MODERN
+   ============================================= */
+body.dark-theme .rating {
+    color: #fbbf24 !important;
+    font-size: 0.9rem !important;
+    font-weight: 500 !important;
+}
+
+body.dark-theme .menu-preview-footer {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    margin-top: 1rem !important;
+    padding-top: 1rem !important;
+    border-top: 1px solid rgba(0, 0, 0, 0.04) !important;
+}
+
+body.dark-theme .price-wrapper {
+    display: flex !important;
+    align-items: center !important;
+    gap: 0.5rem !important;
+}
+
+/* =============================================
+   13. HERO FEATURED DISH - MODERN POPUP
+   ============================================= */
+body.dark-theme .hero-featured-dish {
+    position: absolute !important;
+    bottom: 120px !important;
+    right: 2rem !important;
+    z-index: 20 !important;
+}
+
+body.dark-theme .featured-dish-card {
+    background: var(--bg-white) !important;
+    border-radius: var(--radius-lg) !important;
+    overflow: hidden !important;
+    box-shadow: var(--shadow-lg) !important;
+    max-width: 280px !important;
+    transition: var(--transition) !important;
+}
+
+body.dark-theme .featured-dish-card:hover {
+    transform: translateY(-4px) !important;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15) !important;
+}
+
+body.dark-theme .close-featured {
+    position: absolute !important;
+    top: 0.5rem !important;
+    right: 0.5rem !important;
+    width: 28px !important;
+    height: 28px !important;
+    background: rgba(0, 0, 0, 0.5) !important;
+    border: none !important;
+    border-radius: 50% !important;
+    color: #fff !important;
+    font-size: 1.2rem !important;
+    cursor: pointer !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    z-index: 5 !important;
+    transition: var(--transition) !important;
+}
+
+body.dark-theme .close-featured:hover {
+    background: rgba(0, 0, 0, 0.7) !important;
+}
+
+body.dark-theme .featured-dish-badge {
+    position: absolute !important;
+    top: 0.75rem !important;
+    left: 0.75rem !important;
+    background: var(--primary-green) !important;
+    color: #fff !important;
+    padding: 0.4rem 0.8rem !important;
+    border-radius: 8px !important;
+    font-size: 0.75rem !important;
+    font-weight: 600 !important;
+    z-index: 4 !important;
+}
+
+body.dark-theme .featured-dish-badge.new-badge {
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%) !important;
+}
+
+body.dark-theme .featured-dish-image {
+    height: 160px !important;
+    overflow: hidden !important;
+}
+
+body.dark-theme .featured-dish-image img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    transition: transform 0.5s ease !important;
+}
+
+body.dark-theme .featured-dish-card:hover .featured-dish-image img {
+    transform: scale(1.08) !important;
+}
+
+body.dark-theme .featured-dish-info {
+    padding: 1rem !important;
+}
+
+body.dark-theme .featured-dish-info h4 {
+    color: var(--text-dark) !important;
+    font-weight: 600 !important;
+    font-size: 1rem !important;
+    margin-bottom: 0.3rem !important;
+}
+
+body.dark-theme .featured-dish-meta {
+    color: var(--text-light) !important;
+    font-size: 0.85rem !important;
+    margin-bottom: 0.5rem !important;
+}
+
+body.dark-theme .featured-dish-price .price {
+    color: var(--primary-green) !important;
+    font-weight: 700 !important;
+    font-size: 1.1rem !important;
+}
+
+body.dark-theme .featured-dish-price .discount {
+    background: #fee2e2 !important;
+    color: #dc2626 !important;
+    padding: 0.2rem 0.5rem !important;
+    border-radius: 4px !important;
+    font-size: 0.75rem !important;
+    font-weight: 600 !important;
+    margin-left: 0.5rem !important;
+}
+
+/* =============================================
+   14. SMOOTH ANIMATIONS
+   ============================================= */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+body.dark-theme .feature-row,
+body.dark-theme .menu-preview-item,
+body.dark-theme .intro-stat-item {
+    animation: fadeInUp 0.6s ease forwards !important;
+}
+
+body.dark-theme .feature-row:nth-child(1) { animation-delay: 0.1s !important; }
+body.dark-theme .feature-row:nth-child(2) { animation-delay: 0.2s !important; }
+body.dark-theme .feature-row:nth-child(3) { animation-delay: 0.3s !important; }
+body.dark-theme .feature-row:nth-child(4) { animation-delay: 0.4s !important; }
+
+body.dark-theme .menu-preview-item:nth-child(1) { animation-delay: 0.1s !important; }
+body.dark-theme .menu-preview-item:nth-child(2) { animation-delay: 0.2s !important; }
+body.dark-theme .menu-preview-item:nth-child(3) { animation-delay: 0.3s !important; }
+
+/* =============================================
+   15. FOCUS STATES FOR ACCESSIBILITY
+   ============================================= */
+body.dark-theme .btn-primary:focus,
+body.dark-theme .btn-outline:focus,
+body.dark-theme .btn-view-menu:focus,
+body.dark-theme .cta-btn-modern:focus {
+    outline: 2px solid var(--primary-green) !important;
+    outline-offset: 2px !important;
+}
+
+body.dark-theme .section-scroll:focus {
+    outline: 2px solid var(--primary-green) !important;
+    outline-offset: 2px !important;
+}
+
+/* =============================================
+   16. PRINT STYLES
+   ============================================= */
+@media print {
+    body.dark-theme .section-scroll,
+    body.dark-theme .hero-featured-dish,
+    body.dark-theme .cta-section-modern {
+        display: none !important;
+    }
+}
+
+/* =============================================
+   17. REDUCED MOTION
+   ============================================= */
+@media (prefers-reduced-motion: reduce) {
+    body.dark-theme .feature-row,
+    body.dark-theme .menu-preview-item,
+    body.dark-theme .intro-stat-item,
+    body.dark-theme .section-scroll {
+        animation: none !important;
+        transition: none !important;
+    }
+}
+
+/* =============================================
+   18. CONTAINER POSITIONING
+   ============================================= */
+body.dark-theme .about-intro .container,
+body.dark-theme .menu-preview .container,
+body.dark-theme .cta-section-modern .container {
+    position: relative !important;
+    z-index: 1 !important;
+}
+
+body.dark-theme .about-intro,
+body.dark-theme .menu-preview,
+body.dark-theme .cta-section-modern {
+    position: relative !important;
+}
+
+
+/* =============================================
+   19. PHÂN BIỆT RÕ 3 SECTION TRONG TRANG CHỦ
+   ============================================= */
+
+/* SECTION 1: ABOUT INTRO - NỀN TRẮNG VỚI VIỀN TRÁI XANH */
+body.dark-theme .about-intro {
+    background: #ffffff !important;
+    position: relative !important;
+    border-left: 5px solid var(--primary-green) !important;
+    margin-left: 0 !important;
+}
+
+/* Số thứ tự section 1 */
+body.dark-theme .about-intro::after {
+    content: '01' !important;
+    position: absolute !important;
+    top: 2rem !important;
+    right: 2rem !important;
+    font-size: 6rem !important;
+    font-weight: 900 !important;
+    color: rgba(34, 197, 94, 0.08) !important;
+    line-height: 1 !important;
+    z-index: 0 !important;
+    pointer-events: none !important;
+}
+
+/* Label section 1 */
+body.dark-theme .about-intro .section-badge::before {
+    content: '① ' !important;
+}
+
+/* SECTION 2: MENU PREVIEW - NỀN XÁM VỚI PATTERN */
+body.dark-theme .menu-preview {
+    background: 
+        linear-gradient(135deg, rgba(34, 197, 94, 0.03) 0%, transparent 50%),
+        linear-gradient(225deg, rgba(34, 197, 94, 0.03) 0%, transparent 50%),
+        #f1f5f9 !important;
+    position: relative !important;
+    border-left: 5px solid var(--primary-dark) !important;
+}
+
+/* Số thứ tự section 2 */
+body.dark-theme .menu-preview::after {
+    content: '02' !important;
+    position: absolute !important;
+    top: 2rem !important;
+    right: 2rem !important;
+    font-size: 6rem !important;
+    font-weight: 900 !important;
+    color: rgba(34, 197, 94, 0.08) !important;
+    line-height: 1 !important;
+    z-index: 0 !important;
+    pointer-events: none !important;
+}
+
+/* Label section 2 */
+body.dark-theme .menu-preview .section-badge::before {
+    content: '② ' !important;
+}
+
+/* SECTION 3: CTA - NỀN GRADIENT XANH NHẠT */
+body.dark-theme .cta-section-modern {
+    background: linear-gradient(180deg, #ecfdf5 0%, #d1fae5 50%, #a7f3d0 100%) !important;
+    position: relative !important;
+    border-left: 5px solid var(--primary-darker) !important;
+}
+
+/* Số thứ tự section 3 */
+body.dark-theme .cta-section-modern::after {
+    content: '03' !important;
+    position: absolute !important;
+    top: 2rem !important;
+    right: 2rem !important;
+    font-size: 6rem !important;
+    font-weight: 900 !important;
+    color: rgba(34, 197, 94, 0.15) !important;
+    line-height: 1 !important;
+    z-index: 0 !important;
+    pointer-events: none !important;
+}
+
+/* =============================================
+   20. DIVIDER NỔI BẬT GIỮA CÁC SECTION
+   ============================================= */
+body.dark-theme .section-divider {
+    height: 80px !important;
+    position: relative !important;
+    overflow: visible !important;
+}
+
+/* Đường kẻ ngang */
+body.dark-theme .section-divider::before {
+    content: '' !important;
+    position: absolute !important;
+    left: 10% !important;
+    right: 10% !important;
+    top: 50% !important;
+    height: 3px !important;
+    background: linear-gradient(90deg, 
+        transparent 0%, 
+        var(--primary-green) 20%, 
+        var(--primary-dark) 50%, 
+        var(--primary-green) 80%, 
+        transparent 100%) !important;
+    border-radius: 2px !important;
+}
+
+body.dark-theme .divider-icon {
+    width: 64px !important;
+    height: 64px !important;
+    background: linear-gradient(135deg, var(--primary-green) 0%, var(--primary-dark) 100%) !important;
+    border: 4px solid #ffffff !important;
+    border-radius: 50% !important;
+    box-shadow: 
+        0 8px 30px rgba(34, 197, 94, 0.4),
+        0 0 0 8px rgba(34, 197, 94, 0.1) !important;
+    z-index: 2 !important;
+    animation: dividerPulse 2s ease-in-out infinite !important;
+}
+
+body.dark-theme .divider-icon i {
+    color: #ffffff !important;
+    font-size: 1.4rem !important;
+}
+
+@keyframes dividerPulse {
+    0%, 100% {
+        transform: scale(1);
+        box-shadow: 
+            0 8px 30px rgba(34, 197, 94, 0.4),
+            0 0 0 8px rgba(34, 197, 94, 0.1);
+    }
+    50% {
+        transform: scale(1.1);
+        box-shadow: 
+            0 12px 40px rgba(34, 197, 94, 0.5),
+            0 0 0 12px rgba(34, 197, 94, 0.15);
+    }
+}
+
+/* Divider 1 - Giữa About và Menu */
+body.dark-theme .section-divider:not(.section-divider-2) {
+    background: linear-gradient(180deg, #ffffff 0%, #f8fafc 50%, #f1f5f9 100%) !important;
+}
+
+/* Divider 2 - Giữa Menu và CTA */
+body.dark-theme .section-divider-2 {
+    background: linear-gradient(180deg, #f1f5f9 0%, #ecfdf5 100%) !important;
+}
+
+/* =============================================
+   21. SECTION BADGES NỔI BẬT HƠN
+   ============================================= */
+body.dark-theme .section-badge {
+    background: linear-gradient(135deg, var(--primary-green) 0%, var(--primary-dark) 100%) !important;
+    color: #ffffff !important;
+    padding: 0.75rem 1.75rem !important;
+    font-size: 0.9rem !important;
+    font-weight: 700 !important;
+    box-shadow: 0 4px 15px rgba(34, 197, 94, 0.3) !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.1em !important;
+}
+
+/* =============================================
+   22. SCROLL INDICATOR CHO TỪNG SECTION
+   ============================================= */
+body.dark-theme .section-scroll {
+    width: 52px !important;
+    height: 52px !important;
+    background: linear-gradient(135deg, var(--primary-green) 0%, var(--primary-dark) 100%) !important;
+    border: 3px solid #ffffff !important;
+    color: #ffffff !important;
+    box-shadow: 0 8px 25px rgba(34, 197, 94, 0.4) !important;
+}
+
+body.dark-theme .section-scroll i {
+    color: #ffffff !important;
+}
+
+body.dark-theme .section-scroll:hover {
+    background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-darker) 100%) !important;
+    border-color: #ffffff !important;
+    transform: translateX(-50%) translateY(-6px) !important;
+    box-shadow: 0 12px 35px rgba(34, 197, 94, 0.5) !important;
+}
+
+/* =============================================
+   23. RESPONSIVE CHO SECTION NUMBERS
+   ============================================= */
+@media (max-width: 768px) {
+    body.dark-theme .about-intro::after,
+    body.dark-theme .menu-preview::after,
+    body.dark-theme .cta-section-modern::after {
+        font-size: 4rem !important;
+        top: 1rem !important;
+        right: 1rem !important;
+    }
+    
+    body.dark-theme .about-intro,
+    body.dark-theme .menu-preview,
+    body.dark-theme .cta-section-modern {
+        border-left-width: 4px !important;
+    }
+}
+
+@media (max-width: 480px) {
+    body.dark-theme .about-intro::after,
+    body.dark-theme .menu-preview::after,
+    body.dark-theme .cta-section-modern::after {
+        font-size: 3rem !important;
+    }
+}
+
+
+/* =============================================
+   24. CTA SECTION - HIỆN ĐẠI 2024
+   ============================================= */
+
+/* Nền section */
+body.dark-theme .cta-section-modern {
+    background: #ffffff !important;
+    padding: 5rem 2rem !important;
+    position: relative !important;
+    border-left: none !important;
+}
+
+body.dark-theme .cta-section-modern::after {
+    display: none !important;
+}
+
+/* CTA Box chính */
+body.dark-theme .cta-content-modern {
+    background: linear-gradient(135deg, #22c55e 0%, #16a34a 40%, #15803d 100%) !important;
+    border-radius: 32px !important;
+    padding: 4rem 3rem !important;
+    max-width: 900px !important;
+    margin: 0 auto !important;
+    position: relative !important;
+    overflow: hidden !important;
+    box-shadow: 
+        0 30px 80px rgba(34, 197, 94, 0.3),
+        0 15px 40px rgba(34, 197, 94, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+}
+
+/* Hiệu ứng ánh sáng chạy */
+body.dark-theme .cta-content-modern::before {
+    content: '' !important;
+    position: absolute !important;
+    top: -50% !important;
+    left: -50% !important;
+    width: 200% !important;
+    height: 200% !important;
+    background: conic-gradient(
+        from 0deg,
+        transparent 0deg,
+        rgba(255, 255, 255, 0.1) 60deg,
+        transparent 120deg
+    ) !important;
+    animation: rotateCTA 8s linear infinite !important;
+    pointer-events: none !important;
+}
+
+@keyframes rotateCTA {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Hiệu ứng dots pattern */
+body.dark-theme .cta-content-modern::after {
+    content: '' !important;
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    background-image: radial-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px) !important;
+    background-size: 20px 20px !important;
+    pointer-events: none !important;
+}
+
+/* Icon wrapper */
+body.dark-theme .cta-icon-wrapper {
+    position: relative !important;
+    z-index: 2 !important;
+    margin-bottom: 2rem !important;
+}
+
+body.dark-theme .cta-icon {
+    width: 80px !important;
+    height: 80px !important;
+    background: rgba(255, 255, 255, 0.15) !important;
+    backdrop-filter: blur(10px) !important;
+    border: 2px solid rgba(255, 255, 255, 0.2) !important;
+    border-radius: 24px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    margin: 0 auto !important;
+    transition: all 0.4s ease !important;
+}
+
+body.dark-theme .cta-icon:hover {
+    transform: scale(1.1) rotate(5deg) !important;
+    background: rgba(255, 255, 255, 0.25) !important;
+}
+
+body.dark-theme .cta-icon i {
+    color: #ffffff !important;
+    font-size: 2rem !important;
+}
+
+body.dark-theme .cta-icon-ring {
+    display: none !important;
+}
+
+/* Title */
+body.dark-theme .cta-title {
+    color: #ffffff !important;
+    font-size: clamp(1.8rem, 4vw, 2.8rem) !important;
+    font-weight: 800 !important;
+    letter-spacing: -0.02em !important;
+    margin-bottom: 1rem !important;
+    position: relative !important;
+    z-index: 2 !important;
+    text-shadow: 0 2px 20px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Subtitle */
+body.dark-theme .cta-subtitle {
+    color: rgba(255, 255, 255, 0.9) !important;
+    font-size: 1.15rem !important;
+    line-height: 1.6 !important;
+    margin-bottom: 2.5rem !important;
+    position: relative !important;
+    z-index: 2 !important;
+    max-width: 500px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+}
+
+/* Button hiện đại */
+body.dark-theme .cta-btn-modern {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 0.75rem !important;
+    background: #ffffff !important;
+    color: #16a34a !important;
+    padding: 1.25rem 2.5rem !important;
+    border-radius: 16px !important;
+    font-weight: 700 !important;
+    font-size: 1.05rem !important;
+    text-decoration: none !important;
+    position: relative !important;
+    z-index: 2 !important;
+    overflow: hidden !important;
+    box-shadow: 
+        0 10px 30px rgba(0, 0, 0, 0.15),
+        0 5px 15px rgba(0, 0, 0, 0.1) !important;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+body.dark-theme .cta-btn-modern::before {
+    content: '' !important;
+    position: absolute !important;
+    top: 0 !important;
+    left: -100% !important;
+    width: 100% !important;
+    height: 100% !important;
+    background: linear-gradient(90deg, transparent, rgba(34, 197, 94, 0.1), transparent) !important;
+    transition: left 0.5s ease !important;
+}
+
+body.dark-theme .cta-btn-modern:hover::before {
+    left: 100% !important;
+}
+
+body.dark-theme .cta-btn-modern:hover {
+    transform: translateY(-4px) scale(1.02) !important;
+    box-shadow: 
+        0 20px 50px rgba(0, 0, 0, 0.2),
+        0 10px 25px rgba(0, 0, 0, 0.15) !important;
+}
+
+body.dark-theme .cta-btn-modern span,
+body.dark-theme .cta-btn-modern i {
+    color: #16a34a !important;
+    position: relative !important;
+    z-index: 1 !important;
+}
+
+body.dark-theme .cta-btn-modern .btn-arrow {
+    transition: transform 0.3s ease !important;
+}
+
+body.dark-theme .cta-btn-modern:hover .btn-arrow {
+    transform: translateX(5px) !important;
+}
+
+body.dark-theme .cta-btn-modern .btn-bg {
+    display: none !important;
+}
+
+/* Floating elements decoration */
+body.dark-theme .cta-content-modern .cta-particles {
+    display: block !important;
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    pointer-events: none !important;
+    z-index: 1 !important;
+}
+
+body.dark-theme .cta-particles span {
+    position: absolute !important;
+    width: 10px !important;
+    height: 10px !important;
+    background: rgba(255, 255, 255, 0.2) !important;
+    border-radius: 50% !important;
+    animation: floatParticle 6s ease-in-out infinite !important;
+}
+
+body.dark-theme .cta-particles span:nth-child(1) {
+    top: 20% !important;
+    left: 10% !important;
+    animation-delay: 0s !important;
+}
+
+body.dark-theme .cta-particles span:nth-child(2) {
+    top: 60% !important;
+    left: 20% !important;
+    width: 8px !important;
+    height: 8px !important;
+    animation-delay: 1s !important;
+}
+
+body.dark-theme .cta-particles span:nth-child(3) {
+    top: 30% !important;
+    right: 15% !important;
+    width: 12px !important;
+    height: 12px !important;
+    animation-delay: 2s !important;
+}
+
+body.dark-theme .cta-particles span:nth-child(4) {
+    top: 70% !important;
+    right: 25% !important;
+    width: 6px !important;
+    height: 6px !important;
+    animation-delay: 3s !important;
+}
+
+body.dark-theme .cta-particles span:nth-child(5) {
+    top: 50% !important;
+    left: 5% !important;
+    width: 14px !important;
+    height: 14px !important;
+    animation-delay: 4s !important;
+}
+
+@keyframes floatParticle {
+    0%, 100% {
+        transform: translateY(0) scale(1);
+        opacity: 0.3;
+    }
+    50% {
+        transform: translateY(-20px) scale(1.2);
+        opacity: 0.6;
+    }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    body.dark-theme .cta-content-modern {
+        padding: 3rem 2rem !important;
+        border-radius: 24px !important;
+    }
+    
+    body.dark-theme .cta-icon {
+        width: 64px !important;
+        height: 64px !important;
+        border-radius: 18px !important;
+    }
+    
+    body.dark-theme .cta-icon i {
+        font-size: 1.5rem !important;
+    }
+    
+    body.dark-theme .cta-btn-modern {
+        padding: 1rem 2rem !important;
+        border-radius: 12px !important;
+    }
+}
+
+
+/* =============================================
+   25. CTA SECTION - ULTRA MODERN 2024
+   ============================================= */
+
+/* Override lại CTA box */
+body.dark-theme .cta-content-modern {
+    background: 
+        linear-gradient(135deg, 
+            rgba(34, 197, 94, 1) 0%, 
+            rgba(22, 163, 74, 1) 50%, 
+            rgba(21, 128, 61, 1) 100%) !important;
+    border-radius: 40px !important;
+    padding: 5rem 4rem !important;
+    max-width: 800px !important;
+    text-align: center !important;
+    position: relative !important;
+    isolation: isolate !important;
+}
+
+/* Glassmorphism overlay */
+body.dark-theme .cta-content-modern::before {
+    content: '' !important;
+    position: absolute !important;
+    inset: 0 !important;
+    background: 
+        radial-gradient(circle at 20% 20%, rgba(255,255,255,0.15) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(255,255,255,0.1) 0%, transparent 50%) !important;
+    border-radius: inherit !important;
+    pointer-events: none !important;
+    z-index: -1 !important;
+}
+
+/* Animated border glow */
+body.dark-theme .cta-content-modern::after {
+    content: '' !important;
+    position: absolute !important;
+    inset: -3px !important;
+    background: linear-gradient(45deg, 
+        #22c55e, #16a34a, #15803d, #22c55e, #16a34a) !important;
+    background-size: 300% 300% !important;
+    border-radius: 43px !important;
+    z-index: -2 !important;
+    animation: borderGlow 4s ease infinite !important;
+    filter: blur(8px) !important;
+    opacity: 0.6 !important;
+}
+
+@keyframes borderGlow {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+}
+
+/* Icon container - Modern glass style */
+body.dark-theme .cta-icon {
+    width: 90px !important;
+    height: 90px !important;
+    background: rgba(255, 255, 255, 0.2) !important;
+    backdrop-filter: blur(20px) !important;
+    -webkit-backdrop-filter: blur(20px) !important;
+    border: 2px solid rgba(255, 255, 255, 0.3) !important;
+    border-radius: 28px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    margin: 0 auto 2rem !important;
+    position: relative !important;
+    z-index: 2 !important;
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    box-shadow: 
+        0 8px 32px rgba(0, 0, 0, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+}
+
+body.dark-theme .cta-icon:hover {
+    transform: translateY(-8px) rotate(10deg) scale(1.1) !important;
+    box-shadow: 
+        0 20px 40px rgba(0, 0, 0, 0.15),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3) !important;
+}
+
+body.dark-theme .cta-icon i {
+    color: #ffffff !important;
+    font-size: 2.5rem !important;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1)) !important;
+}
+
+/* Title - Bold & Modern */
+body.dark-theme .cta-title {
+    color: #ffffff !important;
+    font-size: clamp(2rem, 5vw, 3rem) !important;
+    font-weight: 900 !important;
+    letter-spacing: -0.03em !important;
+    line-height: 1.1 !important;
+    margin-bottom: 1.25rem !important;
+    text-shadow: 0 4px 20px rgba(0, 0, 0, 0.15) !important;
+    position: relative !important;
+    z-index: 2 !important;
+}
+
+/* Subtitle - Clean */
+body.dark-theme .cta-subtitle {
+    color: rgba(255, 255, 255, 0.95) !important;
+    font-size: 1.2rem !important;
+    font-weight: 400 !important;
+    line-height: 1.7 !important;
+    margin-bottom: 2.5rem !important;
+    max-width: 450px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    position: relative !important;
+    z-index: 2 !important;
+}
+
+/* Button - Premium Style */
+body.dark-theme .cta-btn-modern {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 1rem !important;
+    background: #ffffff !important;
+    color: #16a34a !important;
+    padding: 1.25rem 3rem !important;
+    border-radius: 100px !important;
+    font-weight: 700 !important;
+    font-size: 1.1rem !important;
+    text-decoration: none !important;
+    position: relative !important;
+    z-index: 2 !important;
+    overflow: hidden !important;
+    box-shadow: 
+        0 10px 40px rgba(0, 0, 0, 0.2),
+        0 4px 12px rgba(0, 0, 0, 0.1),
+        inset 0 -2px 0 rgba(0, 0, 0, 0.05) !important;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    border: none !important;
+}
+
+/* Button shine effect */
+body.dark-theme .cta-btn-modern::before {
+    content: '' !important;
+    position: absolute !important;
+    top: 0 !important;
+    left: -100% !important;
+    width: 100% !important;
+    height: 100% !important;
+    background: linear-gradient(
+        90deg, 
+        transparent, 
+        rgba(34, 197, 94, 0.2), 
+        transparent
+    ) !important;
+    transition: left 0.6s ease !important;
+}
+
+body.dark-theme .cta-btn-modern:hover::before {
+    left: 100% !important;
+}
+
+body.dark-theme .cta-btn-modern:hover {
+    transform: translateY(-6px) scale(1.03) !important;
+    box-shadow: 
+        0 20px 60px rgba(0, 0, 0, 0.25),
+        0 8px 20px rgba(0, 0, 0, 0.15),
+        inset 0 -2px 0 rgba(0, 0, 0, 0.05) !important;
+}
+
+body.dark-theme .cta-btn-modern:active {
+    transform: translateY(-2px) scale(1.01) !important;
+}
+
+body.dark-theme .cta-btn-modern span,
+body.dark-theme .cta-btn-modern i {
+    color: #16a34a !important;
+    position: relative !important;
+    z-index: 1 !important;
+}
+
+body.dark-theme .cta-btn-modern .btn-text {
+    font-weight: 700 !important;
+    letter-spacing: 0.02em !important;
+}
+
+body.dark-theme .cta-btn-modern .btn-arrow {
+    transition: transform 0.3s ease !important;
+    font-size: 1rem !important;
+}
+
+body.dark-theme .cta-btn-modern:hover .btn-arrow {
+    transform: translateX(6px) !important;
+}
+
+/* Floating decorations */
+body.dark-theme .cta-particles {
+    display: block !important;
+}
+
+body.dark-theme .cta-particles span {
+    background: rgba(255, 255, 255, 0.15) !important;
+    border-radius: 50% !important;
+    filter: blur(1px) !important;
+}
+
+/* Hide unnecessary elements */
+body.dark-theme .cta-background,
+body.dark-theme .cta-overlay,
+body.dark-theme .cta-icon-ring,
+body.dark-theme .cta-btn-modern .btn-bg {
+    display: none !important;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    body.dark-theme .cta-content-modern {
+        padding: 3.5rem 2rem !important;
+        border-radius: 28px !important;
+        margin: 0 1rem !important;
+    }
+    
+    body.dark-theme .cta-content-modern::after {
+        border-radius: 31px !important;
+    }
+    
+    body.dark-theme .cta-icon {
+        width: 72px !important;
+        height: 72px !important;
+        border-radius: 22px !important;
+    }
+    
+    body.dark-theme .cta-icon i {
+        font-size: 2rem !important;
+    }
+    
+    body.dark-theme .cta-btn-modern {
+        padding: 1rem 2.5rem !important;
+        font-size: 1rem !important;
+    }
+}
+
+@media (max-width: 480px) {
+    body.dark-theme .cta-content-modern {
+        padding: 3rem 1.5rem !important;
+        border-radius: 24px !important;
+    }
+    
+    body.dark-theme .cta-btn-modern {
+        padding: 1rem 2rem !important;
+        width: 100% !important;
+        justify-content: center !important;
+    }
+}
+
+
+/* =============================================
+   26. XÓA ĐƯỜNG KẺ MÀU CAM/VÀNG
+   ============================================= */
+
+/* Xóa tất cả border màu cam/vàng */
+body.dark-theme .section-divider,
+body.dark-theme .section-divider-2 {
+    border: none !important;
+    border-top: none !important;
+    border-bottom: none !important;
+}
+
+body.dark-theme .section-divider::before {
+    background: linear-gradient(90deg, 
+        transparent 0%, 
+        rgba(34, 197, 94, 0.3) 20%, 
+        rgba(34, 197, 94, 0.5) 50%, 
+        rgba(34, 197, 94, 0.3) 80%, 
+        transparent 100%) !important;
+}
+
+/* Xóa border cam từ các section */
+body.dark-theme .about-intro,
+body.dark-theme .menu-preview,
+body.dark-theme .cta-section-modern,
+body.dark-theme .features {
+    border: none !important;
+    border-left: none !important;
+    border-right: none !important;
+    border-top: none !important;
+    border-bottom: none !important;
+}
+
+/* Xóa border từ intro-stats */
+body.dark-theme .intro-stats {
+    border: none !important;
+    border-top: none !important;
+}
+
+/* Override bất kỳ border màu cam nào */
+body.dark-theme *[style*="border"] {
+    border-color: rgba(34, 197, 94, 0.2) !important;
+}
+
+/* Đảm bảo divider chỉ có màu xanh */
+body.dark-theme .divider-line {
+    background: linear-gradient(90deg, transparent, rgba(34, 197, 94, 0.4), transparent) !important;
+    border: none !important;
+}
+
+/* Xóa border từ hero section */
+body.dark-theme .hero {
+    border: none !important;
+    border-bottom: none !important;
+}
+
+/* Footer border */
+body.dark-theme footer,
+body.dark-theme .footer {
+    border-top: 1px solid rgba(34, 197, 94, 0.1) !important;
+}
+
+
+/* =============================================
+   27. ĐƯỜNG GẠCH MÀU CAM DƯỚI TIÊU ĐỀ SECTION
+   ============================================= */
+
+/* Đường gạch cam dưới tiêu đề About Intro */
+body.dark-theme .about-intro .section-header-center h2::after {
+    content: '' !important;
+    display: block !important;
+    width: 80px !important;
+    height: 4px !important;
+    background: linear-gradient(90deg, #f97316, #ea580c) !important;
+    margin: 1rem auto 0 !important;
+    border-radius: 2px !important;
+}
+
+/* Đường gạch cam dưới tiêu đề Menu Preview */
+body.dark-theme .menu-preview .section-header h2::after {
+    content: '' !important;
+    display: block !important;
+    width: 80px !important;
+    height: 4px !important;
+    background: linear-gradient(90deg, #f97316, #ea580c) !important;
+    margin: 1rem auto 0 !important;
+    border-radius: 2px !important;
+}
+
+/* Đường gạch cam dưới tất cả section headers */
+body.dark-theme .section-header h2::after,
+body.dark-theme .section-header-center h2::after {
+    content: '' !important;
+    display: block !important;
+    width: 80px !important;
+    height: 4px !important;
+    background: linear-gradient(90deg, #f97316, #ea580c) !important;
+    margin: 1rem auto 0 !important;
+    border-radius: 2px !important;
+}

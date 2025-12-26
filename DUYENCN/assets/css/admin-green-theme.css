@@ -1,0 +1,713 @@
+/* =============================================
+   ADMIN GREEN & WHITE THEME
+   Giao diện admin màu xanh lá cây và trắng
+   ============================================= */
+
+:root {
+    --admin-primary: #22c55e;
+    --admin-primary-dark: #16a34a;
+    --admin-primary-darker: #15803d;
+    --admin-primary-light: rgba(34, 197, 94, 0.1);
+    --admin-bg: #ffffff;
+    --admin-bg-light: #f8fafc;
+    --admin-bg-gray: #f1f5f9;
+    --admin-text: #1f2937;
+    --admin-text-light: #4b5563;
+    --admin-text-muted: #6b7280;
+    --admin-border: #e5e7eb;
+    --admin-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+/* =============================================
+   BODY & MAIN LAYOUT
+   ============================================= */
+body.dark-theme,
+body {
+    background: var(--admin-bg-light) !important;
+    color: var(--admin-text) !important;
+}
+
+.admin-wrapper,
+.admin-container {
+    background: var(--admin-bg-light) !important;
+}
+
+
+/* =============================================
+   SIDEBAR - NỀN TRẮNG
+   ============================================= */
+.sidebar,
+.admin-sidebar {
+    background: var(--admin-bg) !important;
+    border-right: 1px solid var(--admin-border) !important;
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.05) !important;
+}
+
+.sidebar-header {
+    background: linear-gradient(135deg, var(--admin-primary) 0%, var(--admin-primary-dark) 100%) !important;
+    border-bottom: none !important;
+    padding: 1.5rem !important;
+}
+
+.sidebar-header h1,
+.sidebar-header .logo-text,
+.sidebar-header span {
+    color: #ffffff !important;
+}
+
+.sidebar-header .admin-badge,
+.sidebar-header small {
+    color: rgba(255, 255, 255, 0.9) !important;
+    background: rgba(255, 255, 255, 0.2) !important;
+}
+
+/* Sidebar Menu Items */
+.sidebar-menu a,
+.sidebar-nav a,
+.nav-link {
+    color: var(--admin-text) !important;
+    background: transparent !important;
+    border-radius: 10px !important;
+    margin: 4px 8px !important;
+    transition: all 0.3s ease !important;
+}
+
+.sidebar-menu a:hover,
+.sidebar-nav a:hover,
+.nav-link:hover {
+    background: var(--admin-primary-light) !important;
+    color: var(--admin-primary) !important;
+}
+
+.sidebar-menu a.active,
+.sidebar-nav a.active,
+.nav-link.active {
+    background: linear-gradient(135deg, var(--admin-primary) 0%, var(--admin-primary-dark) 100%) !important;
+    color: #ffffff !important;
+    box-shadow: 0 4px 15px rgba(34, 197, 94, 0.3) !important;
+}
+
+.sidebar-menu a.active i,
+.sidebar-nav a.active i,
+.nav-link.active i {
+    color: #ffffff !important;
+}
+
+.sidebar-menu a i,
+.sidebar-nav a i,
+.nav-link i {
+    color: var(--admin-text-muted) !important;
+}
+
+.sidebar-menu a:hover i,
+.sidebar-nav a:hover i,
+.nav-link:hover i {
+    color: var(--admin-primary) !important;
+}
+
+/* Sidebar Footer */
+.sidebar-footer {
+    background: var(--admin-bg-gray) !important;
+    border-top: 1px solid var(--admin-border) !important;
+}
+
+.sidebar-footer a,
+.sidebar-footer span {
+    color: var(--admin-text) !important;
+}
+
+
+/* =============================================
+   MAIN CONTENT AREA
+   ============================================= */
+.main-content,
+.admin-content,
+.content-wrapper {
+    background: var(--admin-bg-light) !important;
+}
+
+/* Page Header */
+.page-header,
+.content-header {
+    background: var(--admin-bg) !important;
+    border-bottom: 1px solid var(--admin-border) !important;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03) !important;
+}
+
+.page-header h1,
+.page-header h2,
+.content-header h1,
+.content-header h2,
+.page-title {
+    color: var(--admin-text) !important;
+}
+
+/* =============================================
+   CARDS & STAT BOXES
+   ============================================= */
+.card,
+.stat-card,
+.stat-box,
+.dashboard-card {
+    background: var(--admin-bg) !important;
+    border: 1px solid var(--admin-border) !important;
+    border-radius: 16px !important;
+    box-shadow: var(--admin-shadow) !important;
+}
+
+.card-header {
+    background: var(--admin-bg-gray) !important;
+    border-bottom: 1px solid var(--admin-border) !important;
+    color: var(--admin-text) !important;
+}
+
+.card-header h3,
+.card-header h4,
+.card-title {
+    color: var(--admin-text) !important;
+}
+
+.card-body {
+    background: var(--admin-bg) !important;
+    color: var(--admin-text) !important;
+}
+
+/* Stat Cards với icon xanh */
+.stat-card .stat-icon,
+.stat-box .stat-icon {
+    background: linear-gradient(135deg, var(--admin-primary) 0%, var(--admin-primary-dark) 100%) !important;
+    color: #ffffff !important;
+    border-radius: 12px !important;
+}
+
+.stat-card .stat-number,
+.stat-box .stat-number,
+.stat-value {
+    color: var(--admin-primary) !important;
+    font-weight: 700 !important;
+}
+
+.stat-card .stat-label,
+.stat-box .stat-label {
+    color: var(--admin-text-muted) !important;
+}
+
+.stat-card:hover,
+.stat-box:hover {
+    border-color: var(--admin-primary) !important;
+    box-shadow: 0 8px 30px rgba(34, 197, 94, 0.15) !important;
+}
+
+
+/* =============================================
+   TABLES
+   ============================================= */
+.data-table,
+.table,
+table {
+    background: var(--admin-bg) !important;
+    border-radius: 12px !important;
+    overflow: hidden !important;
+}
+
+.data-table thead,
+.table thead,
+table thead {
+    background: var(--admin-bg-gray) !important;
+}
+
+.data-table th,
+.table th,
+table th {
+    background: var(--admin-bg-gray) !important;
+    color: var(--admin-text) !important;
+    font-weight: 600 !important;
+    border-bottom: 2px solid var(--admin-border) !important;
+}
+
+.data-table td,
+.table td,
+table td {
+    background: var(--admin-bg) !important;
+    color: var(--admin-text) !important;
+    border-bottom: 1px solid var(--admin-border) !important;
+}
+
+.data-table tbody tr:hover,
+.table tbody tr:hover,
+table tbody tr:hover {
+    background: var(--admin-primary-light) !important;
+}
+
+/* =============================================
+   BUTTONS
+   ============================================= */
+.btn-primary,
+.btn-success,
+button[type="submit"] {
+    background: linear-gradient(135deg, var(--admin-primary) 0%, var(--admin-primary-dark) 100%) !important;
+    border: none !important;
+    color: #ffffff !important;
+    border-radius: 10px !important;
+    box-shadow: 0 4px 15px rgba(34, 197, 94, 0.3) !important;
+    transition: all 0.3s ease !important;
+}
+
+.btn-primary:hover,
+.btn-success:hover,
+button[type="submit"]:hover {
+    background: linear-gradient(135deg, var(--admin-primary-dark) 0%, var(--admin-primary-darker) 100%) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 6px 20px rgba(34, 197, 94, 0.4) !important;
+}
+
+.btn-secondary,
+.btn-outline {
+    background: var(--admin-bg) !important;
+    border: 2px solid var(--admin-primary) !important;
+    color: var(--admin-primary) !important;
+    border-radius: 10px !important;
+}
+
+.btn-secondary:hover,
+.btn-outline:hover {
+    background: var(--admin-primary) !important;
+    color: #ffffff !important;
+}
+
+.btn-danger {
+    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%) !important;
+    border: none !important;
+    color: #ffffff !important;
+}
+
+.btn-warning {
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%) !important;
+    border: none !important;
+    color: #ffffff !important;
+}
+
+.btn-info {
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%) !important;
+    border: none !important;
+    color: #ffffff !important;
+}
+
+
+/* =============================================
+   FORMS
+   ============================================= */
+.form-group label {
+    color: var(--admin-text) !important;
+    font-weight: 500 !important;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea,
+.form-control {
+    background: var(--admin-bg) !important;
+    border: 1px solid var(--admin-border) !important;
+    color: var(--admin-text) !important;
+    border-radius: 10px !important;
+    transition: all 0.3s ease !important;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus,
+.form-control:focus {
+    border-color: var(--admin-primary) !important;
+    box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.15) !important;
+    outline: none !important;
+}
+
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+    color: var(--admin-text-muted) !important;
+}
+
+/* Search Input */
+.search-input,
+.search-box input,
+input[type="search"] {
+    background: var(--admin-bg) !important;
+    border: 1px solid var(--admin-border) !important;
+    color: var(--admin-text) !important;
+    border-radius: 10px !important;
+}
+
+.search-input:focus,
+.search-box input:focus {
+    border-color: var(--admin-primary) !important;
+    box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.15) !important;
+}
+
+/* =============================================
+   BADGES & STATUS
+   ============================================= */
+.badge,
+.status-badge {
+    border-radius: 8px !important;
+    font-weight: 600 !important;
+    padding: 0.4rem 0.8rem !important;
+}
+
+.badge-success,
+.status-active,
+.badge-green {
+    background: rgba(34, 197, 94, 0.15) !important;
+    color: var(--admin-primary-dark) !important;
+}
+
+.badge-danger,
+.status-inactive {
+    background: rgba(239, 68, 68, 0.15) !important;
+    color: #dc2626 !important;
+}
+
+.badge-warning,
+.status-pending {
+    background: rgba(245, 158, 11, 0.15) !important;
+    color: #d97706 !important;
+}
+
+.badge-info {
+    background: rgba(59, 130, 246, 0.15) !important;
+    color: #2563eb !important;
+}
+
+
+/* =============================================
+   MODALS
+   ============================================= */
+.modal-content {
+    background: var(--admin-bg) !important;
+    border: 1px solid var(--admin-border) !important;
+    border-radius: 16px !important;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15) !important;
+}
+
+.modal-header {
+    background: var(--admin-bg-gray) !important;
+    border-bottom: 1px solid var(--admin-border) !important;
+    border-radius: 16px 16px 0 0 !important;
+}
+
+.modal-header h3,
+.modal-header h4,
+.modal-title {
+    color: var(--admin-text) !important;
+}
+
+.modal-body {
+    background: var(--admin-bg) !important;
+    color: var(--admin-text) !important;
+}
+
+.modal-footer {
+    background: var(--admin-bg-gray) !important;
+    border-top: 1px solid var(--admin-border) !important;
+    border-radius: 0 0 16px 16px !important;
+}
+
+/* =============================================
+   PAGINATION
+   ============================================= */
+.pagination-btn,
+.page-link {
+    background: var(--admin-bg) !important;
+    border: 1px solid var(--admin-border) !important;
+    color: var(--admin-text) !important;
+    border-radius: 8px !important;
+}
+
+.pagination-btn:hover,
+.page-link:hover {
+    background: var(--admin-primary-light) !important;
+    border-color: var(--admin-primary) !important;
+    color: var(--admin-primary) !important;
+}
+
+.pagination-btn.active,
+.page-link.active,
+.page-item.active .page-link {
+    background: linear-gradient(135deg, var(--admin-primary) 0%, var(--admin-primary-dark) 100%) !important;
+    border-color: var(--admin-primary) !important;
+    color: #ffffff !important;
+}
+
+/* =============================================
+   ALERTS & NOTIFICATIONS
+   ============================================= */
+.alert-success {
+    background: rgba(34, 197, 94, 0.15) !important;
+    border: 1px solid var(--admin-primary) !important;
+    color: var(--admin-primary-darker) !important;
+}
+
+.alert-danger,
+.alert-error {
+    background: rgba(239, 68, 68, 0.15) !important;
+    border: 1px solid #ef4444 !important;
+    color: #dc2626 !important;
+}
+
+.alert-warning {
+    background: rgba(245, 158, 11, 0.15) !important;
+    border: 1px solid #f59e0b !important;
+    color: #d97706 !important;
+}
+
+.alert-info {
+    background: rgba(59, 130, 246, 0.15) !important;
+    border: 1px solid #3b82f6 !important;
+    color: #2563eb !important;
+}
+
+
+/* =============================================
+   FILTER BUTTONS & TABS
+   ============================================= */
+.filter-btn,
+.tab-btn,
+.nav-tab {
+    background: var(--admin-bg) !important;
+    border: 1px solid var(--admin-border) !important;
+    color: var(--admin-text) !important;
+    border-radius: 10px !important;
+}
+
+.filter-btn:hover,
+.tab-btn:hover,
+.nav-tab:hover {
+    background: var(--admin-primary-light) !important;
+    border-color: var(--admin-primary) !important;
+    color: var(--admin-primary) !important;
+}
+
+.filter-btn.active,
+.tab-btn.active,
+.nav-tab.active {
+    background: linear-gradient(135deg, var(--admin-primary) 0%, var(--admin-primary-dark) 100%) !important;
+    border-color: var(--admin-primary) !important;
+    color: #ffffff !important;
+}
+
+/* =============================================
+   DROPDOWN MENUS
+   ============================================= */
+.dropdown-menu {
+    background: var(--admin-bg) !important;
+    border: 1px solid var(--admin-border) !important;
+    border-radius: 12px !important;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1) !important;
+}
+
+.dropdown-item {
+    color: var(--admin-text) !important;
+}
+
+.dropdown-item:hover {
+    background: var(--admin-primary-light) !important;
+    color: var(--admin-primary) !important;
+}
+
+/* =============================================
+   SCROLLBAR
+   ============================================= */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--admin-bg-gray);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--admin-primary);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--admin-primary-dark);
+}
+
+/* =============================================
+   LINKS
+   ============================================= */
+a {
+    color: var(--admin-primary) !important;
+}
+
+a:hover {
+    color: var(--admin-primary-dark) !important;
+}
+
+/* =============================================
+   TEXT COLORS
+   ============================================= */
+h1, h2, h3, h4, h5, h6 {
+    color: var(--admin-text) !important;
+}
+
+p, span, div {
+    color: var(--admin-text);
+}
+
+.text-muted {
+    color: var(--admin-text-muted) !important;
+}
+
+.text-success {
+    color: var(--admin-primary) !important;
+}
+
+.text-danger {
+    color: #ef4444 !important;
+}
+
+.text-warning {
+    color: #f59e0b !important;
+}
+
+
+/* =============================================
+   ACTION BUTTONS (View, Edit, Delete)
+   ============================================= */
+.action-btn,
+.btn-action {
+    border-radius: 8px !important;
+    padding: 0.5rem !important;
+    transition: all 0.3s ease !important;
+}
+
+.action-btn.view,
+.btn-view {
+    background: rgba(59, 130, 246, 0.15) !important;
+    color: #3b82f6 !important;
+}
+
+.action-btn.view:hover,
+.btn-view:hover {
+    background: #3b82f6 !important;
+    color: #ffffff !important;
+}
+
+.action-btn.edit,
+.btn-edit {
+    background: rgba(34, 197, 94, 0.15) !important;
+    color: var(--admin-primary) !important;
+}
+
+.action-btn.edit:hover,
+.btn-edit:hover {
+    background: var(--admin-primary) !important;
+    color: #ffffff !important;
+}
+
+.action-btn.delete,
+.btn-delete {
+    background: rgba(239, 68, 68, 0.15) !important;
+    color: #ef4444 !important;
+}
+
+.action-btn.delete:hover,
+.btn-delete:hover {
+    background: #ef4444 !important;
+    color: #ffffff !important;
+}
+
+/* =============================================
+   TOGGLE SWITCH
+   ============================================= */
+.toggle-switch input:checked + .slider {
+    background: var(--admin-primary) !important;
+}
+
+.switch input:checked + .slider {
+    background: var(--admin-primary) !important;
+}
+
+/* =============================================
+   CHARTS & GRAPHS
+   ============================================= */
+.chart-container {
+    background: var(--admin-bg) !important;
+    border-radius: 12px !important;
+    padding: 1.5rem !important;
+}
+
+/* =============================================
+   LOADING & SPINNERS
+   ============================================= */
+.spinner,
+.loader {
+    border-color: var(--admin-primary-light) !important;
+    border-top-color: var(--admin-primary) !important;
+}
+
+/* =============================================
+   EMPTY STATE
+   ============================================= */
+.empty-state {
+    background: var(--admin-bg) !important;
+    color: var(--admin-text-muted) !important;
+}
+
+.empty-state i {
+    color: var(--admin-primary) !important;
+}
+
+/* =============================================
+   BREADCRUMB
+   ============================================= */
+.breadcrumb {
+    background: transparent !important;
+}
+
+.breadcrumb-item {
+    color: var(--admin-text-muted) !important;
+}
+
+.breadcrumb-item.active {
+    color: var(--admin-primary) !important;
+}
+
+.breadcrumb-item a {
+    color: var(--admin-text) !important;
+}
+
+.breadcrumb-item a:hover {
+    color: var(--admin-primary) !important;
+}
+
+/* =============================================
+   NOTIFICATION BADGE
+   ============================================= */
+.notification-badge,
+.badge-notification {
+    background: var(--admin-primary) !important;
+    color: #ffffff !important;
+}
+
+/* =============================================
+   AVATAR
+   ============================================= */
+.avatar {
+    border: 2px solid var(--admin-primary) !important;
+}
+
+/* =============================================
+   PROGRESS BAR
+   ============================================= */
+.progress {
+    background: var(--admin-bg-gray) !important;
+    border-radius: 8px !important;
+}
+
+.progress-bar {
+    background: linear-gradient(135deg, var(--admin-primary) 0%, var(--admin-primary-dark) 100%) !important;
+}

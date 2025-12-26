@@ -1,0 +1,56 @@
+/* Simple Language Switch Button */
+.lang-switch-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background: #fff;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.lang-switch-btn:hover {
+    transform: scale(1.08);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.lang-switch-btn:active {
+    transform: scale(0.95);
+}
+
+.lang-switch-btn .lang-code {
+    font-weight: 700;
+    font-size: 0.85rem;
+    color: #1f2937;
+    letter-spacing: 0.5px;
+}
+
+.lang-switch-btn .lang-flag {
+    font-size: 1.4rem;
+    line-height: 1;
+}
+
+.lang-switch-btn .lang-flag-img {
+    width: 28px;
+    height: auto;
+    border-radius: 3px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+/* Dark Theme */
+body.dark-theme .lang-switch-btn {
+    background: rgba(255, 255, 255, 0.1);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+body.dark-theme .lang-switch-btn:hover {
+    background: rgba(255, 255, 255, 0.15);
+}
+
+body.dark-theme .lang-switch-btn .lang-code {
+    color: #fff;
+}
