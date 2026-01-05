@@ -256,12 +256,12 @@ body.dark-theme .filter-card,
 .filter-card {
     background: #ffffff !important;
     border: none !important;
-    border-radius: 16px !important;
-    padding: 1rem 1.25rem !important;
-    margin-bottom: 1.5rem !important;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06) !important;
+    border-radius: 20px !important;
+    padding: 1.5rem 2rem !important;
+    margin-bottom: 2rem !important;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08) !important;
     display: flex !important;
-    gap: 0.75rem !important;
+    gap: 1.25rem !important;
     flex-wrap: wrap !important;
     align-items: center !important;
 }
@@ -270,22 +270,24 @@ body.dark-theme .filter-group,
 .filter-group {
     display: flex !important;
     align-items: center !important;
-    gap: 0.5rem !important;
+    gap: 0.85rem !important;
     flex: 1 !important;
-    min-width: 180px !important;
+    min-width: 250px !important;
+    max-width: 350px !important;
 }
 
 body.dark-theme .filter-group i,
 .filter-group i {
-    width: 32px !important;
-    height: 32px !important;
+    width: 40px !important;
+    height: 40px !important;
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
-    background: linear-gradient(135deg, #f0fdf4, #dcfce7) !important;
-    color: #22c55e !important;
-    border-radius: 10px !important;
-    font-size: 0.85rem !important;
+    background: linear-gradient(135deg, #fef3c7, #fde68a) !important;
+    color: #f59e0b !important;
+    border-radius: 12px !important;
+    font-size: 1rem !important;
+    box-shadow: 0 2px 8px rgba(251, 191, 36, 0.25) !important;
 }
 
 body.dark-theme .filter-section select,
@@ -293,36 +295,38 @@ body.dark-theme .filter-group select,
 .filter-section select,
 .filter-group select {
     flex: 1 !important;
-    padding: 0.7rem 1rem !important;
-    background: #ffffff !important;
-    border: 2px solid #e5e7eb !important;
-    border-radius: 12px !important;
+    padding: 1rem 1.5rem !important;
+    background: #fafafa !important;
+    border: 2px solid #e8e8e8 !important;
+    border-radius: 14px !important;
     color: #374151 !important;
-    font-size: 0.9rem !important;
+    font-size: 1rem !important;
     font-weight: 500 !important;
     cursor: pointer !important;
-    transition: all 0.2s !important;
+    transition: all 0.3s ease !important;
     -webkit-appearance: none !important;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2322c55e'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E") !important;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2322c55e' stroke-width='2'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E") !important;
     background-repeat: no-repeat !important;
-    background-position: right 0.75rem center !important;
+    background-position: right 1rem center !important;
     background-size: 1.25rem !important;
-    padding-right: 2.5rem !important;
+    padding-right: 3rem !important;
+    min-height: 50px !important;
 }
 
 body.dark-theme .filter-section select:hover,
 body.dark-theme .filter-group select:hover,
 .filter-section select:hover,
 .filter-group select:hover {
-    border-color: #86efac !important;
+    border-color: #22c55e !important;
     background-color: #f0fdf4 !important;
+    box-shadow: 0 4px 12px rgba(34, 197, 94, 0.12) !important;
 }
 
 body.dark-theme .filter-section select:focus,
 .filter-section select:focus {
     outline: none !important;
     border-color: #22c55e !important;
-    box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.12) !important;
+    box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.1) !important;
 }
 
 /* ========================================
@@ -360,10 +364,10 @@ body.dark-theme .review-item,
 .review-card,
 .review-item {
     background: #ffffff !important;
-    border: 2px solid #e5e7eb !important;
+    border: 2px solid #22c55e !important;
     border-radius: 20px !important;
     padding: 1.5rem !important;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06) !important;
+    box-shadow: 0 4px 16px rgba(34, 197, 94, 0.1) !important;
     transition: all 0.3s ease !important;
     position: relative !important;
     overflow: hidden !important;
@@ -561,58 +565,66 @@ body.dark-theme .review-card .user-info,
 
 body.dark-theme .review-card .user-name,
 .review-card .user-name {
-    color: #1f2937 !important;
-    font-weight: 700 !important;
-    font-size: 1rem !important;
+    color: #0f172a !important;
+    font-weight: 800 !important;
+    font-size: 1.1rem !important;
     margin: 0 !important;
+    letter-spacing: -0.01em;
 }
 
 body.dark-theme .review-card .review-date,
 .review-card .review-date {
-    color: #9ca3af !important;
-    font-size: 0.8rem !important;
+    color: #64748b !important;
+    font-size: 0.85rem !important;
     display: flex !important;
     align-items: center !important;
     gap: 0.4rem !important;
+    font-weight: 600 !important;
 }
 
 body.dark-theme .review-card .review-date i,
 .review-card .review-date i {
     color: #22c55e !important;
-    font-size: 0.75rem !important;
+    font-size: 0.8rem !important;
 }
 
 body.dark-theme .review-card .rating-badge,
 .review-card .rating-badge {
-    background: #f0fdf4 !important;
-    color: #15803d !important;
-    padding: 0.5rem 0.85rem !important;
+    background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%) !important;
+    color: #ffffff !important;
+    padding: 0.6rem 1rem !important;
     border-radius: 12px !important;
     display: flex !important;
     align-items: center !important;
-    gap: 0.35rem !important;
-    font-weight: 700 !important;
-    font-size: 0.95rem !important;
-    box-shadow: 0 2px 8px rgba(34, 197, 94, 0.15) !important;
-    border: 1px solid #86efac !important;
+    gap: 0.4rem !important;
+    font-weight: 800 !important;
+    font-size: 1.1rem !important;
+    box-shadow: 0 4px 12px rgba(34, 197, 94, 0.35) !important;
+    border: none !important;
+}
+
+body.dark-theme .review-card .rating-badge i,
+.review-card .rating-badge i {
+    color: #fbbf24 !important;
+    font-size: 1rem !important;
 }
 
 body.dark-theme .review-card .rating-badge.rating-1,
 body.dark-theme .review-card .rating-badge.rating-2,
 .review-card .rating-badge.rating-1,
 .review-card .rating-badge.rating-2 {
-    background: #fef2f2 !important;
-    color: #dc2626 !important;
-    border-color: #fecaca !important;
-    box-shadow: 0 2px 8px rgba(239, 68, 68, 0.15) !important;
+    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%) !important;
+    color: #ffffff !important;
+    border: none !important;
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.35) !important;
 }
 
 body.dark-theme .review-card .rating-badge.rating-3,
 .review-card .rating-badge.rating-3 {
-    background: #fffbeb !important;
-    color: #d97706 !important;
-    border-color: #fde68a !important;
-    box-shadow: 0 2px 8px rgba(245, 158, 11, 0.15) !important;
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%) !important;
+    color: #ffffff !important;
+    border: none !important;
+    box-shadow: 0 4px 12px rgba(245, 158, 11, 0.35) !important;
 }
 
 /* Dish Tag */
@@ -621,20 +633,22 @@ body.dark-theme .review-card .dish-tag,
     display: inline-flex !important;
     align-items: center !important;
     gap: 0.5rem !important;
-    background: linear-gradient(135deg, #f0fdf4, #dcfce7) !important;
+    background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%) !important;
     color: #15803d !important;
-    padding: 0.5rem 1rem !important;
-    border-radius: 50px !important;
-    font-size: 0.85rem !important;
-    font-weight: 600 !important;
+    padding: 0.6rem 1.25rem !important;
+    border-radius: 25px !important;
+    font-size: 0.95rem !important;
+    font-weight: 700 !important;
     margin-bottom: 1rem !important;
-    border: 1px solid #86efac !important;
+    border: 2px solid #86efac !important;
+    box-shadow: 0 2px 8px rgba(34, 197, 94, 0.15) !important;
 }
 
 body.dark-theme .review-card .dish-tag a,
 .review-card .dish-tag a {
     color: #15803d !important;
     text-decoration: none !important;
+    font-weight: 700 !important;
 }
 
 body.dark-theme .review-card .dish-tag a:hover,
@@ -646,6 +660,7 @@ body.dark-theme .review-card .dish-tag a:hover,
 body.dark-theme .review-card .dish-tag i,
 .review-card .dish-tag i {
     color: #22c55e !important;
+    font-size: 1rem !important;
 }
 
 /* Review Content Area - Text + Small Image */
@@ -660,8 +675,8 @@ body.dark-theme .review-card .review-content-area,
 body.dark-theme .review-card .review-text,
 .review-card .review-text {
     flex: 1 !important;
-    background: #f8fafc !important;
-    padding: 1rem 1.25rem !important;
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%) !important;
+    padding: 1.25rem 1.5rem !important;
     border-radius: 14px !important;
     border-left: 4px solid #22c55e !important;
     position: relative !important;
@@ -670,10 +685,11 @@ body.dark-theme .review-card .review-text,
 
 body.dark-theme .review-card .review-text p,
 .review-card .review-text p {
-    color: #374151 !important;
-    font-size: 0.95rem !important;
+    color: #1e293b !important;
+    font-size: 1rem !important;
     line-height: 1.7 !important;
     margin: 0 !important;
+    font-weight: 500 !important;
 }
 
 body.dark-theme .review-card .review-text::before,
@@ -682,9 +698,9 @@ body.dark-theme .review-card .review-text::before,
     position: absolute !important;
     top: 0.25rem !important;
     left: 0.5rem !important;
-    font-size: 2rem !important;
+    font-size: 2.5rem !important;
     color: #22c55e !important;
-    opacity: 0.2 !important;
+    opacity: 0.3 !important;
     font-family: Georgia, serif !important;
     line-height: 1 !important;
 }
@@ -720,7 +736,7 @@ body.dark-theme .review-card .card-footer,
     align-items: center !important;
     gap: 0.75rem !important;
     padding-top: 1rem !important;
-    border-top: 1px solid #f3f4f6 !important;
+    border-top: 2px solid #e2e8f0 !important;
 }
 
 body.dark-theme .review-card .like-btn,
@@ -728,39 +744,42 @@ body.dark-theme .review-card .like-btn,
     display: inline-flex !important;
     align-items: center !important;
     gap: 0.5rem !important;
-    padding: 0.5rem 1rem !important;
-    background: #fff5f5 !important;
-    border: 2px solid #fed7d7 !important;
-    border-radius: 50px !important;
-    color: #fc8181 !important;
-    font-size: 0.85rem !important;
-    font-weight: 600 !important;
+    padding: 0.65rem 1.25rem !important;
+    background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%) !important;
+    border: 2px solid #fecaca !important;
+    border-radius: 25px !important;
+    color: #ef4444 !important;
+    font-size: 0.95rem !important;
+    font-weight: 700 !important;
     cursor: pointer !important;
     transition: all 0.25s ease !important;
 }
 
 body.dark-theme .review-card .like-btn i,
 .review-card .like-btn i {
-    color: #fc8181 !important;
+    color: #ef4444 !important;
+    font-size: 1.1rem !important;
 }
 
 body.dark-theme .review-card .like-btn:hover,
 .review-card .like-btn:hover {
-    background: #feb2b2 !important;
-    border-color: #fc8181 !important;
-    color: #c53030 !important;
+    background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%) !important;
+    border-color: #f87171 !important;
+    color: #dc2626 !important;
+    transform: scale(1.05) !important;
 }
 
 body.dark-theme .review-card .like-btn:hover i,
 .review-card .like-btn:hover i {
-    color: #c53030 !important;
+    color: #dc2626 !important;
 }
 
 body.dark-theme .review-card .like-btn.liked,
 .review-card .like-btn.liked {
-    background: #e53e3e !important;
-    border-color: #e53e3e !important;
+    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%) !important;
+    border-color: #ef4444 !important;
     color: white !important;
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.35) !important;
 }
 
 body.dark-theme .review-card .like-btn.liked i,
@@ -770,8 +789,9 @@ body.dark-theme .review-card .like-btn.liked i,
 
 body.dark-theme .review-card .helpful-text,
 .review-card .helpful-text {
-    color: #9ca3af !important;
-    font-size: 0.8rem !important;
+    color: #475569 !important;
+    font-size: 0.95rem !important;
+    font-weight: 600 !important;
 }
 
 /* Review Comment - Legacy support */
@@ -934,20 +954,22 @@ body.dark-theme .no-reviews p,
     align-items: center;
     gap: 0.5rem;
     flex: 1;
-    min-width: 200px;
+    min-width: 250px;
 }
 .filter-group i {
     color: #22c55e;
 }
 .filter-group select {
     flex: 1;
-    padding: 0.75rem 1rem;
+    padding: 1rem 1.5rem;
     border: 2px solid #e5e7eb !important;
     border-radius: 12px;
     background: #f9fafb !important;
     color: #1f2937 !important;
-    font-size: 0.9rem;
+    font-size: 1rem;
     cursor: pointer;
+    min-height: 52px;
+    min-width: 200px;
 }
 .filter-group select:focus {
     border-color: #22c55e !important;
@@ -969,14 +991,15 @@ body.dark-theme .no-reviews p,
 .review-card {
     background: #ffffff !important;
     border: 2px solid #22c55e !important;
-    border-radius: 20px;
+    border-radius: 16px;
     padding: 1.5rem;
-    box-shadow: 0 4px 20px rgba(34, 197, 94, 0.08);
+    box-shadow: 0 4px 20px rgba(34, 197, 94, 0.12);
     transition: all 0.3s ease;
 }
 .review-card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 8px 30px rgba(34, 197, 94, 0.15);
+    box-shadow: 0 12px 40px rgba(34, 197, 94, 0.2);
+    border-color: #16a34a !important;
 }
 .review-header {
     display: flex;
@@ -985,8 +1008,8 @@ body.dark-theme .no-reviews p,
     margin-bottom: 1rem;
 }
 .reviewer-avatar {
-    width: 48px;
-    height: 48px;
+    width: 52px;
+    height: 52px;
     border-radius: 50%;
     background: linear-gradient(135deg, #22c55e, #16a34a);
     display: flex;
@@ -994,7 +1017,9 @@ body.dark-theme .no-reviews p,
     justify-content: center;
     color: white;
     font-weight: 700;
-    font-size: 1.1rem;
+    font-size: 1.2rem;
+    border: 3px solid #dcfce7;
+    box-shadow: 0 4px 12px rgba(34, 197, 94, 0.25);
 }
 .reviewer-avatar img {
     width: 100%;
@@ -1003,71 +1028,109 @@ body.dark-theme .no-reviews p,
     object-fit: cover;
 }
 .reviewer-info .name {
-    font-weight: 600;
-    color: #1f2937 !important;
+    font-weight: 700;
+    color: #0f172a !important;
+    font-size: 1rem;
 }
 .reviewer-info .date {
-    font-size: 0.8rem;
-    color: #6b7280 !important;
+    font-size: 0.85rem;
+    color: #475569 !important;
+    font-weight: 500;
 }
 .review-rating {
     margin-left: auto;
     background: linear-gradient(135deg, #22c55e, #16a34a);
     color: white;
-    padding: 0.4rem 0.8rem;
-    border-radius: 50px;
-    font-weight: 700;
-    font-size: 0.85rem;
+    padding: 0.5rem 1rem;
+    border-radius: 12px;
+    font-weight: 800;
+    font-size: 1rem;
+    box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3);
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
 }
 .review-menu-tag {
-    display: inline-block;
-    background: rgba(34, 197, 94, 0.1) !important;
-    color: #16a34a !important;
-    padding: 0.4rem 0.8rem;
-    border-radius: 20px;
-    font-size: 0.8rem;
-    font-weight: 600;
-    margin-bottom: 0.75rem;
-    border: 1px solid rgba(34, 197, 94, 0.3);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%) !important;
+    color: #15803d !important;
+    padding: 0.5rem 1rem;
+    border-radius: 25px;
+    font-size: 0.9rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    border: 2px solid #86efac;
+}
+.review-menu-tag i {
+    color: #22c55e;
 }
 .review-comment {
-    background: #f9fafb !important;
-    padding: 1rem;
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%) !important;
+    padding: 1.25rem;
     border-radius: 12px;
-    border-left: 3px solid #22c55e;
-    color: #374151 !important;
-    line-height: 1.6;
+    border-left: 4px solid #22c55e;
+    color: #1e293b !important;
+    font-size: 1rem;
+    line-height: 1.7;
     margin-bottom: 1rem;
+    font-weight: 500;
+}
+.review-comment::before {
+    content: '"';
+    font-size: 2rem;
+    color: #22c55e;
+    opacity: 0.5;
+    line-height: 0;
+    vertical-align: -0.4em;
+    margin-right: 0.25rem;
 }
 .review-actions {
     display: flex;
-    justify-content: flex-end;
+    align-items: center;
+    gap: 0.75rem;
+    justify-content: flex-start;
 }
 .like-btn {
     display: flex;
     align-items: center;
-    gap: 0.4rem;
-    padding: 0.5rem 1rem;
-    background: rgba(34, 197, 94, 0.1) !important;
-    border: 1px solid rgba(34, 197, 94, 0.3);
-    border-radius: 50px;
-    color: #22c55e !important;
-    font-size: 0.85rem;
+    gap: 0.5rem;
+    padding: 0.6rem 1.25rem;
+    background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%) !important;
+    border: 2px solid #fecaca;
+    border-radius: 25px;
+    color: #ef4444 !important;
+    font-size: 0.9rem;
+    font-weight: 700;
     cursor: pointer;
     transition: all 0.2s;
 }
-.like-btn:hover, .like-btn.liked {
-    background: #22c55e !important;
+.like-btn:hover {
+    background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%) !important;
+    transform: scale(1.05);
+}
+.like-btn.liked {
+    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%) !important;
+    border-color: #ef4444;
     color: white !important;
+}
+.like-btn i {
+    font-size: 1rem;
+}
+.helpful-text {
+    color: #64748b !important;
+    font-size: 0.9rem;
+    font-weight: 600;
 }
 /* Empty State */
 .no-reviews {
     text-align: center;
     padding: 4rem 2rem;
     background: #ffffff;
-    border: 2px dashed #e5e7eb;
+    border: 2px dashed #22c55e;
     border-radius: 20px;
-    color: #6b7280;
+    color: #475569;
 }
 .no-reviews i {
     font-size: 3rem;
@@ -1143,46 +1206,55 @@ body.dark-theme .no-reviews p,
                 
                 <div class="filter-item">
                     <div class="filter-icon"><i class="fas fa-star"></i></div>
-                    <select name="rating" onchange="this.form.submit()">
-                        <option value=""><?php echo $current_lang === 'en' ? 'All Ratings' : 'Tất cả sao'; ?></option>
-                        <option value="5" <?php echo $filter_rating == '5' ? 'selected' : ''; ?>>5 ⭐ <?php echo $current_lang === 'en' ? 'Excellent' : 'Xuất sắc'; ?></option>
-                        <option value="4" <?php echo $filter_rating == '4' ? 'selected' : ''; ?>>4 ⭐ <?php echo $current_lang === 'en' ? 'Good' : 'Tốt'; ?></option>
-                        <option value="3" <?php echo $filter_rating == '3' ? 'selected' : ''; ?>>3 ⭐ <?php echo $current_lang === 'en' ? 'Average' : 'Trung bình'; ?></option>
-                        <option value="2" <?php echo $filter_rating == '2' ? 'selected' : ''; ?>>2 ⭐ <?php echo $current_lang === 'en' ? 'Poor' : 'Kém'; ?></option>
-                        <option value="1" <?php echo $filter_rating == '1' ? 'selected' : ''; ?>>1 ⭐ <?php echo $current_lang === 'en' ? 'Bad' : 'Tệ'; ?></option>
-                    </select>
+                    <div class="filter-content">
+                        <span class="filter-label"><?php echo $current_lang === 'en' ? 'Rating' : 'Đánh giá'; ?></span>
+                        <select name="rating" onchange="this.form.submit()">
+                            <option value=""><?php echo $current_lang === 'en' ? 'All Ratings' : 'Tất cả sao'; ?></option>
+                            <option value="5" <?php echo $filter_rating == '5' ? 'selected' : ''; ?>>5 ⭐ <?php echo $current_lang === 'en' ? 'Excellent' : 'Xuất sắc'; ?></option>
+                            <option value="4" <?php echo $filter_rating == '4' ? 'selected' : ''; ?>>4 ⭐ <?php echo $current_lang === 'en' ? 'Good' : 'Tốt'; ?></option>
+                            <option value="3" <?php echo $filter_rating == '3' ? 'selected' : ''; ?>>3 ⭐ <?php echo $current_lang === 'en' ? 'Average' : 'Trung bình'; ?></option>
+                            <option value="2" <?php echo $filter_rating == '2' ? 'selected' : ''; ?>>2 ⭐ <?php echo $current_lang === 'en' ? 'Poor' : 'Kém'; ?></option>
+                            <option value="1" <?php echo $filter_rating == '1' ? 'selected' : ''; ?>>1 ⭐ <?php echo $current_lang === 'en' ? 'Bad' : 'Tệ'; ?></option>
+                        </select>
+                    </div>
                 </div>
                 
                 <div class="filter-item">
-                    <div class="filter-icon"><i class="fas fa-utensils"></i></div>
-                    <select name="menu_item" onchange="this.form.submit()">
-                        <option value=""><?php echo $current_lang === 'en' ? 'All Dishes' : 'Tất cả món'; ?></option>
-                        <?php foreach($menu_items as $item): 
-                            $item_name = $current_lang === 'en' && !empty($item['name_en']) ? $item['name_en'] : $item['name'];
-                        ?>
-                        <option value="<?php echo $item['id']; ?>" <?php echo $filter_menu_item == $item['id'] ? 'selected' : ''; ?>>
-                            <?php echo htmlspecialchars($item_name); ?>
-                        </option>
-                        <?php endforeach; ?>
-                    </select>
+                    <div class="filter-icon dish-icon"><i class="fas fa-utensils"></i></div>
+                    <div class="filter-content">
+                        <span class="filter-label"><?php echo $current_lang === 'en' ? 'Dish' : 'Món ăn'; ?></span>
+                        <select name="menu_item" onchange="this.form.submit()">
+                            <option value=""><?php echo $current_lang === 'en' ? 'All Dishes' : 'Tất cả món'; ?></option>
+                            <?php foreach($menu_items as $item): 
+                                $item_name = $current_lang === 'en' && !empty($item['name_en']) ? $item['name_en'] : $item['name'];
+                            ?>
+                            <option value="<?php echo $item['id']; ?>" <?php echo $filter_menu_item == $item['id'] ? 'selected' : ''; ?>>
+                                <?php echo htmlspecialchars($item_name); ?>
+                            </option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
                 </div>
                 
                 <div class="filter-item">
-                    <div class="filter-icon"><i class="fas fa-sort-amount-down"></i></div>
-                    <select name="sort" onchange="this.form.submit()">
-                        <option value="newest" <?php echo $sort_by == 'newest' ? 'selected' : ''; ?>>
-                            <?php echo $current_lang === 'en' ? 'Newest First' : 'Mới nhất'; ?>
-                        </option>
-                        <option value="oldest" <?php echo $sort_by == 'oldest' ? 'selected' : ''; ?>>
-                            <?php echo $current_lang === 'en' ? 'Oldest First' : 'Cũ nhất'; ?>
-                        </option>
-                        <option value="highest" <?php echo $sort_by == 'highest' ? 'selected' : ''; ?>>
-                            <?php echo $current_lang === 'en' ? 'Highest Rating' : 'Điểm cao nhất'; ?>
-                        </option>
-                        <option value="lowest" <?php echo $sort_by == 'lowest' ? 'selected' : ''; ?>>
-                            <?php echo $current_lang === 'en' ? 'Lowest Rating' : 'Điểm thấp nhất'; ?>
-                        </option>
-                    </select>
+                    <div class="filter-icon sort-icon"><i class="fas fa-sort-amount-down"></i></div>
+                    <div class="filter-content">
+                        <span class="filter-label"><?php echo $current_lang === 'en' ? 'Sort by' : 'Sắp xếp'; ?></span>
+                        <select name="sort" onchange="this.form.submit()">
+                            <option value="newest" <?php echo $sort_by == 'newest' ? 'selected' : ''; ?>>
+                                <?php echo $current_lang === 'en' ? 'Newest First' : 'Mới nhất'; ?>
+                            </option>
+                            <option value="oldest" <?php echo $sort_by == 'oldest' ? 'selected' : ''; ?>>
+                                <?php echo $current_lang === 'en' ? 'Oldest First' : 'Cũ nhất'; ?>
+                            </option>
+                            <option value="highest" <?php echo $sort_by == 'highest' ? 'selected' : ''; ?>>
+                                <?php echo $current_lang === 'en' ? 'Highest Rating' : 'Điểm cao nhất'; ?>
+                            </option>
+                            <option value="lowest" <?php echo $sort_by == 'lowest' ? 'selected' : ''; ?>>
+                                <?php echo $current_lang === 'en' ? 'Lowest Rating' : 'Điểm thấp nhất'; ?>
+                            </option>
+                        </select>
+                    </div>
                 </div>
                 
                 <?php if ($filter_rating || $filter_menu_item || $sort_by != 'newest'): ?>
@@ -1202,8 +1274,9 @@ body.dark-theme .no-reviews p,
                         ? $review['menu_item_name_en'] 
                         : $review['menu_item_name'];
                     $delay = ($index % 6) * 0.1;
+                    $is_owner = isset($_SESSION['customer_id']) && $review['customer_id'] == $_SESSION['customer_id'];
                 ?>
-                <div class="review-card" style="animation-delay: <?php echo $delay; ?>s">
+                <div class="review-card" data-review-id="<?php echo $review['id']; ?>" style="animation-delay: <?php echo $delay; ?>s">
                     <div class="card-header">
                         <div class="user-section">
                             <div class="avatar">
@@ -1224,9 +1297,21 @@ body.dark-theme .no-reviews p,
                                 </span>
                             </div>
                         </div>
-                        <div class="rating-badge rating-<?php echo $review['rating']; ?>">
-                            <span class="rating-num"><?php echo $review['rating']; ?></span>
-                            <i class="fas fa-star"></i>
+                        <div class="header-right">
+                            <?php if($is_owner): ?>
+                            <div class="review-owner-actions">
+                                <button class="owner-action-btn edit-btn" onclick="openEditModal(<?php echo $review['id']; ?>, <?php echo $review['rating']; ?>, '<?php echo addslashes(htmlspecialchars($review['comment'])); ?>')" title="<?php echo $current_lang === 'en' ? 'Edit' : 'Sửa'; ?>">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="owner-action-btn delete-btn" onclick="openDeleteModal(<?php echo $review['id']; ?>)" title="<?php echo $current_lang === 'en' ? 'Delete' : 'Xóa'; ?>">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </div>
+                            <?php endif; ?>
+                            <div class="rating-badge rating-<?php echo $review['rating']; ?>">
+                                <span class="rating-num"><?php echo $review['rating']; ?></span>
+                                <i class="fas fa-star"></i>
+                            </div>
                         </div>
                     </div>
                     
@@ -1242,7 +1327,7 @@ body.dark-theme .no-reviews p,
                     <div class="review-content-area">
                         <?php if ($review['comment']): ?>
                         <div class="review-text">
-                            <p><?php echo nl2br(htmlspecialchars($review['comment'])); ?></p>
+                            <p class="review-comment-text"><?php echo nl2br(htmlspecialchars($review['comment'])); ?></p>
                         </div>
                         <?php endif; ?>
                         
@@ -1289,10 +1374,12 @@ body.dark-theme .no-reviews p,
 
 
 <style>
-/* Modern Reviews Section */
+/* =====================================================
+   MODERN REVIEWS SECTION - CLEAN WHITE THEME
+   ===================================================== */
 .modern-reviews-section {
     min-height: 100vh;
-    background: linear-gradient(180deg, rgba(2, 6, 23, 0.98) 0%, rgba(15, 23, 42, 0.95) 50%, rgba(10, 18, 35, 0.98) 100%);
+    background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 50%, #e2e8f0 100%);
     padding: 0;
     position: relative;
     overflow: hidden;
@@ -1306,8 +1393,8 @@ body.dark-theme .no-reviews p,
     right: 0;
     bottom: 0;
     background: 
-        radial-gradient(circle at 20% 30%, rgba(96, 165, 250, 0.05) 0%, transparent 40%),
-        radial-gradient(circle at 80% 70%, rgba(167, 139, 250, 0.05) 0%, transparent 40%);
+        radial-gradient(circle at 20% 30%, rgba(34, 197, 94, 0.08) 0%, transparent 40%),
+        radial-gradient(circle at 80% 70%, rgba(34, 197, 94, 0.05) 0%, transparent 40%);
     pointer-events: none;
 }
 
@@ -1332,51 +1419,51 @@ body.dark-theme .no-reviews p,
 }
 
 .reviews-hero .hero-icon {
-    width: 60px;
-    height: 60px;
-    background: linear-gradient(135deg, #ffc107 0%, #ff9800 100%);
+    width: 70px;
+    height: 70px;
+    background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
     border-radius: 50%;
     display: inline-flex;
     align-items: center;
     justify-content: center;
     margin-bottom: 1rem;
-    box-shadow: 0 8px 30px rgba(255, 193, 7, 0.4);
+    box-shadow: 0 12px 40px rgba(34, 197, 94, 0.4);
 }
 
 .reviews-hero .hero-icon i {
-    font-size: 1.8rem;
+    font-size: 2rem;
     color: #fff;
 }
 
 .reviews-hero h1 {
-    font-size: clamp(1.8rem, 4vw, 2.5rem);
+    font-size: clamp(2rem, 4vw, 2.8rem);
     font-weight: 800;
-    background: linear-gradient(135deg, #fff 0%, #e0e0e0 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    color: #1f2937;
     margin-bottom: 0.5rem;
     letter-spacing: -0.02em;
 }
 
 .reviews-hero p {
-    font-size: 1rem;
-    color: rgba(255, 255, 255, 0.7);
+    font-size: 1.1rem;
+    color: #6b7280;
     margin: 0;
 }
 
-/* Stats Overview */
+/* =====================================================
+   STATS OVERVIEW - ENHANCED DESIGN
+   ===================================================== */
 .stats-overview {
     display: grid;
-    grid-template-columns: auto 1fr;
-    gap: 2rem;
-    margin-bottom: 1.5rem;
-    background: rgba(255, 255, 255, 0.03);
-    backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 20px;
-    padding: 1.5rem 2rem;
-    align-items: center;
+    grid-template-columns: 280px 1fr;
+    gap: 0;
+    margin-bottom: 2rem;
+    background: #ffffff;
+    border: 2px solid #e5e7eb;
+    border-radius: 24px;
+    padding: 0;
+    align-items: stretch;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
 }
 
 .stats-card {
@@ -1392,170 +1479,364 @@ body.dark-theme .no-reviews p,
     transform: none;
 }
 
-.main-stat .rating-display {
+/* Main Rating Card - Left Side */
+.stats-card.main-stat,
+.main-stat {
+    background: linear-gradient(145deg, #22c55e 0%, #16a34a 50%, #15803d 100%);
+    padding: 2rem;
     display: flex;
     align-items: center;
-    gap: 1rem;
-    justify-content: flex-start;
+    justify-content: center;
+}
+
+.main-stat .rating-display {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+    text-align: center;
 }
 
 .big-rating {
-    font-size: 3.5rem;
+    font-size: 5rem;
     font-weight: 900;
-    background: linear-gradient(135deg, #ffc107 0%, #ff9800 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    color: #ffffff;
     line-height: 1;
+    text-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
 }
 
 .rating-details {
-    text-align: left;
+    text-align: center;
 }
 
 .stars-row {
-    font-size: 1.2rem;
-    color: #ffc107;
-    margin-bottom: 0.3rem;
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+    display: flex;
+    gap: 4px;
+    justify-content: center;
 }
 
 .stars-row i {
-    margin-right: 2px;
+    color: #fbbf24;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
 }
 
 .total-reviews {
-    color: rgba(255, 255, 255, 0.6);
-    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.95);
+    font-size: 1rem;
+    font-weight: 600;
 }
 
-/* Breakdown Bars */
+/* Breakdown Bars - Right Side */
+.stats-card.breakdown-stat,
+.breakdown-stat {
+    padding: 2rem 2.5rem;
+    display: flex;
+    align-items: center;
+}
+
 .breakdown-bars {
     display: flex;
     flex-direction: column;
-    gap: 0.75rem;
+    gap: 0.85rem;
+    width: 100%;
 }
 
 .bar-row {
     display: flex;
     align-items: center;
-    gap: 0.75rem;
+    gap: 1rem;
 }
 
 .bar-label {
-    width: 20px;
-    font-weight: 700;
-    color: rgba(255, 255, 255, 0.8);
+    width: 24px;
+    font-weight: 800;
+    color: #374151;
     text-align: center;
+    font-size: 1rem;
 }
 
 .star-icon {
-    color: #ffc107;
-    font-size: 0.9rem;
+    color: #f59e0b;
+    font-size: 1rem;
 }
 
 .bar-track {
     flex: 1;
-    height: 10px;
-    background: rgba(255, 255, 255, 0.1);
+    height: 14px;
+    background: #f3f4f6;
     border-radius: 10px;
     overflow: hidden;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.06);
 }
 
 .bar-fill {
     height: 100%;
-    background: linear-gradient(90deg, #ffc107 0%, #ff9800 100%);
+    background: linear-gradient(90deg, #f59e0b 0%, #fbbf24 100%);
     border-radius: 10px;
     transition: width 0.8s ease;
+    box-shadow: 0 2px 8px rgba(245, 158, 11, 0.3);
 }
 
 .bar-count {
-    width: 30px;
+    width: 40px;
     text-align: right;
-    color: rgba(255, 255, 255, 0.6);
-    font-weight: 600;
-    font-size: 0.9rem;
+    color: #6b7280;
+    font-weight: 700;
+    font-size: 0.95rem;
 }
 
-/* Filter Section */
+/* =====================================================
+   FILTER SECTION - REDESIGNED MODERN UI
+   ===================================================== */
 .filter-section {
-    background: rgba(255, 255, 255, 0.03);
-    backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 16px;
-    padding: 1rem 1.5rem;
-    margin-bottom: 2rem;
+    background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+    border-radius: 24px;
+    padding: 2rem 2.5rem;
+    margin-bottom: 2.5rem;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08), 0 1px 3px rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(34, 197, 94, 0.1);
+    position: relative;
+    overflow: hidden;
+}
+
+.filter-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #22c55e 0%, #16a34a 50%, #15803d 100%);
 }
 
 .filter-form {
     display: flex;
-    gap: 1rem;
-    align-items: center;
-    flex-wrap: wrap;
+    gap: 1.5rem;
+    align-items: stretch;
+    flex-wrap: nowrap;
+    justify-content: space-between;
 }
 
 .filter-item {
     display: flex;
-    align-items: center;
+    flex-direction: column;
     gap: 0.5rem;
-    flex: 1;
-    min-width: 180px;
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: 12px;
-    padding: 0.5rem;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    transition: all 0.3s ease;
+    flex: 1 1 0;
+    min-width: 0;
+    max-width: none;
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 1.25rem 1.5rem;
+    border: 2px solid #22c55e;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    min-height: 80px;
+    box-shadow: 0 2px 8px rgba(34, 197, 94, 0.1);
 }
 
-.filter-item:hover, .filter-item:focus-within {
-    border-color: rgba(255, 193, 7, 0.3);
-    background: rgba(255, 255, 255, 0.08);
+.filter-item:hover {
+    border-color: #16a34a;
+    background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+    box-shadow: 0 8px 25px rgba(34, 197, 94, 0.2);
+    transform: translateY(-3px);
+}
+
+.filter-item:focus-within {
+    border-color: #16a34a;
+    background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+    box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.15), 0 8px 25px rgba(34, 197, 94, 0.2);
 }
 
 .filter-icon {
-    width: 36px;
-    height: 36px;
-    background: linear-gradient(135deg, rgba(255, 193, 7, 0.2) 0%, rgba(255, 152, 0, 0.2) 100%);
-    border-radius: 10px;
+    width: 52px;
+    height: 52px;
+    background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+    border-radius: 14px;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #ffc107;
     flex-shrink: 0;
+    box-shadow: 0 4px 12px rgba(251, 191, 36, 0.3);
+    position: absolute;
+    top: 50%;
+    left: 1.5rem;
+    transform: translateY(-50%);
+}
+
+.filter-icon i {
+    font-size: 1.3rem;
+    color: #f59e0b;
+}
+
+/* Icon màu khác cho từng filter */
+.filter-item:nth-child(1) .filter-icon {
+    background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+    box-shadow: 0 4px 12px rgba(251, 191, 36, 0.3);
+}
+.filter-item:nth-child(1) .filter-icon i {
+    color: #f59e0b;
+}
+
+.filter-item:nth-child(2) .filter-icon {
+    background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%);
+    box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3);
+}
+.filter-item:nth-child(2) .filter-icon i {
+    color: #22c55e;
+}
+
+.filter-item:nth-child(3) .filter-icon {
+    background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+}
+.filter-item:nth-child(3) .filter-icon i {
+    color: #3b82f6;
+}
+
+.filter-content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    padding-left: 72px;
+    flex: 1;
+}
+
+.filter-label {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: #6b7280;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
 .filter-item select {
-    flex: 1;
+    width: 100%;
     background: transparent;
     border: none;
-    color: #fff;
-    font-size: 0.95rem;
-    padding: 0.5rem;
+    color: #1f2937;
+    font-size: 1.15rem;
+    font-weight: 600;
+    padding: 0.35rem 2.5rem 0.35rem 0;
     cursor: pointer;
+    outline: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2322c55e' stroke-width='2.5'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0 center;
+    background-size: 1.75rem;
+}
+
+.filter-item select:focus {
     outline: none;
 }
 
+/* Giới hạn chiều cao dropdown để mở xuống dưới đồng nhất */
 .filter-item select option {
-    background: #1a1a2e;
-    color: #fff;
+    background: #ffffff;
+    color: #374151;
+    padding: 1rem;
+    font-size: 1.1rem;
+}
+
+/* Đảm bảo filter section có đủ margin bottom cho dropdown */
+.filter-section {
+    margin-bottom: 3rem;
+    overflow: visible !important;
+}
+
+.filter-form {
+    overflow: visible !important;
+}
+
+.filter-item {
+    overflow: visible !important;
 }
 
 .clear-filter-btn {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
-    padding: 0.75rem 1.25rem;
-    background: rgba(255, 107, 107, 0.15);
-    border: 1px solid rgba(255, 107, 107, 0.3);
-    border-radius: 12px;
-    color: #ff6b6b;
+    justify-content: center;
+    gap: 0.6rem;
+    padding: 1rem 1.75rem;
+    background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+    border: 2px solid #fecaca;
+    border-radius: 16px;
+    color: #dc2626;
     text-decoration: none;
-    font-weight: 600;
-    transition: all 0.3s ease;
+    font-weight: 700;
+    font-size: 0.95rem;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 12px rgba(220, 38, 38, 0.15);
+    align-self: center;
+    min-height: 56px;
 }
 
 .clear-filter-btn:hover {
-    background: rgba(255, 107, 107, 0.25);
-    transform: translateY(-2px);
+    background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+    border-color: #dc2626;
+    color: #ffffff;
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(220, 38, 38, 0.3);
+}
+
+.clear-filter-btn i {
+    font-size: 1rem;
+}
+
+/* Responsive cho filter */
+@media (max-width: 992px) {
+    .filter-section {
+        padding: 1.75rem 2rem;
+    }
+    
+    .filter-form {
+        gap: 1.25rem;
+        flex-wrap: wrap;
+    }
+    
+    .filter-item {
+        flex: 1 1 calc(50% - 0.75rem);
+        min-width: calc(50% - 0.75rem);
+        max-width: calc(50% - 0.75rem);
+    }
+}
+
+@media (max-width: 768px) {
+    .filter-section {
+        padding: 1.5rem;
+        border-radius: 20px;
+    }
+    
+    .filter-form {
+        flex-direction: column;
+    }
+    
+    .filter-item {
+        flex: 1 1 100%;
+        min-width: 100%;
+        max-width: 100%;
+    }
+    .filter-form {
+        gap: 1rem;
+    }
+    
+    .filter-item {
+        min-width: 100%;
+        max-width: 100%;
+    }
+    
+    .clear-filter-btn {
+        width: 100%;
+    }
+    
+    .clear-filter-btn {
+        width: 100%;
+        justify-content: center;
+    }
 }
 
 /* Reviews Grid */
@@ -2031,4 +2312,500 @@ document.addEventListener('DOMContentLoaded', function() {
         observer.observe(card);
     });
 });
+
+// ========== EDIT/DELETE REVIEW FUNCTIONS ==========
+let editSelectedRating = 0;
+
+// Open edit modal
+function openEditModal(reviewId, rating, comment) {
+    document.getElementById('editReviewId').value = reviewId;
+    document.getElementById('editRatingVal').value = rating;
+    document.getElementById('editCommentVal').value = comment;
+    
+    // Set stars
+    editSelectedRating = rating;
+    document.querySelectorAll('#editStarInput i').forEach((s, i) => {
+        s.className = i < rating ? 'fas fa-star' : 'far fa-star';
+    });
+    
+    document.getElementById('editReviewModal').classList.add('active');
+}
+
+// Close edit modal
+function closeEditModal() {
+    document.getElementById('editReviewModal').classList.remove('active');
+}
+
+// Initialize edit star rating
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('#editStarInput i').forEach(star => {
+        star.addEventListener('click', () => {
+            editSelectedRating = parseInt(star.dataset.r);
+            document.getElementById('editRatingVal').value = editSelectedRating;
+            document.querySelectorAll('#editStarInput i').forEach((s, i) => {
+                s.className = i < editSelectedRating ? 'fas fa-star' : 'far fa-star';
+            });
+        });
+    });
+});
+
+// Submit edit review
+async function submitEditReview(e) {
+    e.preventDefault();
+    
+    if (!editSelectedRating) {
+        alert('<?php echo $current_lang === "en" ? "Please select rating" : "Vui lòng chọn số sao"; ?>');
+        return;
+    }
+    
+    const formData = new FormData(e.target);
+    
+    try {
+        const res = await fetch('api/update-review.php', { method: 'POST', body: formData });
+        const data = await res.json();
+        
+        if (data.success) {
+            showToast('<?php echo $current_lang === "en" ? "Review updated!" : "Đã cập nhật đánh giá!"; ?>', 'success');
+            closeEditModal();
+            setTimeout(() => location.reload(), 1000);
+        } else {
+            alert(data.message || '<?php echo $current_lang === "en" ? "An error occurred" : "Có lỗi xảy ra"; ?>');
+        }
+    } catch (err) {
+        alert('<?php echo $current_lang === "en" ? "An error occurred" : "Có lỗi xảy ra"; ?>');
+    }
+}
+
+// Open delete confirm modal
+function openDeleteModal(reviewId) {
+    document.getElementById('deleteReviewId').value = reviewId;
+    document.getElementById('deleteConfirmModal').classList.add('active');
+}
+
+// Close delete confirm modal
+function closeDeleteModal() {
+    document.getElementById('deleteConfirmModal').classList.remove('active');
+}
+
+// Confirm delete review
+async function confirmDeleteReview() {
+    const reviewId = document.getElementById('deleteReviewId').value;
+    
+    const formData = new FormData();
+    formData.append('review_id', reviewId);
+    
+    try {
+        const res = await fetch('api/delete-review.php', { method: 'POST', body: formData });
+        const data = await res.json();
+        
+        if (data.success) {
+            showToast('<?php echo $current_lang === "en" ? "Review deleted!" : "Đã xóa đánh giá!"; ?>', 'success');
+            closeDeleteModal();
+            
+            // Remove review card from DOM
+            const reviewCard = document.querySelector(`.review-card[data-review-id="${reviewId}"]`);
+            if (reviewCard) {
+                reviewCard.style.transition = 'all 0.3s';
+                reviewCard.style.opacity = '0';
+                reviewCard.style.transform = 'scale(0.9)';
+                setTimeout(() => reviewCard.remove(), 300);
+            }
+        } else {
+            alert(data.message || '<?php echo $current_lang === "en" ? "An error occurred" : "Có lỗi xảy ra"; ?>');
+        }
+    } catch (err) {
+        alert('<?php echo $current_lang === "en" ? "An error occurred" : "Có lỗi xảy ra"; ?>');
+    }
+}
+
+// Toast notification
+function showToast(message, type = 'info') {
+    const toast = document.createElement('div');
+    toast.className = 'toast-notification ' + type;
+    toast.innerHTML = '<i class="fas fa-' + (type === 'success' ? 'check-circle' : 'info-circle') + '"></i> ' + message;
+    document.body.appendChild(toast);
+    
+    setTimeout(() => toast.classList.add('show'), 100);
+    setTimeout(() => {
+        toast.classList.remove('show');
+        setTimeout(() => toast.remove(), 300);
+    }, 2500);
+}
+
+// Close modals when clicking outside
+document.getElementById('editReviewModal')?.addEventListener('click', function(e) {
+    if (e.target === this) closeEditModal();
+});
+document.getElementById('deleteConfirmModal')?.addEventListener('click', function(e) {
+    if (e.target === this) closeDeleteModal();
+});
 </script>
+
+<!-- Edit Review Modal -->
+<div id="editReviewModal" class="review-modal-overlay">
+    <div class="review-modal-box">
+        <button class="modal-close-btn" onclick="closeEditModal()"><i class="fas fa-times"></i></button>
+        <h3><i class="fas fa-edit"></i> <?php echo $current_lang === 'en' ? 'Edit Review' : 'Sửa đánh giá'; ?></h3>
+        
+        <form id="editReviewForm" onsubmit="submitEditReview(event)">
+            <input type="hidden" name="review_id" id="editReviewId">
+            
+            <div class="modal-form-field">
+                <label><?php echo $current_lang === 'en' ? 'Rating' : 'Đánh giá'; ?></label>
+                <div class="star-input-group" id="editStarInput">
+                    <i class="far fa-star" data-r="1"></i>
+                    <i class="far fa-star" data-r="2"></i>
+                    <i class="far fa-star" data-r="3"></i>
+                    <i class="far fa-star" data-r="4"></i>
+                    <i class="far fa-star" data-r="5"></i>
+                </div>
+                <input type="hidden" name="rating" id="editRatingVal">
+            </div>
+            
+            <div class="modal-form-field">
+                <label><?php echo $current_lang === 'en' ? 'Comment' : 'Nhận xét'; ?></label>
+                <textarea name="comment" id="editCommentVal" required placeholder="<?php echo $current_lang === 'en' ? 'Share your experience...' : 'Chia sẻ trải nghiệm...'; ?>"></textarea>
+            </div>
+            
+            <div class="modal-form-btns">
+                <button type="submit" class="btn-save"><i class="fas fa-save"></i> <?php echo $current_lang === 'en' ? 'Save' : 'Lưu'; ?></button>
+                <button type="button" onclick="closeEditModal()" class="btn-cancel-modal"><?php echo $current_lang === 'en' ? 'Cancel' : 'Hủy'; ?></button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Delete Confirm Modal -->
+<div id="deleteConfirmModal" class="review-modal-overlay">
+    <div class="review-modal-box delete-confirm">
+        <div class="delete-icon">
+            <i class="fas fa-exclamation-triangle"></i>
+        </div>
+        <h3><?php echo $current_lang === 'en' ? 'Delete Review?' : 'Xóa đánh giá?'; ?></h3>
+        <p><?php echo $current_lang === 'en' ? 'This action cannot be undone.' : 'Hành động này không thể hoàn tác.'; ?></p>
+        <input type="hidden" id="deleteReviewId">
+        <div class="modal-form-btns">
+            <button type="button" class="btn-delete" onclick="confirmDeleteReview()">
+                <i class="fas fa-trash-alt"></i> <?php echo $current_lang === 'en' ? 'Delete' : 'Xóa'; ?>
+            </button>
+            <button type="button" onclick="closeDeleteModal()" class="btn-cancel-modal"><?php echo $current_lang === 'en' ? 'Cancel' : 'Hủy'; ?></button>
+        </div>
+    </div>
+</div>
+
+<style>
+/* Review Owner Actions */
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-left: auto;
+}
+.review-owner-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+.owner-action-btn {
+    width: 36px;
+    height: 36px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    font-size: 0.9rem;
+}
+.owner-action-btn.edit-btn {
+    background: rgba(59, 130, 246, 0.1);
+    color: #3b82f6;
+}
+.owner-action-btn.edit-btn:hover {
+    background: rgba(59, 130, 246, 0.2);
+    transform: scale(1.08);
+}
+.owner-action-btn.delete-btn {
+    background: rgba(239, 68, 68, 0.1);
+    color: #ef4444;
+}
+.owner-action-btn.delete-btn:hover {
+    background: rgba(239, 68, 68, 0.2);
+    transform: scale(1.08);
+}
+
+/* Review Modal Styles */
+.review-modal-overlay {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(15, 23, 42, 0.75);
+    backdrop-filter: blur(8px);
+    z-index: 10000;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+}
+.review-modal-overlay.active {
+    display: flex;
+}
+.review-modal-box {
+    background: #ffffff;
+    border-radius: 24px;
+    padding: 2.5rem;
+    max-width: 480px;
+    width: 100%;
+    position: relative;
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.2);
+    animation: modalSlideUp 0.3s ease;
+    border: 1px solid #e2e8f0;
+}
+@keyframes modalSlideUp {
+    from { opacity: 0; transform: translateY(30px) scale(0.95); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+}
+.review-modal-box h3 {
+    color: #0f172a;
+    font-size: 1.35rem;
+    font-weight: 700;
+    margin: 0 0 2rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid #f1f5f9;
+}
+.review-modal-box h3 i {
+    color: #22c55e;
+    font-size: 1.1rem;
+}
+.modal-close-btn {
+    position: absolute;
+    top: 1.25rem; right: 1.25rem;
+    background: #f8fafc;
+    border: 2px solid #e2e8f0;
+    color: #64748b;
+    width: 38px;
+    height: 38px;
+    border-radius: 12px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    font-size: 0.9rem;
+}
+.modal-close-btn:hover {
+    background: #fef2f2;
+    border-color: #fecaca;
+    color: #ef4444;
+    transform: rotate(90deg);
+}
+.modal-form-field {
+    margin-bottom: 1.5rem;
+}
+.modal-form-field label {
+    display: block;
+    color: #374151;
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+    letter-spacing: 0.01em;
+}
+.star-input-group {
+    display: flex;
+    gap: 0.75rem;
+    font-size: 1.75rem;
+    padding: 1rem 1.25rem;
+    background: #f8fafc;
+    border-radius: 12px;
+    justify-content: center;
+    border: 2px solid #e2e8f0;
+    transition: all 0.2s ease;
+}
+.star-input-group:hover {
+    border-color: #22c55e;
+    background: #f0fdf4;
+}
+.star-input-group i {
+    color: #cbd5e1;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+.star-input-group i.fas {
+    color: #f59e0b;
+    filter: drop-shadow(0 2px 4px rgba(245, 158, 11, 0.3));
+}
+.star-input-group i:hover {
+    transform: scale(1.2);
+    color: #fbbf24;
+}
+.modal-form-field textarea {
+    width: 100%;
+    padding: 1rem 1.25rem;
+    background: #ffffff;
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    color: #000000;
+    min-height: 120px;
+    resize: vertical;
+    font-size: 1rem;
+    font-family: inherit;
+    line-height: 1.6;
+    transition: all 0.2s ease;
+}
+.modal-form-field textarea:focus {
+    outline: none;
+    border-color: #22c55e;
+    background: #ffffff;
+    box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.1);
+}
+.modal-form-field textarea::placeholder {
+    color: #94a3b8;
+}
+.modal-form-btns {
+    display: flex;
+    gap: 1rem;
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 2px solid #f1f5f9;
+}
+.btn-save, .btn-delete, .btn-cancel-modal {
+    flex: 1;
+    padding: 1rem 1.5rem;
+    border-radius: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    font-size: 1rem;
+    transition: all 0.25s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+.btn-save {
+    background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+    color: #ffffff;
+    box-shadow: 0 4px 14px rgba(34, 197, 94, 0.35);
+}
+.btn-save:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(34, 197, 94, 0.45);
+}
+.btn-save:active {
+    transform: translateY(0);
+}
+.btn-delete {
+    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+    color: #ffffff;
+    box-shadow: 0 4px 14px rgba(239, 68, 68, 0.35);
+}
+.btn-delete:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(239, 68, 68, 0.45);
+}
+.btn-cancel-modal {
+    background: #f8fafc;
+    color: #64748b;
+    border: 2px solid #e2e8f0;
+}
+.btn-cancel-modal:hover {
+    background: #f1f5f9;
+    border-color: #cbd5e1;
+    color: #475569;
+}
+
+/* Delete Confirm Modal */
+.review-modal-box.delete-confirm {
+    text-align: center;
+    padding: 2.5rem 2rem;
+}
+.review-modal-box.delete-confirm h3 {
+    justify-content: center;
+    margin-bottom: 0.5rem;
+}
+.review-modal-box.delete-confirm p {
+    color: #64748b;
+    margin-bottom: 1.5rem;
+}
+.delete-icon {
+    width: 70px;
+    height: 70px;
+    background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1.25rem;
+}
+.delete-icon i {
+    font-size: 2rem;
+    color: #ef4444;
+}
+
+/* Toast Notification */
+.toast-notification {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%) translateY(100px);
+    background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+    color: #fff;
+    padding: 1rem 1.5rem;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-weight: 600;
+    box-shadow: 0 10px 40px rgba(34, 197, 94, 0.3);
+    z-index: 99999;
+    opacity: 0;
+    transition: all 0.3s ease;
+}
+.toast-notification.show {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
+}
+.toast-notification.success {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+}
+
+/* Override Dark Theme for Edit Review Modal Textarea */
+body.dark-theme .review-modal-overlay textarea,
+body.dark-theme .review-modal-box textarea,
+body.dark-theme #editReviewModal textarea,
+body.dark-theme .modal-form-field textarea,
+.review-modal-overlay textarea,
+.review-modal-box textarea,
+#editReviewModal textarea,
+.modal-form-field textarea {
+    background: #ffffff !important;
+    color: #000000 !important;
+    border: 2px solid #e2e8f0 !important;
+    -webkit-text-fill-color: #000000 !important;
+}
+
+body.dark-theme .review-modal-overlay textarea:focus,
+body.dark-theme .review-modal-box textarea:focus,
+body.dark-theme #editReviewModal textarea:focus,
+body.dark-theme .modal-form-field textarea:focus,
+.review-modal-overlay textarea:focus,
+.review-modal-box textarea:focus,
+#editReviewModal textarea:focus,
+.modal-form-field textarea:focus {
+    background: #ffffff !important;
+    color: #000000 !important;
+    border-color: #22c55e !important;
+    -webkit-text-fill-color: #000000 !important;
+    box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.1) !important;
+}
+
+body.dark-theme .review-modal-overlay textarea::placeholder,
+body.dark-theme .review-modal-box textarea::placeholder,
+body.dark-theme #editReviewModal textarea::placeholder,
+body.dark-theme .modal-form-field textarea::placeholder {
+    color: #9ca3af !important;
+    -webkit-text-fill-color: #9ca3af !important;
+}
+</style>

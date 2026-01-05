@@ -69,9 +69,9 @@ $search = trim($_GET['search'] ?? '');
         
         <!-- Menu Header Compact -->
         <div class="menu-header-compact">
-            <!-- Search Box Inline -->
+            <!-- Search Box Inline với Autocomplete -->
             <div class="menu-search-inline">
-            <form method="GET" action="" class="search-form">
+            <form method="GET" action="" class="search-form" id="menuSearchForm">
                 <input type="hidden" name="page" value="menu">
                 <?php if($category_filter): ?>
                 <input type="hidden" name="category" value="<?php echo $category_filter; ?>">
@@ -80,6 +80,7 @@ $search = trim($_GET['search'] ?? '');
                     <i class="fas fa-search search-icon"></i>
                     <input type="text" 
                            name="search" 
+                           id="menuSearchInput"
                            placeholder="<?php echo $current_lang === 'en' ? 'Search dishes by name...' : 'Tìm kiếm món ăn theo tên...'; ?>" 
                            value="<?php echo htmlspecialchars($search); ?>"
                            class="search-input"
@@ -89,6 +90,8 @@ $search = trim($_GET['search'] ?? '');
                         <i class="fas fa-times"></i>
                     </a>
                     <?php endif; ?>
+                    <!-- Autocomplete Dropdown -->
+                    <div class="search-autocomplete" id="searchAutocomplete"></div>
                 </div>
                 <button type="submit" class="search-btn">
                     <i class="fas fa-search"></i>
@@ -575,6 +578,7 @@ body.dark-theme .menu-promo-banner-content small {
 
 .menu-search-inline .search-input-wrapper {
     flex: 1;
+    position: relative;
 }
 
 .menu-search-inline .search-input {
@@ -738,6 +742,183 @@ body.dark-theme .search-result-info {
     grid-column: 1 / -1;
 }
 
+/* Autocomplete Dropdown Styles */
+.search-autocomplete {
+    position: absolute !important;
+    top: 100% !important;
+    left: 0 !important;
+    right: 0 !important;
+    background: #ffffff !important;
+    border-radius: 12px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+    z-index: 9999 !important;
+    max-height: 400px;
+    overflow-y: auto;
+    display: none;
+    margin-top: 8px;
+    border: 1px solid #e5e7eb;
+}
+
+.search-autocomplete.active {
+    display: block !important;
+    animation: slideDown 0.2s ease;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.autocomplete-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border-bottom: 1px solid #f3f4f6;
+    text-decoration: none;
+    color: inherit;
+}
+
+.autocomplete-item:last-child {
+    border-bottom: none;
+}
+
+.autocomplete-item:hover,
+.autocomplete-item.selected {
+    background: linear-gradient(135deg, rgba(34, 197, 94, 0.08), rgba(34, 197, 94, 0.04));
+}
+
+.autocomplete-item.unavailable {
+    opacity: 0.6;
+}
+
+.autocomplete-img {
+    width: 50px;
+    height: 50px;
+    border-radius: 10px;
+    object-fit: cover;
+    flex-shrink: 0;
+    border: 2px solid #f3f4f6;
+}
+
+.autocomplete-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.autocomplete-name {
+    font-weight: 600;
+    color: #1f2937;
+    font-size: 0.95rem;
+    margin-bottom: 2px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.autocomplete-name mark {
+    background: linear-gradient(135deg, #fef08a, #fde047);
+    color: #1f2937;
+    padding: 0 2px;
+    border-radius: 2px;
+}
+
+.autocomplete-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.8rem;
+    color: #6b7280;
+}
+
+.autocomplete-category {
+    background: #f3f4f6;
+    padding: 2px 8px;
+    border-radius: 4px;
+}
+
+.autocomplete-price {
+    color: #22c55e;
+    font-weight: 600;
+}
+
+.autocomplete-badge {
+    background: #fef2f2;
+    color: #ef4444;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 0.7rem;
+    font-weight: 600;
+}
+
+.autocomplete-empty {
+    padding: 24px 16px;
+    text-align: center;
+    color: #9ca3af;
+}
+
+.autocomplete-empty i {
+    font-size: 2rem;
+    margin-bottom: 8px;
+    display: block;
+}
+
+.autocomplete-loading {
+    padding: 20px;
+    text-align: center;
+    color: #6b7280;
+}
+
+.autocomplete-loading i {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+/* Dark theme autocomplete */
+body.dark-theme .search-autocomplete {
+    background: #1e293b;
+    border-color: rgba(34, 197, 94, 0.3);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+}
+
+body.dark-theme .autocomplete-item {
+    border-bottom-color: #334155;
+}
+
+body.dark-theme .autocomplete-item:hover,
+body.dark-theme .autocomplete-item.selected {
+    background: rgba(34, 197, 94, 0.15);
+}
+
+body.dark-theme .autocomplete-name {
+    color: #f1f5f9;
+}
+
+body.dark-theme .autocomplete-meta {
+    color: #94a3b8;
+}
+
+body.dark-theme .autocomplete-category {
+    background: #334155;
+    color: #94a3b8;
+}
+
+body.dark-theme .autocomplete-img {
+    border-color: #334155;
+}
+
 @media (max-width: 640px) {
     .search-form {
         flex-direction: column;
@@ -750,6 +931,23 @@ body.dark-theme .search-result-info {
     .search-btn {
         width: 100%;
         justify-content: center;
+    }
+    
+    .search-autocomplete {
+        position: fixed;
+        left: 10px;
+        right: 10px;
+        top: auto;
+        max-height: 60vh;
+    }
+    
+    .autocomplete-item {
+        padding: 10px 12px;
+    }
+    
+    .autocomplete-img {
+        width: 45px;
+        height: 45px;
     }
 }
 
@@ -1020,6 +1218,179 @@ function toggleFilter() {
     overlay.classList.toggle('active');
     document.body.style.overflow = sidebar.classList.contains('active') ? 'hidden' : '';
 }
+
+// ========== AUTOCOMPLETE SEARCH ==========
+(function() {
+    const searchInput = document.getElementById('menuSearchInput');
+    const autocomplete = document.getElementById('searchAutocomplete');
+    const searchForm = document.getElementById('menuSearchForm');
+    
+    console.log('Autocomplete init:', { searchInput, autocomplete }); // Debug
+    
+    if (!searchInput || !autocomplete) {
+        console.error('Autocomplete elements not found!');
+        return;
+    }
+    
+    let debounceTimer;
+    let selectedIndex = -1;
+    let suggestions = [];
+    
+    // Debounce function
+    function debounce(func, delay) {
+        return function(...args) {
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(() => func.apply(this, args), delay);
+        };
+    }
+    
+    // Highlight matching text
+    function highlightMatch(text, query) {
+        if (!query) return text;
+        const regex = new RegExp(`(${query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
+        return text.replace(regex, '<mark>$1</mark>');
+    }
+    
+    // Render suggestions
+    function renderSuggestions(data) {
+        if (!data.suggestions || data.suggestions.length === 0) {
+            autocomplete.innerHTML = `
+                <div class="autocomplete-empty">
+                    <i class="fas fa-search"></i>
+                    <div>Không tìm thấy món ăn nào</div>
+                </div>
+            `;
+            autocomplete.classList.add('active');
+            return;
+        }
+        
+        suggestions = data.suggestions;
+        selectedIndex = -1;
+        
+        const html = suggestions.map((item, index) => `
+            <a href="index.php?page=menu-item-detail&id=${item.id}" 
+               class="autocomplete-item ${!item.is_available ? 'unavailable' : ''}"
+               data-index="${index}">
+                <img src="${item.image}" alt="${item.name}" class="autocomplete-img" 
+                     onerror="this.src='https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=100&q=80'">
+                <div class="autocomplete-info">
+                    <div class="autocomplete-name">${highlightMatch(item.name, data.query)}</div>
+                    <div class="autocomplete-meta">
+                        ${item.category ? `<span class="autocomplete-category">${item.category}</span>` : ''}
+                        <span class="autocomplete-price">${item.price_formatted}</span>
+                        ${!item.is_available ? '<span class="autocomplete-badge">Hết món</span>' : ''}
+                    </div>
+                </div>
+            </a>
+        `).join('');
+        
+        autocomplete.innerHTML = html;
+        autocomplete.classList.add('active');
+    }
+    
+    // Fetch suggestions from API
+    async function fetchSuggestions(query) {
+        if (query.length < 1) {
+            autocomplete.classList.remove('active');
+            return;
+        }
+        
+        // Show loading
+        autocomplete.innerHTML = `
+            <div class="autocomplete-loading">
+                <i class="fas fa-spinner"></i> Đang tìm kiếm...
+            </div>
+        `;
+        autocomplete.classList.add('active');
+        
+        try {
+            console.log('Fetching suggestions for:', query); // Debug
+            const response = await fetch(`DUYENCN/api/search-suggestions.php?q=${encodeURIComponent(query)}&limit=8`);
+            console.log('Response status:', response.status); // Debug
+            const data = await response.json();
+            console.log('API response:', data); // Debug
+            
+            if (data.success) {
+                renderSuggestions(data);
+            } else {
+                autocomplete.classList.remove('active');
+            }
+        } catch (error) {
+            console.error('Search error:', error);
+            autocomplete.classList.remove('active');
+        }
+    }
+    
+    // Debounced search
+    const debouncedSearch = debounce(fetchSuggestions, 250);
+    
+    // Input event
+    searchInput.addEventListener('input', function() {
+        const query = this.value.trim();
+        debouncedSearch(query);
+    });
+    
+    // Focus event - show suggestions if there's text
+    searchInput.addEventListener('focus', function() {
+        const query = this.value.trim();
+        if (query.length >= 1 && suggestions.length > 0) {
+            autocomplete.classList.add('active');
+        }
+    });
+    
+    // Keyboard navigation
+    searchInput.addEventListener('keydown', function(e) {
+        const items = autocomplete.querySelectorAll('.autocomplete-item');
+        
+        if (e.key === 'ArrowDown') {
+            e.preventDefault();
+            selectedIndex = Math.min(selectedIndex + 1, items.length - 1);
+            updateSelection(items);
+        } else if (e.key === 'ArrowUp') {
+            e.preventDefault();
+            selectedIndex = Math.max(selectedIndex - 1, -1);
+            updateSelection(items);
+        } else if (e.key === 'Enter' && selectedIndex >= 0) {
+            e.preventDefault();
+            const selectedItem = items[selectedIndex];
+            if (selectedItem) {
+                window.location.href = selectedItem.href;
+            }
+        } else if (e.key === 'Escape') {
+            autocomplete.classList.remove('active');
+            selectedIndex = -1;
+        }
+    });
+    
+    // Update selection highlight
+    function updateSelection(items) {
+        items.forEach((item, index) => {
+            item.classList.toggle('selected', index === selectedIndex);
+        });
+        
+        // Scroll into view
+        if (selectedIndex >= 0 && items[selectedIndex]) {
+            items[selectedIndex].scrollIntoView({ block: 'nearest' });
+        }
+    }
+    
+    // Click outside to close
+    document.addEventListener('click', function(e) {
+        if (!searchInput.contains(e.target) && !autocomplete.contains(e.target)) {
+            autocomplete.classList.remove('active');
+        }
+    });
+    
+    // Hover to select
+    autocomplete.addEventListener('mouseover', function(e) {
+        const item = e.target.closest('.autocomplete-item');
+        if (item) {
+            selectedIndex = parseInt(item.dataset.index);
+            const items = autocomplete.querySelectorAll('.autocomplete-item');
+            updateSelection(items);
+        }
+    });
+})();
 
 // Toggle Favorite
 function toggleFavorite(btn, itemId) {

@@ -26,7 +26,7 @@ $news_data = [
             </ul>
             
             <p><strong>Địa chỉ:</strong> 126 Nguyễn Thiện Thành, Phường 5, TP. Trà Vinh</p>
-            <p><strong>Giờ mở cửa:</strong> 10:00 - 22:00 hàng ngày</p>
+            <p><strong>Giờ mở cửa:</strong> Thứ 2 - Thứ 6: 10:00 - 22:00 | Thứ 7 - Chủ nhật: 09:00 - 23:00</p>
         '
     ],
     2 => [

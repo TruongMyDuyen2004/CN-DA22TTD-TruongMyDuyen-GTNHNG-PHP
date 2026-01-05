@@ -78,15 +78,18 @@ if (isset($_POST['delete_reservation'])) {
         }
         $reservation = $stmt->fetch(PDO::FETCH_ASSOC);
         
-        // Chỉ cho phép xóa đặt bàn đã hủy, đã hoàn thành hoặc không đến
-        if ($reservation && in_array($reservation['status'], ['cancelled', 'completed', 'no_show'])) {
+        // Chỉ cho phép xóa đặt bàn đã hủy, đã hoàn thành, không đến hoặc đang chờ
+        if ($reservation && in_array($reservation['status'], ['cancelled', 'completed', 'no_show', 'pending'])) {
             $delete = $conn->prepare("DELETE FROM reservations WHERE id = ?");
             $delete->execute([$reservation_id]);
             
             $cancel_message = "Đã xóa đặt bàn #$reservation_id khỏi danh sách!";
             $cancel_type = 'success';
+        } elseif ($reservation && $reservation['status'] == 'confirmed') {
+            $cancel_message = "Không thể xóa đặt bàn đã được xác nhận. Vui lòng liên hệ nhà hàng!";
+            $cancel_type = 'error';
         } else {
-            $cancel_message = "Không thể xóa đặt bàn đang chờ xử lý!";
+            $cancel_message = "Không thể xóa đặt bàn này!";
             $cancel_type = 'error';
         }
     } catch (Exception $e) {
@@ -134,10 +137,24 @@ $location_labels = [
         </div>
 
         <?php if ($cancel_message): ?>
-        <div class="cancel-alert <?php echo $cancel_type; ?>">
+        <div class="cancel-alert <?php echo $cancel_type; ?>" id="cancelAlert">
             <i class="fas <?php echo $cancel_type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'; ?>"></i>
             <?php echo $cancel_message; ?>
         </div>
+        <script>
+            // Tự động ẩn thông báo sau 5 giây
+            setTimeout(function() {
+                var alert = document.getElementById('cancelAlert');
+                if (alert) {
+                    alert.style.transition = 'opacity 0.5s, transform 0.5s';
+                    alert.style.opacity = '0';
+                    alert.style.transform = 'translateY(-20px)';
+                    setTimeout(function() {
+                        alert.style.display = 'none';
+                    }, 500);
+                }
+            }, 5000);
+        </script>
         <?php endif; ?>
 
         <?php if (empty($reservations)): ?>
@@ -231,8 +248,8 @@ $location_labels = [
                     </span>
                     <?php endif; ?>
                     
-                    <?php if (in_array($res['status'], ['cancelled', 'completed', 'no_show'])): ?>
-                    <button type="button" class="btn-delete-rsv" onclick="confirmDeleteReservation(<?php echo $res['id']; ?>)">
+                    <?php if (in_array($res['status'], ['cancelled', 'completed', 'no_show', 'pending'])): ?>
+                    <button type="button" class="btn-delete-rsv" onclick="confirmDeleteReservation(<?php echo $res['id']; ?>, '<?php echo $res['status']; ?>')" title="Xóa khỏi danh sách">
                         <i class="fas fa-trash-alt"></i>
                     </button>
                     <?php endif; ?>
@@ -942,8 +959,17 @@ function closeUserCancelModal() {
 }
 
 // Delete reservation function
-function confirmDeleteReservation(id) {
-    if (confirm('Bạn có chắc muốn xóa đặt bàn #' + id + ' khỏi danh sách?\n\nHành động này không thể hoàn tác!')) {
+function confirmDeleteReservation(id, status) {
+    var message = 'Bạn có chắc muốn xóa đặt bàn #' + id + ' khỏi danh sách?\n\nHành động này không thể hoàn tác!';
+    
+    if (status === 'pending') {
+        message = 'Bạn có chắc muốn xóa đặt bàn #' + id + '?\n\n⚠️ Đặt bàn này đang chờ xác nhận và sẽ bị hủy.\n\nHành động này không thể hoàn tác!';
+    } else if (status === 'confirmed') {
+        alert('Không thể xóa đặt bàn đã được xác nhận.\nVui lòng liên hệ nhà hàng để hủy!');
+        return;
+    }
+    
+    if (confirm(message)) {
         document.getElementById('deleteReservationId').value = id;
         document.getElementById('deleteReservationForm').submit();
     }

@@ -81,6 +81,8 @@ $unavailable = $total - $available;
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quản lý tồn kho - Admin</title>
+    <link rel="icon" type="image/jpeg" href="../assets/images/logo.jpg">
+    <link rel="shortcut icon" type="image/jpeg" href="../assets/images/logo.jpg">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="../assets/css/admin-dark-modern.css">
     <link rel="stylesheet" href="../assets/css/admin-green-override.css">
@@ -187,165 +189,208 @@ $unavailable = $total - $available;
             box-shadow: 0 4px 12px rgba(0,0,0,0.15);
         }
         
-        .stock-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-            gap: 1rem;
-        }
-        .stock-card {
+        /* ========================================
+           STOCK TABLE - MODERN DESIGN
+           ======================================== */
+        
+        .stock-table-container {
             background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+        }
+        
+        .stock-table-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 24px;
+            background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+            border-bottom: 2px solid #bbf7d0;
+        }
+        
+        .stock-table-header h3 {
+            margin: 0;
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: #166534;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .stock-table-header h3 i {
+            color: #22c55e;
+        }
+        
+        .stock-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .stock-table thead {
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+        }
+        
+        .stock-table th {
+            padding: 16px 18px;
+            text-align: left;
+            font-weight: 700;
+            font-size: 0.9rem;
+            color: #374151;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 2px solid #e5e7eb;
+        }
+        
+        .stock-table th:first-child {
+            padding-left: 24px;
+            width: 50px;
+        }
+        
+        .stock-table td {
+            padding: 18px;
+            border-bottom: 1px solid #f3f4f6;
+            vertical-align: middle;
+        }
+        
+        .stock-table td:first-child {
+            padding-left: 24px;
+        }
+        
+        .stock-table tbody tr {
+            transition: all 0.2s ease;
+            background: white;
+        }
+        
+        .stock-table tbody tr:hover {
+            background: linear-gradient(135deg, #f0fdf4 0%, #fafafa 100%);
+        }
+        
+        .stock-table tbody tr.unavailable {
+            background: #fffbeb;
+        }
+        
+        .stock-table tbody tr.unavailable:hover {
+            background: #fef3c7;
+        }
+        
+        .stock-table tbody tr.unavailable .item-details h4 {
+            color: #92400e;
+        }
+        
+        .stock-table tbody tr.unavailable .price-cell {
+            color: #d97706;
+        }
+        
+        /* Item Info Cell */
+        .item-info {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+        
+        .item-thumb {
+            width: 60px;
+            height: 60px;
             border-radius: 12px;
             overflow: hidden;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-            transition: all 0.3s;
-            position: relative;
-            border: 1px solid #e5e7eb;
+            flex-shrink: 0;
+            border: 2px solid #e5e7eb;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
         }
-        .stock-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 20px rgba(0,0,0,0.1);
-            border-color: #22c55e;
-        }
-        .stock-card.unavailable {
-            opacity: 0.75;
-            border-color: #fca5a5;
-        }
-        .stock-card.unavailable .card-image img {
-            filter: grayscale(50%);
-        }
-        .card-checkbox {
-            position: absolute;
-            top: 8px;
-            left: 8px;
-            z-index: 10;
-        }
-        .card-checkbox input {
-            width: 18px;
-            height: 18px;
-            cursor: pointer;
-            accent-color: #22c55e;
-        }
-        .card-image {
-            height: 140px;
-            overflow: hidden;
-            position: relative;
-        }
-        .card-image img {
+        
+        .item-thumb img {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            transition: transform 0.5s;
-        }
-        .stock-card:hover .card-image img {
-            transform: scale(1.05);
-        }
-        .card-image .placeholder {
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2rem;
-        }
-        .status-badge {
-            position: absolute;
-            top: 8px;
-            right: 8px;
-            padding: 5px 10px;
-            border-radius: 15px;
-            font-size: 0.75rem;
-            font-weight: 600;
-        }
-        .status-badge.available {
-            background: #10b981;
-            color: white;
-        }
-        .status-badge.unavailable {
-            background: #ef4444;
-            color: white;
-        }
-        .card-body {
-            padding: 12px 14px;
-        }
-        .card-category {
-            font-size: 0.75rem;
-            color: #16a34a;
-            font-weight: 600;
-            margin-bottom: 4px;
-            text-transform: uppercase;
-        }
-        .card-title {
-            font-size: 0.95rem;
-            font-weight: 700;
-            color: #1f2937;
-            margin-bottom: 6px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-        .card-price {
-            font-size: 1rem;
-            font-weight: 700;
-            color: #dc2626;
-            margin-bottom: 10px;
         }
         
-        /* Toggle Section - Gọn gàng */
-        .toggle-section {
-            background: #f8fafc;
-            border: 1px solid #e2e8f0;
-            border-radius: 8px;
-            padding: 10px 12px;
-        }
-        .toggle-row {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-        .toggle-left {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .toggle-icon {
-            width: 28px;
-            height: 28px;
-            border-radius: 6px;
+        .item-thumb-placeholder {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 12px;
+            color: white;
+            font-size: 1.3rem;
         }
-        .toggle-icon.on {
-            background: #dcfce7;
-            color: #16a34a;
+        
+        .item-details h4 {
+            margin: 0 0 4px 0;
+            font-size: 1rem;
+            font-weight: 700;
+            color: #1f2937;
         }
-        .toggle-icon.off {
-            background: #fee2e2;
-            color: #dc2626;
+        
+        .item-details .item-id {
+            font-size: 0.8rem;
+            color: #6b7280;
+            font-weight: 500;
         }
-        .toggle-text {
+        
+        /* Category Badge */
+        .category-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 14px;
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            color: #92400e;
+            border-radius: 20px;
             font-size: 0.85rem;
             font-weight: 600;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.06);
         }
-        .toggle-text.on {
-            color: #16a34a;
+        
+        /* Price Cell */
+        .price-cell {
+            font-size: 1.1rem;
+            font-weight: 800;
+            color: #22c55e;
         }
-        .toggle-text.off {
-            color: #dc2626;
+        
+        /* Status Badge in Table */
+        .status-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.08);
         }
+        
+        .status-pill.available {
+            background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+            color: white;
+        }
+        
+        .status-pill.unavailable {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            color: white;
+        }
+        
+        .status-pill i {
+            font-size: 0.6rem;
+        }
+        
+        /* Toggle Switch - Larger & Clearer */
         .switch {
             position: relative;
-            width: 44px;
-            height: 24px;
+            width: 64px;
+            height: 34px;
             flex-shrink: 0;
         }
+        
         .switch input {
             opacity: 0;
             width: 0;
             height: 0;
         }
+        
         .slider {
             position: absolute;
             cursor: pointer;
@@ -354,26 +399,61 @@ $unavailable = $total - $available;
             right: 0;
             bottom: 0;
             background: #ef4444;
-            transition: 0.3s;
-            border-radius: 24px;
+            transition: 0.3s ease;
+            border-radius: 34px;
+            border: 3px solid #dc2626;
         }
+        
         .slider:before {
             position: absolute;
-            content: "";
-            height: 18px;
-            width: 18px;
-            left: 3px;
-            bottom: 3px;
+            content: "✗";
+            height: 26px;
+            width: 26px;
+            left: 1px;
+            bottom: 1px;
             background-color: white;
-            transition: 0.3s;
+            transition: 0.3s ease;
             border-radius: 50%;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+            color: #ef4444;
         }
+        
         input:checked + .slider {
-            background: #10b981;
+            background: #22c55e;
+            border-color: #16a34a;
         }
+        
         input:checked + .slider:before {
-            transform: translateX(20px);
+            transform: translateX(30px);
+            content: "✓";
+            color: #22c55e;
+        }
+        
+        .switch:hover .slider {
+            box-shadow: 0 0 8px rgba(0,0,0,0.2);
+        }
+        
+        /* Checkbox Style */
+        .stock-checkbox {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            accent-color: #22c55e;
+        }
+        
+        /* Select All */
+        .select-all-row {
+            background: #f8fafc !important;
+        }
+        
+        .select-all-row td {
+            padding: 12px 16px !important;
+            border-bottom: 2px solid #e5e7eb !important;
         }
         
         .empty-state {
@@ -415,114 +495,158 @@ $unavailable = $total - $available;
     <?php include 'includes/sidebar.php'; ?>
     
     <div class="main-content">
-        <div class="page-header">
-            <h1><i class="fas fa-boxes"></i> Quản lý tồn kho</h1>
-            <a href="menu-manage.php" class="btn btn-secondary">
+        <!-- Modern Page Header -->
+        <div class="page-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; padding: 20px 28px; background: linear-gradient(135deg, #ffffff 0%, #f0fdf4 100%); border-radius: 16px; border: 2px solid #bbf7d0; box-shadow: 0 4px 20px rgba(34, 197, 94, 0.1);">
+            <h1 style="font-size: 1.6rem; font-weight: 800; color: #166534; margin: 0; display: flex; align-items: center; gap: 14px;">
+                <span style="width: 48px; height: 48px; background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%); border-radius: 12px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3);">
+                    <i class="fas fa-boxes" style="color: white; font-size: 1.3rem;"></i>
+                </span>
+                Quản lý tồn kho
+            </h1>
+            <a href="menu-manage.php" class="btn btn-primary" style="background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%); color: white; padding: 12px 24px; border-radius: 10px; text-decoration: none; font-weight: 700; display: flex; align-items: center; gap: 8px; box-shadow: 0 4px 15px rgba(34, 197, 94, 0.35); transition: all 0.3s ease;">
                 <i class="fas fa-utensils"></i> Quản lý thực đơn
             </a>
         </div>
 
-        <!-- Thống kê - Style giống trang giảm giá -->
-        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; margin-bottom: 1.5rem;">
-            <div style="background: white; border-radius: 14px; padding: 1.25rem 1.5rem; box-shadow: 0 4px 12px rgba(0,0,0,0.08); display: flex; align-items: center; gap: 1.25rem; border: 2px solid #d1d5db; transition: all 0.2s;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 20px rgba(0,0,0,0.12)'; this.style.borderColor='#3b82f6';" onmouseout="this.style.transform='none'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.08)'; this.style.borderColor='#d1d5db';">
-                <div style="width: 56px; height: 56px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; color: white; background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%); flex-shrink: 0;">
+        <!-- Modern Stats Cards -->
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 24px;">
+            <!-- Total -->
+            <a href="?status=" class="stat-card-link" style="text-decoration: none; background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%); border-radius: 16px; padding: 24px; border: 2px solid <?php echo $status_filter === '' ? '#3b82f6' : '#93c5fd'; ?>; box-shadow: 0 4px 15px rgba(59, 130, 246, <?php echo $status_filter === '' ? '0.35' : '0.15'; ?>); display: flex; align-items: center; gap: 20px; transition: all 0.3s ease; cursor: pointer;" onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 8px 25px rgba(59, 130, 246, 0.25)';" onmouseout="this.style.transform='none'; this.style.boxShadow='0 4px 15px rgba(59, 130, 246, <?php echo $status_filter === '' ? '0.35' : '0.15'; ?>';">
+                <div style="width: 64px; height: 64px; border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 1.6rem; color: white; background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%); box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4); flex-shrink: 0;">
                     <i class="fas fa-utensils"></i>
                 </div>
                 <div>
-                    <h3 style="font-size: 1.75rem; font-weight: 800; color: #1f2937; margin: 0; line-height: 1;"><?php echo $total; ?></h3>
-                    <p style="color: #6b7280; margin: 0.25rem 0 0; font-size: 0.9rem; font-weight: 500;">Tổng số món</p>
+                    <h3 style="font-size: 2.2rem; font-weight: 800; color: #1e40af; margin: 0; line-height: 1;"><?php echo $total; ?></h3>
+                    <p style="color: #3b82f6; margin: 6px 0 0; font-size: 0.95rem; font-weight: 600;">Tổng số món</p>
                 </div>
-            </div>
-            <div style="background: white; border-radius: 14px; padding: 1.25rem 1.5rem; box-shadow: 0 4px 12px rgba(0,0,0,0.08); display: flex; align-items: center; gap: 1.25rem; border: 2px solid #d1d5db; transition: all 0.2s;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 20px rgba(0,0,0,0.12)'; this.style.borderColor='#22c55e';" onmouseout="this.style.transform='none'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.08)'; this.style.borderColor='#d1d5db';">
-                <div style="width: 56px; height: 56px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; color: white; background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%); flex-shrink: 0;">
+            </a>
+            
+            <!-- Available -->
+            <a href="?status=1" class="stat-card-link" style="text-decoration: none; background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%); border-radius: 16px; padding: 24px; border: 2px solid <?php echo $status_filter === '1' ? '#22c55e' : '#86efac'; ?>; box-shadow: 0 4px 15px rgba(34, 197, 94, <?php echo $status_filter === '1' ? '0.35' : '0.15'; ?>); display: flex; align-items: center; gap: 20px; transition: all 0.3s ease; cursor: pointer;" onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 8px 25px rgba(34, 197, 94, 0.25)';" onmouseout="this.style.transform='none'; this.style.boxShadow='0 4px 15px rgba(34, 197, 94, <?php echo $status_filter === '1' ? '0.35' : '0.15'; ?>';">
+                <div style="width: 64px; height: 64px; border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 1.6rem; color: white; background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%); box-shadow: 0 4px 12px rgba(34, 197, 94, 0.4); flex-shrink: 0;">
                     <i class="fas fa-check-circle"></i>
                 </div>
                 <div>
-                    <h3 style="font-size: 1.75rem; font-weight: 800; color: #1f2937; margin: 0; line-height: 1;"><?php echo $available; ?></h3>
-                    <p style="color: #6b7280; margin: 0.25rem 0 0; font-size: 0.9rem; font-weight: 500;">Còn món</p>
+                    <h3 style="font-size: 2.2rem; font-weight: 800; color: #166534; margin: 0; line-height: 1;"><?php echo $available; ?></h3>
+                    <p style="color: #22c55e; margin: 6px 0 0; font-size: 0.95rem; font-weight: 600;">Còn món</p>
                 </div>
-            </div>
-            <div style="background: white; border-radius: 14px; padding: 1.25rem 1.5rem; box-shadow: 0 4px 12px rgba(0,0,0,0.08); display: flex; align-items: center; gap: 1.25rem; border: 2px solid #d1d5db; transition: all 0.2s;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 20px rgba(0,0,0,0.12)'; this.style.borderColor='#ef4444';" onmouseout="this.style.transform='none'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.08)'; this.style.borderColor='#d1d5db';">
-                <div style="width: 56px; height: 56px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; color: white; background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); flex-shrink: 0;">
+            </a>
+            
+            <!-- Unavailable -->
+            <a href="?status=0" class="stat-card-link" style="text-decoration: none; background: linear-gradient(135deg, #fef2f2 0%, #fecaca 100%); border-radius: 16px; padding: 24px; border: 2px solid <?php echo $status_filter === '0' ? '#ef4444' : '#fca5a5'; ?>; box-shadow: 0 4px 15px rgba(239, 68, 68, <?php echo $status_filter === '0' ? '0.35' : '0.15'; ?>); display: flex; align-items: center; gap: 20px; transition: all 0.3s ease; cursor: pointer;" onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 8px 25px rgba(239, 68, 68, 0.25)';" onmouseout="this.style.transform='none'; this.style.boxShadow='0 4px 15px rgba(239, 68, 68, <?php echo $status_filter === '0' ? '0.35' : '0.15'; ?>';">
+                <div style="width: 64px; height: 64px; border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 1.6rem; color: white; background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4); flex-shrink: 0;">
                     <i class="fas fa-times-circle"></i>
                 </div>
                 <div>
-                    <h3 style="font-size: 1.75rem; font-weight: 800; color: #1f2937; margin: 0; line-height: 1;"><?php echo $unavailable; ?></h3>
-                    <p style="color: #6b7280; margin: 0.25rem 0 0; font-size: 0.9rem; font-weight: 500;">Hết món</p>
+                    <h3 style="font-size: 2.2rem; font-weight: 800; color: #991b1b; margin: 0; line-height: 1;"><?php echo $unavailable; ?></h3>
+                    <p style="color: #ef4444; margin: 6px 0 0; font-size: 0.95rem; font-weight: 600;">Hết món</p>
                 </div>
-            </div>
+            </a>
         </div>
 
-        <!-- Bộ lọc & Bulk actions -->
-        <div class="filter-bar">
-            <select id="categoryFilter" onchange="applyFilter()">
-                <option value="">Tất cả danh mục</option>
-                <?php foreach ($categories as $cat): ?>
-                <option value="<?php echo $cat['id']; ?>" <?php echo $category_filter == $cat['id'] ? 'selected' : ''; ?>>
-                    <?php echo htmlspecialchars($cat['name']); ?>
-                </option>
-                <?php endforeach; ?>
-            </select>
+        <!-- Modern Filter Bar -->
+        <div style="background: white; padding: 20px 24px; border-radius: 16px; margin-bottom: 24px; display: flex; gap: 16px; align-items: center; flex-wrap: wrap; box-shadow: 0 4px 15px rgba(0,0,0,0.06); border: 2px solid #e5e7eb;">
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <span style="width: 36px; height: 36px; background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #22c55e;">
+                    <i class="fas fa-filter"></i>
+                </span>
+                <select id="categoryFilter" onchange="applyFilter()" style="padding: 10px 16px; border: 2px solid #e5e7eb; border-radius: 10px; font-size: 0.95rem; min-width: 180px; font-weight: 500; cursor: pointer; transition: all 0.2s;" onfocus="this.style.borderColor='#22c55e'; this.style.boxShadow='0 0 0 3px rgba(34, 197, 94, 0.1)';" onblur="this.style.borderColor='#e5e7eb'; this.style.boxShadow='none';">
+                    <option value="">📂 Tất cả danh mục</option>
+                    <?php foreach ($categories as $cat): ?>
+                    <option value="<?php echo $cat['id']; ?>" <?php echo $category_filter == $cat['id'] ? 'selected' : ''; ?>>
+                        <?php echo htmlspecialchars($cat['name']); ?>
+                    </option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
             
-            <select id="statusFilter" onchange="applyFilter()">
-                <option value="">Tất cả trạng thái</option>
+            <select id="statusFilter" onchange="applyFilter()" style="padding: 10px 16px; border: 2px solid #e5e7eb; border-radius: 10px; font-size: 0.95rem; min-width: 160px; font-weight: 500; cursor: pointer; transition: all 0.2s;" onfocus="this.style.borderColor='#22c55e'; this.style.boxShadow='0 0 0 3px rgba(34, 197, 94, 0.1)';" onblur="this.style.borderColor='#e5e7eb'; this.style.boxShadow='none';">
+                <option value="">📊 Tất cả trạng thái</option>
                 <option value="1" <?php echo $status_filter === '1' ? 'selected' : ''; ?>>✅ Còn món</option>
                 <option value="0" <?php echo $status_filter === '0' ? 'selected' : ''; ?>>❌ Hết món</option>
             </select>
             
-            <div class="bulk-actions">
-                <span id="selectedCount" style="color: #6b7280; font-size: 0.9rem;">Đã chọn: 0</span>
-                <button class="bulk-btn available" onclick="bulkUpdate(1)" id="btnAvailable" disabled>
+            <div style="margin-left: auto; display: flex; align-items: center; gap: 12px;">
+                <span id="selectedCount" style="color: #6b7280; font-size: 0.9rem; font-weight: 600; background: #f3f4f6; padding: 8px 14px; border-radius: 8px;">Đã chọn: 0</span>
+                <button onclick="bulkUpdate(1)" id="btnAvailable" disabled style="padding: 10px 20px; border: none; border-radius: 10px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 8px; background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%); color: white; box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3); transition: all 0.2s; opacity: 0.5;" onmouseover="if(!this.disabled) { this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 20px rgba(34, 197, 94, 0.4)'; }" onmouseout="this.style.transform='none'; this.style.boxShadow='0 4px 12px rgba(34, 197, 94, 0.3)';">
                     <i class="fas fa-check"></i> Đánh dấu còn món
                 </button>
-                <button class="bulk-btn unavailable" onclick="bulkUpdate(0)" id="btnUnavailable" disabled>
+                <button onclick="bulkUpdate(0)" id="btnUnavailable" disabled style="padding: 10px 20px; border: none; border-radius: 10px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 8px; background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); color: white; box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3); transition: all 0.2s; opacity: 0.5;" onmouseover="if(!this.disabled) { this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 20px rgba(239, 68, 68, 0.4)'; }" onmouseout="this.style.transform='none'; this.style.boxShadow='0 4px 12px rgba(239, 68, 68, 0.3)';">
                     <i class="fas fa-times"></i> Đánh dấu hết món
                 </button>
             </div>
         </div>
 
-        <!-- Danh sách món -->
+        <!-- Danh sách món - Table View -->
         <?php if (count($items) > 0): ?>
-        <div class="stock-grid">
-            <?php foreach ($items as $item): ?>
-            <div class="stock-card <?php echo !$item['is_available'] ? 'unavailable' : ''; ?>" data-id="<?php echo $item['id']; ?>">
-                <div class="card-checkbox">
-                    <input type="checkbox" class="item-checkbox" value="<?php echo $item['id']; ?>" onchange="updateSelection()">
-                </div>
-                <div class="card-image">
-                    <?php if ($item['image']): ?>
-                        <img src="../<?php echo htmlspecialchars($item['image']); ?>" alt="<?php echo htmlspecialchars($item['name']); ?>">
-                    <?php else: ?>
-                        <div class="placeholder">🍽️</div>
-                    <?php endif; ?>
-                    <span class="status-badge <?php echo $item['is_available'] ? 'available' : 'unavailable'; ?>">
-                        <?php echo $item['is_available'] ? 'Còn món' : 'Hết món'; ?>
-                    </span>
-                </div>
-                <div class="card-body">
-                    <div class="card-category"><?php echo htmlspecialchars($item['category_name'] ?? 'Chưa phân loại'); ?></div>
-                    <h3 class="card-title"><?php echo htmlspecialchars($item['name']); ?></h3>
-                    <div class="card-price"><?php echo number_format($item['price'], 0, ',', '.'); ?>đ</div>
-                    <div class="toggle-section">
-                        <div class="toggle-row">
-                            <div class="toggle-left" id="toggle-info-<?php echo $item['id']; ?>">
-                                <div class="toggle-icon <?php echo $item['is_available'] ? 'on' : 'off'; ?>">
-                                    <i class="fas <?php echo $item['is_available'] ? 'fa-check' : 'fa-times'; ?>"></i>
+        <div class="stock-table-container">
+            <div class="stock-table-header">
+                <h3><i class="fas fa-clipboard-list"></i> Danh sách tồn kho</h3>
+                <span style="background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%); color: white; padding: 8px 16px; border-radius: 20px; font-weight: 700; font-size: 0.9rem;">
+                    <?php echo count($items); ?> món
+                </span>
+            </div>
+            
+            <table class="stock-table">
+                <thead>
+                    <tr>
+                        <th><input type="checkbox" class="stock-checkbox" id="selectAll" onchange="toggleSelectAll(this)"></th>
+                        <th>Món ăn</th>
+                        <th>Danh mục</th>
+                        <th>Giá</th>
+                        <th>Trạng thái</th>
+                        <th style="text-align: center;">Bật/Tắt</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($items as $index => $item): ?>
+                    <tr class="<?php echo !$item['is_available'] ? 'unavailable' : ''; ?>" data-id="<?php echo $item['id']; ?>">
+                        <td>
+                            <input type="checkbox" class="stock-checkbox item-checkbox" value="<?php echo $item['id']; ?>" onchange="updateSelection()">
+                        </td>
+                        <td>
+                            <div class="item-info">
+                                <div class="item-thumb">
+                                    <?php if ($item['image']): ?>
+                                        <img src="../<?php echo htmlspecialchars($item['image']); ?>" alt="<?php echo htmlspecialchars($item['name']); ?>">
+                                    <?php else: ?>
+                                        <div class="item-thumb-placeholder">
+                                            <i class="fas fa-utensils"></i>
+                                        </div>
+                                    <?php endif; ?>
                                 </div>
-                                <span class="toggle-text <?php echo $item['is_available'] ? 'on' : 'off'; ?>">
-                                    <?php echo $item['is_available'] ? 'Còn món' : 'Hết món'; ?>
-                                </span>
+                                <div class="item-details">
+                                    <h4><?php echo htmlspecialchars($item['name']); ?></h4>
+                                    <span class="item-id">#<?php echo $item['id']; ?></span>
+                                </div>
                             </div>
+                        </td>
+                        <td>
+                            <span class="category-badge">
+                                <i class="fas fa-tag"></i>
+                                <?php echo htmlspecialchars($item['category_name'] ?? 'Chưa phân loại'); ?>
+                            </span>
+                        </td>
+                        <td>
+                            <span class="price-cell"><?php echo number_format($item['price'], 0, ',', '.'); ?>đ</span>
+                        </td>
+                        <td>
+                            <span class="status-pill <?php echo $item['is_available'] ? 'available' : 'unavailable'; ?>" id="status-pill-<?php echo $item['id']; ?>">
+                                <i class="fas fa-circle"></i>
+                                <?php echo $item['is_available'] ? 'Còn món' : 'Hết món'; ?>
+                            </span>
+                        </td>
+                        <td style="text-align: center;">
                             <label class="switch">
                                 <input type="checkbox" <?php echo $item['is_available'] ? 'checked' : ''; ?> 
                                        onchange="toggleStatus(<?php echo $item['id']; ?>, this.checked)">
                                 <span class="slider"></span>
                             </label>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <?php endforeach; ?>
+                        </td>
+                    </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
         </div>
         <?php else: ?>
         <div class="empty-state">
@@ -545,6 +669,12 @@ $unavailable = $total - $available;
             window.location.href = url;
         }
         
+        function toggleSelectAll(checkbox) {
+            const checkboxes = document.querySelectorAll('.item-checkbox');
+            checkboxes.forEach(cb => cb.checked = checkbox.checked);
+            updateSelection();
+        }
+        
         async function toggleStatus(id, checked) {
             const status = checked ? 1 : 0;
             
@@ -562,20 +692,17 @@ $unavailable = $total - $available;
                 const data = await response.json();
                 
                 if (data.success) {
-                    const card = document.querySelector(`.stock-card[data-id="${id}"]`);
-                    const badge = card.querySelector('.status-badge');
-                    const toggleInfo = document.getElementById(`toggle-info-${id}`);
+                    const row = document.querySelector(`tr[data-id="${id}"]`);
+                    const statusPill = document.getElementById(`status-pill-${id}`);
                     
                     if (status) {
-                        card.classList.remove('unavailable');
-                        badge.className = 'status-badge available';
-                        badge.textContent = 'Còn món';
-                        toggleInfo.innerHTML = '<div class="toggle-icon on"><i class="fas fa-check"></i></div><span class="toggle-text on">Còn món</span>';
+                        row.classList.remove('unavailable');
+                        statusPill.className = 'status-pill available';
+                        statusPill.innerHTML = '<i class="fas fa-circle"></i> Còn món';
                     } else {
-                        card.classList.add('unavailable');
-                        badge.className = 'status-badge unavailable';
-                        badge.textContent = 'Hết món';
-                        toggleInfo.innerHTML = '<div class="toggle-icon off"><i class="fas fa-times"></i></div><span class="toggle-text off">Hết món</span>';
+                        row.classList.add('unavailable');
+                        statusPill.className = 'status-pill unavailable';
+                        statusPill.innerHTML = '<i class="fas fa-circle"></i> Hết món';
                     }
                     
                     showToast(status ? 'Đã đánh dấu còn món' : 'Đã đánh dấu hết món', 'success');
@@ -590,8 +717,24 @@ $unavailable = $total - $available;
             const count = checkboxes.length;
             
             document.getElementById('selectedCount').textContent = 'Đã chọn: ' + count;
-            document.getElementById('btnAvailable').disabled = count === 0;
-            document.getElementById('btnUnavailable').disabled = count === 0;
+            
+            const btnAvailable = document.getElementById('btnAvailable');
+            const btnUnavailable = document.getElementById('btnUnavailable');
+            
+            btnAvailable.disabled = count === 0;
+            btnUnavailable.disabled = count === 0;
+            btnAvailable.style.opacity = count === 0 ? '0.5' : '1';
+            btnUnavailable.style.opacity = count === 0 ? '0.5' : '1';
+            btnAvailable.style.cursor = count === 0 ? 'not-allowed' : 'pointer';
+            btnUnavailable.style.cursor = count === 0 ? 'not-allowed' : 'pointer';
+            
+            // Update select all checkbox
+            const allCheckboxes = document.querySelectorAll('.item-checkbox');
+            const selectAll = document.getElementById('selectAll');
+            if (selectAll) {
+                selectAll.checked = count === allCheckboxes.length && count > 0;
+                selectAll.indeterminate = count > 0 && count < allCheckboxes.length;
+            }
         }
         
         async function bulkUpdate(status) {

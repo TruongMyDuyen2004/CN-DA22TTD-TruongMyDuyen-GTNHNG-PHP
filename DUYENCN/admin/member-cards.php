@@ -119,6 +119,8 @@ $stats = $conn->query("
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quản lý Thẻ Thành Viên - Admin</title>
+    <link rel="icon" type="image/jpeg" href="../assets/images/logo.jpg">
+    <link rel="shortcut icon" type="image/jpeg" href="../assets/images/logo.jpg">
     <link rel="stylesheet" href="../assets/css/admin-dark-modern.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>

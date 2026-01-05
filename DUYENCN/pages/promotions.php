@@ -43,8 +43,25 @@ try {
     $conn->exec("ALTER TABLE restaurant_promotions ADD COLUMN combo_price DECIMAL(10,0) DEFAULT NULL");
 }
 
-// Lấy danh sách khuyến mãi - Chỉ lấy combo
+// ========== PHÂN TRANG ==========
+$items_per_page = 6;
+$current_page = isset($_GET['pg']) ? max(1, intval($_GET['pg'])) : 1;
+$offset = ($current_page - 1) * $items_per_page;
+
+// Đếm tổng số combo
 $now = date('Y-m-d');
+$count_stmt = $conn->prepare("
+    SELECT COUNT(*) FROM restaurant_promotions 
+    WHERE is_active = 1 
+    AND promo_type = 'combo'
+    AND (start_date IS NULL OR start_date <= ?)
+    AND (end_date IS NULL OR end_date >= ?)
+");
+$count_stmt->execute([$now, $now]);
+$total_items = $count_stmt->fetchColumn();
+$total_pages = ceil($total_items / $items_per_page);
+
+// Lấy danh sách khuyến mãi - Chỉ lấy combo với phân trang
 $stmt = $conn->prepare("
     SELECT * FROM restaurant_promotions 
     WHERE is_active = 1 
@@ -52,8 +69,13 @@ $stmt = $conn->prepare("
     AND (start_date IS NULL OR start_date <= ?)
     AND (end_date IS NULL OR end_date >= ?)
     ORDER BY is_featured DESC, display_order ASC
+    LIMIT ? OFFSET ?
 ");
-$stmt->execute([$now, $now]);
+$stmt->bindValue(1, $now, PDO::PARAM_STR);
+$stmt->bindValue(2, $now, PDO::PARAM_STR);
+$stmt->bindValue(3, $items_per_page, PDO::PARAM_INT);
+$stmt->bindValue(4, $offset, PDO::PARAM_INT);
+$stmt->execute();
 $promotions = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 // Icon theo loại
@@ -208,6 +230,11 @@ foreach ($promotions as $promo) {
                         <?php endif; ?>
                         
                         <?php if ($is_combo && $has_combo_items): ?>
+                        <!-- Hiển thị mô tả combo -->
+                        <?php if ($desc): ?>
+                        <p class="combo-description"><?php echo htmlspecialchars($desc); ?></p>
+                        <?php endif; ?>
+                        
                         <!-- Hiển thị giá combo -->
                         <div class="combo-price-display">
                             <?php if ($combo_total > $combo_price): ?>
@@ -220,6 +247,11 @@ foreach ($promotions as $promo) {
                             <i class="fas fa-utensils"></i>
                             <?php echo count($combo_items[$promo['id']]); ?> <?php echo $current_lang === 'en' ? 'items' : 'món'; ?>
                         </div>
+                        <?php elseif ($is_combo): ?>
+                        <!-- Combo không có items - vẫn hiển thị mô tả -->
+                        <?php if ($desc): ?>
+                        <p class="combo-description"><?php echo htmlspecialchars($desc); ?></p>
+                        <?php endif; ?>
                         <?php else: ?>
                         <p><?php echo htmlspecialchars($desc); ?></p>
                         <?php endif; ?>
@@ -251,6 +283,50 @@ foreach ($promotions as $promo) {
             <?php endif; ?>
             <?php endforeach; ?>
         </div>
+        
+        <!-- Phân trang -->
+        <?php if ($total_pages > 1): ?>
+        <div class="promo-pagination">
+            <?php if ($current_page > 1): ?>
+            <a href="?page=promotions&pg=<?php echo $current_page - 1; ?>" class="pagination-btn prev">
+                <i class="fas fa-chevron-left"></i>
+            </a>
+            <?php endif; ?>
+            
+            <div class="pagination-numbers">
+                <?php 
+                $start_page = max(1, $current_page - 2);
+                $end_page = min($total_pages, $current_page + 2);
+                
+                if ($start_page > 1): ?>
+                    <a href="?page=promotions&pg=1" class="pagination-num">1</a>
+                    <?php if ($start_page > 2): ?>
+                    <span class="pagination-dots">...</span>
+                    <?php endif; ?>
+                <?php endif; ?>
+                
+                <?php for ($i = $start_page; $i <= $end_page; $i++): ?>
+                <a href="?page=promotions&pg=<?php echo $i; ?>" 
+                   class="pagination-num <?php echo $i == $current_page ? 'active' : ''; ?>">
+                    <?php echo $i; ?>
+                </a>
+                <?php endfor; ?>
+                
+                <?php if ($end_page < $total_pages): ?>
+                    <?php if ($end_page < $total_pages - 1): ?>
+                    <span class="pagination-dots">...</span>
+                    <?php endif; ?>
+                    <a href="?page=promotions&pg=<?php echo $total_pages; ?>" class="pagination-num"><?php echo $total_pages; ?></a>
+                <?php endif; ?>
+            </div>
+            
+            <?php if ($current_page < $total_pages): ?>
+            <a href="?page=promotions&pg=<?php echo $current_page + 1; ?>" class="pagination-btn next">
+                <i class="fas fa-chevron-right"></i>
+            </a>
+            <?php endif; ?>
+        </div>
+        <?php endif; ?>
         
         <?php endif; ?>
         
@@ -306,6 +382,18 @@ foreach ($promotions as $promo) {
 
 .promo-empty p {
     color: #6b7280;
+}
+
+/* Combo Description */
+.combo-description {
+    color: #4b5563;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    margin-bottom: 0.75rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
 }
 
 /* Combo Price Display */
@@ -617,6 +705,106 @@ body.dark-theme .promo-empty p {
 
 body.dark-theme .promo-time {
     color: #9ca3af;
+}
+
+/* Pagination Styles */
+.promo-pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    margin: 2.5rem 0 1rem;
+}
+
+.pagination-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    background: #ffffff;
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    color: #64748b;
+    text-decoration: none;
+    font-size: 1rem;
+    transition: all 0.2s ease;
+}
+
+.pagination-btn:hover {
+    background: #22c55e;
+    border-color: #22c55e;
+    color: #ffffff;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3);
+}
+
+.pagination-numbers {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+}
+
+.pagination-num {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 44px;
+    height: 44px;
+    padding: 0 0.75rem;
+    background: #ffffff;
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    color: #475569;
+    text-decoration: none;
+    font-size: 1rem;
+    font-weight: 600;
+    transition: all 0.2s ease;
+}
+
+.pagination-num:hover {
+    border-color: #22c55e;
+    color: #22c55e;
+}
+
+.pagination-num.active {
+    background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+    border-color: #22c55e;
+    color: #ffffff;
+    box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3);
+}
+
+.pagination-dots {
+    color: #94a3b8;
+    padding: 0 0.25rem;
+    font-weight: 600;
+}
+
+.pagination-info {
+    text-align: center;
+    color: #64748b;
+    font-size: 0.9rem;
+    margin-bottom: 2rem;
+}
+
+.pagination-info strong {
+    color: #22c55e;
+    font-weight: 700;
+}
+
+@media (max-width: 640px) {
+    .promo-pagination {
+        gap: 0.25rem;
+    }
+    
+    .pagination-btn,
+    .pagination-num {
+        width: 38px;
+        height: 38px;
+        min-width: 38px;
+        font-size: 0.9rem;
+        border-radius: 10px;
+    }
 }
 </style>
 

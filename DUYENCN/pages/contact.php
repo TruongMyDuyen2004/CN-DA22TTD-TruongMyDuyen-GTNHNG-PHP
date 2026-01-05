@@ -114,16 +114,17 @@ $current_lang = getCurrentLanguage();
                         <div class="info-icon"><i class="fas fa-clock"></i></div>
                         <div class="info-text">
                             <strong><?php echo $current_lang === 'en' ? 'Hours' : 'Giờ mở cửa'; ?></strong>
-                            <span>10:00 - 22:00 (<?php echo $current_lang === 'en' ? 'Daily' : 'Hàng ngày'; ?>)</span>
+                            <span><?php echo $current_lang === 'en' ? 'Mon - Fri' : 'Thứ 2 - Thứ 6'; ?>: 10:00 - 22:00</span>
+                            <span><?php echo $current_lang === 'en' ? 'Sat - Sun' : 'Thứ 7 - Chủ nhật'; ?>: 09:00 - 23:00</span>
                         </div>
                     </div>
                 </div>
 
                 <div class="social-links">
-                    <a href="#" title="Facebook"><i class="fab fa-facebook-f"></i></a>
-                    <a href="#" title="Instagram"><i class="fab fa-instagram"></i></a>
-                    <a href="#" title="YouTube"><i class="fab fa-youtube"></i></a>
-                    <a href="#" title="TikTok"><i class="fab fa-tiktok"></i></a>
+                    <a href="https://www.facebook.com/ngongallery" target="_blank" rel="noopener" title="Facebook"><i class="fab fa-facebook-f"></i></a>
+                    <a href="https://www.instagram.com/ngongallery" target="_blank" rel="noopener" title="Instagram"><i class="fab fa-instagram"></i></a>
+                    <a href="https://www.youtube.com/@ngongallery" target="_blank" rel="noopener" title="YouTube"><i class="fab fa-youtube"></i></a>
+                    <a href="https://www.tiktok.com/@ngongallery" target="_blank" rel="noopener" title="TikTok"><i class="fab fa-tiktok"></i></a>
                 </div>
             </div>
 
@@ -337,32 +338,37 @@ $current_lang = getCurrentLanguage();
     transform: translateX(8px);
 }
 
-.info-icon {
+.contact-info-card .info-icon {
     width: 56px;
     height: 56px;
     min-width: 56px;
-    background: rgba(34, 197, 94, 0.1);
+    background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%) !important;
+    -webkit-background-clip: unset !important;
+    -webkit-text-fill-color: unset !important;
+    background-clip: unset !important;
     border-radius: 16px;
     display: flex;
     align-items: center;
     justify-content: center;
     transition: all 0.3s ease;
-    border: 2px solid rgba(34, 197, 94, 0.2);
+    border: none;
+    box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3);
 }
 
-.info-icon i {
+.contact-info-card .info-icon i {
     font-size: 1.4rem;
-    color: #22c55e;
+    color: #ffffff !important;
+    -webkit-text-fill-color: #ffffff !important;
 }
 
-.info-item:hover .info-icon {
-    background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
-    border-color: #22c55e;
-    transform: scale(1.05);
+.contact-info-card .info-item:hover .info-icon {
+    background: linear-gradient(135deg, #16a34a 0%, #15803d 100%) !important;
+    transform: scale(1.08);
+    box-shadow: 0 6px 16px rgba(34, 197, 94, 0.4);
 }
 
-.info-item:hover .info-icon i {
-    color: #ffffff;
+.contact-info-card .info-item:hover .info-icon i {
+    color: #ffffff !important;
 }
 
 .info-text {
@@ -392,23 +398,24 @@ $current_lang = getCurrentLanguage();
     gap: 1rem;
     margin-top: 2rem;
     padding-top: 2rem;
-    border-top: 2px solid #e5e7eb;
+    border-top: 2px solid #bbf7d0;
     justify-content: center;
 }
 
 .social-links a {
-    width: 48px;
-    height: 48px;
-    background: #f9fafb;
-    border: 2px solid #e5e7eb;
+    width: 50px;
+    height: 50px;
+    background: #ffffff;
+    border: 2px solid #22c55e;
     border-radius: 14px;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #6b7280;
+    color: #22c55e;
     text-decoration: none;
-    font-size: 1.2rem;
+    font-size: 1.3rem;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 2px 8px rgba(34, 197, 94, 0.15);
 }
 
 .social-links a:hover {

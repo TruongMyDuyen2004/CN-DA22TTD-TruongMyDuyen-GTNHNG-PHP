@@ -2,7 +2,6 @@
 session_start();
 require_once '../config/database.php';
 
-// Kiểm tra đăng nhập
 if (!isset($_SESSION['admin_id'])) {
     header('Location: login.php');
     exit;
@@ -11,645 +10,364 @@ if (!isset($_SESSION['admin_id'])) {
 $db = new Database();
 $conn = $db->connect();
 
-// Dashboard chỉ hiển thị thống kê tổng quan, không xử lý actions
+// Thống kê
+$total_orders = $conn->query("SELECT COUNT(*) FROM orders")->fetchColumn();
+$pending_orders = $conn->query("SELECT COUNT(*) FROM orders WHERE status = 'pending'")->fetchColumn();
+$total_reservations = $conn->query("SELECT COUNT(*) FROM reservations")->fetchColumn();
+$pending_reservations = $conn->query("SELECT COUNT(*) FROM reservations WHERE status = 'pending'")->fetchColumn();
+$total_customers = $conn->query("SELECT COUNT(*) FROM customers")->fetchColumn();
+$total_items = $conn->query("SELECT COUNT(*) FROM menu_items")->fetchColumn();
 
-// Lấy thống kê tổng quan
-$stmt = $conn->query("SELECT COUNT(*) as total FROM reservations WHERE status = 'pending'");
-$pending_reservations = $stmt->fetch(PDO::FETCH_ASSOC)['total'];
+// Doanh thu
+$today_revenue = $conn->query("SELECT COALESCE(SUM(total_amount), 0) FROM orders WHERE DATE(created_at) = CURDATE() AND status != 'cancelled'")->fetchColumn();
+$month_revenue = $conn->query("SELECT COALESCE(SUM(total_amount), 0) FROM orders WHERE MONTH(created_at) = MONTH(CURDATE()) AND YEAR(created_at) = YEAR(CURDATE()) AND status != 'cancelled'")->fetchColumn();
 
-$stmt = $conn->query("SELECT COUNT(*) as total FROM reservations");
-$total_reservations = $stmt->fetch(PDO::FETCH_ASSOC)['total'];
-
-$stmt = $conn->query("SELECT COUNT(*) as total FROM contacts WHERE status = 'new'");
-$new_contacts = $stmt->fetch(PDO::FETCH_ASSOC)['total'];
-
-$stmt = $conn->query("SELECT COUNT(*) as total FROM contacts");
-$total_contacts = $stmt->fetch(PDO::FETCH_ASSOC)['total'];
-
-$stmt = $conn->query("SELECT COUNT(*) as total FROM menu_items");
-$total_items = $stmt->fetch(PDO::FETCH_ASSOC)['total'];
-
-$stmt = $conn->query("SELECT COUNT(*) as total FROM orders WHERE status = 'pending'");
-$pending_orders = $stmt->fetch(PDO::FETCH_ASSOC)['total'];
-
-$stmt = $conn->query("SELECT COUNT(*) as total FROM orders");
-$total_orders = $stmt->fetch(PDO::FETCH_ASSOC)['total'];
-
-$stmt = $conn->query("SELECT COUNT(*) as total FROM customers");
-$total_customers = $stmt->fetch(PDO::FETCH_ASSOC)['total'];
-
-// Thống kê doanh thu hôm nay
-$stmt = $conn->query("SELECT COALESCE(SUM(total_amount), 0) as revenue FROM orders WHERE DATE(created_at) = CURDATE() AND status != 'cancelled'");
-$today_revenue = $stmt->fetch(PDO::FETCH_ASSOC)['revenue'];
-
-// Thống kê doanh thu 7 ngày gần nhất cho biểu đồ
+// Dữ liệu biểu đồ
 $revenue_7days = [];
+$orders_7days = [];
 $labels_7days = [];
 for ($i = 6; $i >= 0; $i--) {
     $date = date('Y-m-d', strtotime("-$i days"));
-    $label = date('d/m', strtotime("-$i days"));
-    $labels_7days[] = $label;
-    
-    $stmt = $conn->prepare("SELECT COALESCE(SUM(total_amount), 0) as revenue FROM orders WHERE DATE(created_at) = ? AND status != 'cancelled'");
+    $labels_7days[] = date('d/m', strtotime("-$i days"));
+    $stmt = $conn->prepare("SELECT COALESCE(SUM(total_amount), 0) FROM orders WHERE DATE(created_at) = ? AND status != 'cancelled'");
     $stmt->execute([$date]);
-    $revenue_7days[] = (int)$stmt->fetch(PDO::FETCH_ASSOC)['revenue'];
+    $revenue_7days[] = (int)$stmt->fetchColumn();
+    $stmt = $conn->prepare("SELECT COUNT(*) FROM orders WHERE DATE(created_at) = ?");
+    $stmt->execute([$date]);
+    $orders_7days[] = (int)$stmt->fetchColumn();
 }
 
-// Thống kê đơn hàng 7 ngày gần nhất
-$orders_7days = [];
-for ($i = 6; $i >= 0; $i--) {
-    $date = date('Y-m-d', strtotime("-$i days"));
-    $stmt = $conn->prepare("SELECT COUNT(*) as total FROM orders WHERE DATE(created_at) = ?");
-    $stmt->execute([$date]);
-    $orders_7days[] = (int)$stmt->fetch(PDO::FETCH_ASSOC)['total'];
-}
-
-// Thống kê trạng thái đơn hàng cho biểu đồ tròn
-$stmt = $conn->query("SELECT status, COUNT(*) as count FROM orders GROUP BY status");
 $order_status = [];
+$stmt = $conn->query("SELECT status, COUNT(*) as count FROM orders GROUP BY status");
 while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $order_status[$row['status']] = (int)$row['count'];
 }
 
-// Thống kê top 5 món ăn bán chạy
-$stmt = $conn->query("
-    SELECT mi.name, SUM(oi.quantity) as total_sold 
-    FROM order_items oi 
-    JOIN menu_items mi ON oi.menu_item_id = mi.id 
-    JOIN orders o ON oi.order_id = o.id 
-    WHERE o.status != 'cancelled'
-    GROUP BY mi.id, mi.name 
-    ORDER BY total_sold DESC 
-    LIMIT 5
-");
-$top_dishes = $stmt->fetchAll(PDO::FETCH_ASSOC);
+$top_dishes = $conn->query("SELECT mi.name, SUM(oi.quantity) as total_sold FROM order_items oi JOIN menu_items mi ON oi.menu_item_id = mi.id JOIN orders o ON oi.order_id = o.id WHERE o.status != 'cancelled' GROUP BY mi.id, mi.name ORDER BY total_sold DESC LIMIT 5")->fetchAll(PDO::FETCH_ASSOC);
 ?>
 <!DOCTYPE html>
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard - Ngon Gallery Admin</title>
+    <title>Dashboard - Admin</title>
+    <link rel="icon" type="image/jpeg" href="../assets/images/logo.jpg">
     <link rel="stylesheet" href="../assets/css/admin-dark-modern.css">
-    <link rel="stylesheet" href="../assets/css/admin-green-override.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+    .db-page { padding: 24px; background: #f8fafc; min-height: 100vh; max-width: 1400px; margin: 0 auto; }
+    
+    /* Header */
+    .db-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+    .db-header h1 { font-size: 28px; font-weight: 700; color: #1e293b; margin: 0; display: flex; align-items: center; gap: 12px; }
+    .db-header h1 i { color: #22c55e; }
+    .btn-site { background: #22c55e; color: #ffffff !important; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: 700; font-size: 15px; display: flex; align-items: center; gap: 10px; box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3); }
+    .btn-site:hover { background: #16a34a; box-shadow: 0 6px 16px rgba(34, 197, 94, 0.4); transform: translateY(-2px); }
+
+    /* Stats Grid */
+    .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-bottom: 28px; }
+    .stat-card { 
+        background: white; 
+        border-radius: 16px; 
+        padding: 28px 20px; 
+        box-shadow: 0 2px 8px rgba(0,0,0,0.06); 
+        text-decoration: none; 
+        transition: all 0.3s ease; 
+        border: 1px solid #e5e7eb;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        min-height: 180px;
+    }
+    .stat-card:hover { 
+        transform: translateY(-4px); 
+        box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+        border-color: transparent;
+    }
+    .stat-card .icon { 
+        width: 56px !important; 
+        height: 56px !important; 
+        min-width: 56px !important;
+        max-width: 56px !important;
+        border-radius: 14px; 
+        display: flex; 
+        align-items: center; 
+        justify-content: center; 
+        font-size: 24px !important; 
+        color: white;
+        margin: 0 auto 16px auto;
+        flex-shrink: 0;
+    }
+    .stat-card .icon i {
+        font-size: 24px !important;
+    }
+    .stat-card h3 { 
+        font-size: 36px !important; 
+        font-weight: 800; 
+        color: #1e293b; 
+        margin: 0 !important;
+        line-height: 1;
+        width: 100%;
+        text-align: center !important;
+    }
+    .stat-card p { 
+        color: #64748b; 
+        font-size: 14px !important; 
+        margin: 8px 0 0 !important; 
+        font-weight: 600; 
+        width: 100%;
+        text-align: center !important;
+    }
+    .stat-card .badge { 
+        background: #fef3c7; 
+        color: #d97706; 
+        font-size: 12px; 
+        font-weight: 700; 
+        padding: 5px 14px; 
+        border-radius: 20px; 
+        margin-top: 14px;
+    }
+    .stat-card .badge-placeholder {
+        height: 26px;
+        margin-top: 14px;
+    }
+    
+    .stat-card.green .icon { background: linear-gradient(135deg, #22c55e, #16a34a); }
+    .stat-card.green:hover { border-color: #22c55e; }
+    .stat-card.orange .icon { background: linear-gradient(135deg, #f59e0b, #d97706); }
+    .stat-card.orange:hover { border-color: #f59e0b; }
+    .stat-card.purple .icon { background: linear-gradient(135deg, #8b5cf6, #7c3aed); }
+    .stat-card.purple:hover { border-color: #8b5cf6; }
+    .stat-card.blue .icon { background: linear-gradient(135deg, #3b82f6, #2563eb); }
+    .stat-card.blue:hover { border-color: #3b82f6; }
+
+    /* Revenue - Hiện đại */
+    .revenue-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; margin-bottom: 28px; }
+    .revenue-card { 
+        border-radius: 16px; 
+        padding: 28px 32px; 
+        display: flex; 
+        align-items: center; 
+        gap: 24px;
+        position: relative;
+        overflow: hidden;
+        transition: all 0.3s ease;
+    }
+    .revenue-card:hover { transform: translateY(-4px); }
+    .revenue-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+        opacity: 0.1;
+        transform: translate(30%, -30%);
+    }
+    .revenue-card .icon { 
+        width: 64px; 
+        height: 64px; 
+        border-radius: 16px; 
+        display: flex; 
+        align-items: center; 
+        justify-content: center; 
+        font-size: 28px; 
+        color: white;
+        flex-shrink: 0;
+    }
+    .revenue-card .info { position: relative; z-index: 1; }
+    .revenue-card .label { font-size: 14px; font-weight: 600; margin-bottom: 8px; }
+    .revenue-card .value { font-size: 32px; font-weight: 800; letter-spacing: -0.5px; }
+    
+    .revenue-card.today { 
+        background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+        box-shadow: 0 10px 30px rgba(34, 197, 94, 0.3);
+    }
+    .revenue-card.today::before { background: white; }
+    .revenue-card.today .icon { background: rgba(255,255,255,0.2); }
+    .revenue-card.today .label { color: rgba(255,255,255,0.85); }
+    .revenue-card.today .value { color: white; }
+    
+    .revenue-card.month { 
+        background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+        box-shadow: 0 10px 30px rgba(59, 130, 246, 0.3);
+    }
+    .revenue-card.month::before { background: white; }
+    .revenue-card.month .icon { background: rgba(255,255,255,0.2); }
+    .revenue-card.month .label { color: rgba(255,255,255,0.85); }
+    .revenue-card.month .value { color: white; }
+
+    /* Charts */
+    .charts-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+    .chart-card { background: white; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); overflow: hidden; }
+    .chart-card .head { padding: 16px 20px; border-bottom: 1px solid #f1f5f9; display: flex; align-items: center; gap: 10px; }
+    .chart-card .head i { color: #22c55e; }
+    .chart-card .head h3 { font-size: 15px; font-weight: 600; color: #1e293b; margin: 0; }
+    .chart-card .body { padding: 20px; height: 300px; }
+
+    @media (max-width: 1200px) { .stats-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 768px) { .stats-grid, .revenue-grid, .charts-grid { grid-template-columns: 1fr; } }
+    </style>
 </head>
 <body>
     <?php include 'includes/sidebar.php'; ?>
-    
     <div class="main-content">
-        <div class="page-header">
-            <h1>
-                <i class="fas fa-chart-line"></i>
-                Dashboard
-            </h1>
-            <div class="header-actions">
-                <a href="../index.php" target="_blank" class="btn btn-secondary">
-                    <i class="fas fa-external-link-alt"></i>
-                    Xem Website
-                </a>
+        <div class="db-page">
+            <div class="db-header">
+                <h1><i class="fas fa-chart-line"></i> Dashboard</h1>
+                <a href="../index.php" target="_blank" class="btn-site"><i class="fas fa-external-link-alt"></i> Xem Website</a>
             </div>
-        </div>
-        
-        <!-- Charts Section - Đầu trang -->
-        <div class="charts-grid">
-            <!-- Biểu đồ doanh thu 7 ngày -->
-            <div class="card chart-card">
-                <div class="card-header">
-                    <h3>
-                        <i class="fas fa-chart-area"></i>
-                        Doanh thu 7 ngày gần nhất
-                    </h3>
-                </div>
-                <div class="card-body">
-                    <canvas id="revenueChart"></canvas>
-                </div>
-            </div>
-            
-            <!-- Biểu đồ đơn hàng 7 ngày -->
-            <div class="card chart-card">
-                <div class="card-header">
-                    <h3>
-                        <i class="fas fa-chart-bar"></i>
-                        Đơn hàng 7 ngày gần nhất
-                    </h3>
-                </div>
-                <div class="card-body">
-                    <canvas id="ordersChart"></canvas>
-                </div>
-            </div>
-            
-            <!-- Biểu đồ trạng thái đơn hàng -->
-            <div class="card chart-card">
-                <div class="card-header">
-                    <h3>
-                        <i class="fas fa-chart-pie"></i>
-                        Trạng thái đơn hàng
-                    </h3>
-                </div>
-                <div class="card-body">
-                    <canvas id="statusChart"></canvas>
-                </div>
-            </div>
-            
-            <!-- Top món ăn bán chạy -->
-            <div class="card chart-card">
-                <div class="card-header">
-                    <h3>
-                        <i class="fas fa-trophy"></i>
-                        Top 5 món bán chạy
-                    </h3>
-                </div>
-                <div class="card-body">
-                    <canvas id="topDishesChart"></canvas>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Stats Grid - Style giống trang giảm giá -->
-        <div style="display: grid; grid-template-columns: repeat(6, 1fr); gap: 1.25rem; margin-bottom: 1.5rem;">
-            <!-- Đơn hàng -->
-            <a href="orders.php" style="text-decoration: none;">
-                <div style="background: white; border-radius: 14px; padding: 1.25rem 1.5rem; box-shadow: 0 4px 12px rgba(0,0,0,0.08); display: flex; align-items: center; gap: 1.25rem; border: 2px solid #d1d5db; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 20px rgba(0,0,0,0.12)'; this.style.borderColor='#22c55e';" onmouseout="this.style.transform='none'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.08)'; this.style.borderColor='#d1d5db';">
-                    <div style="width: 56px; height: 56px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; color: white; background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%); flex-shrink: 0;">
-                        <i class="fas fa-shopping-cart"></i>
-                    </div>
-                    <div>
-                        <h3 style="font-size: 1.75rem; font-weight: 800; color: #1f2937; margin: 0; line-height: 1;"><?php echo $total_orders; ?></h3>
-                        <p style="color: #6b7280; margin: 0.25rem 0 0; font-size: 0.85rem; font-weight: 500;">Tổng đơn hàng</p>
-                    </div>
-                </div>
-            </a>
-            
-            <!-- Đặt bàn -->
-            <a href="reservations.php" style="text-decoration: none;">
-                <div style="background: white; border-radius: 14px; padding: 1.25rem 1.5rem; box-shadow: 0 4px 12px rgba(0,0,0,0.08); display: flex; align-items: center; gap: 1.25rem; border: 2px solid #d1d5db; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 20px rgba(0,0,0,0.12)'; this.style.borderColor='#f59e0b';" onmouseout="this.style.transform='none'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.08)'; this.style.borderColor='#d1d5db';">
-                    <div style="width: 56px; height: 56px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; color: white; background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); flex-shrink: 0;">
-                        <i class="fas fa-calendar-check"></i>
-                    </div>
-                    <div>
-                        <h3 style="font-size: 1.75rem; font-weight: 800; color: #1f2937; margin: 0; line-height: 1;"><?php echo $total_reservations; ?></h3>
-                        <p style="color: #6b7280; margin: 0.25rem 0 0; font-size: 0.85rem; font-weight: 500;">Tổng đặt bàn</p>
-                    </div>
-                </div>
-            </a>
-            
-            <!-- Liên hệ -->
-            <a href="contacts.php" style="text-decoration: none;">
-                <div style="background: white; border-radius: 14px; padding: 1.25rem 1.5rem; box-shadow: 0 4px 12px rgba(0,0,0,0.08); display: flex; align-items: center; gap: 1.25rem; border: 2px solid #d1d5db; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 20px rgba(0,0,0,0.12)'; this.style.borderColor='#ef4444';" onmouseout="this.style.transform='none'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.08)'; this.style.borderColor='#d1d5db';">
-                    <div style="width: 56px; height: 56px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; color: white; background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); flex-shrink: 0;">
-                        <i class="fas fa-envelope"></i>
-                    </div>
-                    <div>
-                        <h3 style="font-size: 1.75rem; font-weight: 800; color: #1f2937; margin: 0; line-height: 1;"><?php echo $total_contacts; ?></h3>
-                        <p style="color: #6b7280; margin: 0.25rem 0 0; font-size: 0.85rem; font-weight: 500;">Tổng liên hệ</p>
-                    </div>
-                </div>
-            </a>
-            
-            <!-- Khách hàng -->
-            <a href="customers.php" style="text-decoration: none;">
-                <div style="background: white; border-radius: 14px; padding: 1.25rem 1.5rem; box-shadow: 0 4px 12px rgba(0,0,0,0.08); display: flex; align-items: center; gap: 1.25rem; border: 2px solid #d1d5db; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 20px rgba(0,0,0,0.12)'; this.style.borderColor='#8b5cf6';" onmouseout="this.style.transform='none'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.08)'; this.style.borderColor='#d1d5db';">
-                    <div style="width: 56px; height: 56px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; color: white; background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); flex-shrink: 0;">
-                        <i class="fas fa-users"></i>
-                    </div>
-                    <div>
-                        <h3 style="font-size: 1.75rem; font-weight: 800; color: #1f2937; margin: 0; line-height: 1;"><?php echo $total_customers; ?></h3>
-                        <p style="color: #6b7280; margin: 0.25rem 0 0; font-size: 0.85rem; font-weight: 500;">Khách hàng</p>
-                    </div>
-                </div>
-            </a>
-            
-            <!-- Thực đơn -->
-            <a href="menu-manage.php" style="text-decoration: none;">
-                <div style="background: white; border-radius: 14px; padding: 1.25rem 1.5rem; box-shadow: 0 4px 12px rgba(0,0,0,0.08); display: flex; align-items: center; gap: 1.25rem; border: 2px solid #d1d5db; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 20px rgba(0,0,0,0.12)'; this.style.borderColor='#3b82f6';" onmouseout="this.style.transform='none'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.08)'; this.style.borderColor='#d1d5db';">
-                    <div style="width: 56px; height: 56px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; color: white; background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%); flex-shrink: 0;">
-                        <i class="fas fa-utensils"></i>
-                    </div>
-                    <div>
-                        <h3 style="font-size: 1.75rem; font-weight: 800; color: #1f2937; margin: 0; line-height: 1;"><?php echo $total_items; ?></h3>
-                        <p style="color: #6b7280; margin: 0.25rem 0 0; font-size: 0.85rem; font-weight: 500;">Món ăn</p>
-                    </div>
-                </div>
-            </a>
-            
-            <!-- Doanh thu hôm nay -->
-            <div style="background: white; border-radius: 14px; padding: 1.25rem 1.5rem; box-shadow: 0 4px 12px rgba(0,0,0,0.08); display: flex; align-items: center; gap: 1.25rem; border: 2px solid #d1d5db; transition: all 0.2s;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 20px rgba(0,0,0,0.12)'; this.style.borderColor='#10b981';" onmouseout="this.style.transform='none'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.08)'; this.style.borderColor='#d1d5db';">
-                <div style="width: 56px; height: 56px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; color: white; background: linear-gradient(135deg, #10b981 0%, #059669 100%); flex-shrink: 0;">
-                    <i class="fas fa-dollar-sign"></i>
-                </div>
-                <div>
-                    <h3 style="font-size: 1.5rem; font-weight: 800; color: #1f2937; margin: 0; line-height: 1;"><?php echo number_format($today_revenue); ?>đ</h3>
-                    <p style="color: #6b7280; margin: 0.25rem 0 0; font-size: 0.85rem; font-weight: 500;">Doanh thu hôm nay</p>
-                </div>
-            </div>
-        </div>
-        
-        <?php if (isset($dashboard_message) && $dashboard_message): ?>
-        <div class="alert alert-success">
-            <i class="fas fa-check-circle"></i>
-            <?php echo htmlspecialchars($dashboard_message); ?>
-        </div>
-        <?php endif; ?>
 
-        <!-- Quick Actions -->
-        <div class="card">
-            <div class="card-header">
-                <h3>
-                    <i class="fas fa-bolt"></i>
-                    Thao tác nhanh
-                </h3>
+            <!-- Revenue Cards - Đầu trang -->
+            <div class="revenue-grid">
+                <div class="revenue-card today">
+                    <div class="icon"><i class="fas fa-coins"></i></div>
+                    <div class="info">
+                        <div class="label">Doanh thu hôm nay</div>
+                        <div class="value"><?= number_format($today_revenue) ?>đ</div>
+                    </div>
+                </div>
+                <div class="revenue-card month">
+                    <div class="icon"><i class="fas fa-chart-line"></i></div>
+                    <div class="info">
+                        <div class="label">Doanh thu tháng này</div>
+                        <div class="value"><?= number_format($month_revenue) ?>đ</div>
+                    </div>
+                </div>
             </div>
-            <div class="quick-actions-grid">
-                <a href="orders.php" class="quick-action-btn">
-                    <i class="fas fa-shopping-cart"></i>
-                    <span>Quản lý đơn hàng</span>
+
+            <!-- Stats Cards -->
+            <div class="stats-grid">
+                <a href="orders.php" class="stat-card green">
+                    <div class="icon"><i class="fas fa-shopping-cart"></i></div>
+                    <h3><?= $total_orders ?></h3>
+                    <p>Đơn hàng</p>
+                    <?php if($pending_orders > 0): ?><span class="badge"><?= $pending_orders ?> chờ xử lý</span><?php else: ?><span class="badge-placeholder"></span><?php endif; ?>
                 </a>
-                <a href="reservations.php" class="quick-action-btn">
-                    <i class="fas fa-calendar-alt"></i>
-                    <span>Quản lý đặt bàn</span>
+                <a href="reservations.php" class="stat-card orange">
+                    <div class="icon"><i class="fas fa-calendar-check"></i></div>
+                    <h3><?= $total_reservations ?></h3>
+                    <p>Đặt bàn</p>
+                    <?php if($pending_reservations > 0): ?><span class="badge"><?= $pending_reservations ?> chờ xử lý</span><?php else: ?><span class="badge-placeholder"></span><?php endif; ?>
                 </a>
-                <a href="contacts.php" class="quick-action-btn">
-                    <i class="fas fa-envelope"></i>
-                    <span>Quản lý liên hệ</span>
+                <a href="customers.php" class="stat-card purple">
+                    <div class="icon"><i class="fas fa-users"></i></div>
+                    <h3><?= $total_customers ?></h3>
+                    <p>Khách hàng</p>
+                    <span class="badge-placeholder"></span>
                 </a>
-                <a href="menu-manage.php" class="quick-action-btn">
-                    <i class="fas fa-utensils"></i>
-                    <span>Quản lý thực đơn</span>
-                </a>
-                <a href="customers.php" class="quick-action-btn">
-                    <i class="fas fa-users"></i>
-                    <span>Quản lý khách hàng</span>
-                </a>
-                <a href="reviews.php" class="quick-action-btn">
-                    <i class="fas fa-star"></i>
-                    <span>Quản lý đánh giá</span>
+                <a href="menu-manage.php" class="stat-card blue">
+                    <div class="icon"><i class="fas fa-utensils"></i></div>
+                    <h3><?= $total_items ?></h3>
+                    <p>Món ăn</p>
+                    <span class="badge-placeholder"></span>
                 </a>
             </div>
+
+            <div class="charts-grid">
+                <div class="chart-card">
+                    <div class="head"><i class="fas fa-chart-area"></i><h3>Doanh thu 7 ngày</h3></div>
+                    <div class="body"><canvas id="revenueChart"></canvas></div>
+                </div>
+                <div class="chart-card">
+                    <div class="head"><i class="fas fa-chart-bar"></i><h3>Đơn hàng 7 ngày</h3></div>
+                    <div class="body"><canvas id="ordersChart"></canvas></div>
+                </div>
+                <div class="chart-card">
+                    <div class="head"><i class="fas fa-chart-pie"></i><h3>Trạng thái đơn hàng</h3></div>
+                    <div class="body"><canvas id="statusChart"></canvas></div>
+                </div>
+                <div class="chart-card">
+                    <div class="head"><i class="fas fa-trophy"></i><h3>Top 5 món bán chạy</h3></div>
+                    <div class="body"><canvas id="topDishesChart"></canvas></div>
+                </div>
+            </div>
+        </div>
     </div>
-    
+
     <script>
-    // Cấu hình chung cho Chart.js - Màu đậm và rõ ràng hơn
-    Chart.defaults.font.family = 'Inter, sans-serif';
-    Chart.defaults.font.size = 13;
-    Chart.defaults.font.weight = '500';
-    Chart.defaults.color = '#1f2937';
-    
-    // 1. Biểu đồ doanh thu - Line chart với gradient đậm
-    const revenueCtx = document.getElementById('revenueChart').getContext('2d');
-    const revenueGradient = revenueCtx.createLinearGradient(0, 0, 0, 280);
-    revenueGradient.addColorStop(0, 'rgba(34, 197, 94, 0.4)');
-    revenueGradient.addColorStop(1, 'rgba(34, 197, 94, 0.05)');
-    
-    new Chart(revenueCtx, {
+    Chart.defaults.font.family = 'system-ui, sans-serif';
+    Chart.defaults.color = '#64748b';
+
+    // Revenue Chart
+    new Chart(document.getElementById('revenueChart'), {
         type: 'line',
         data: {
-            labels: <?php echo json_encode($labels_7days); ?>,
+            labels: <?= json_encode($labels_7days) ?>,
             datasets: [{
-                label: 'Doanh thu (VNĐ)',
-                data: <?php echo json_encode($revenue_7days); ?>,
-                borderColor: '#16a34a',
-                backgroundColor: revenueGradient,
-                borderWidth: 4,
+                label: 'Doanh thu',
+                data: <?= json_encode($revenue_7days) ?>,
+                borderColor: '#22c55e',
+                backgroundColor: 'rgba(34,197,94,0.1)',
+                borderWidth: 2,
                 fill: true,
-                tension: 0.4,
-                pointBackgroundColor: '#16a34a',
-                pointBorderColor: '#ffffff',
-                pointBorderWidth: 3,
-                pointRadius: 8,
-                pointHoverRadius: 12,
-                pointHoverBackgroundColor: '#15803d',
-                pointHoverBorderWidth: 4
+                tension: 0.3,
+                pointRadius: 4,
+                pointBackgroundColor: '#22c55e'
             }]
         },
         options: {
             responsive: true,
             maintainAspectRatio: false,
-            plugins: {
-                legend: {
-                    display: true,
-                    position: 'top',
-                    labels: {
-                        color: '#1f2937',
-                        font: { size: 13, weight: '600' },
-                        padding: 20,
-                        usePointStyle: true,
-                        pointStyle: 'rectRounded'
-                    }
-                },
-                tooltip: {
-                    backgroundColor: '#1f2937',
-                    titleColor: '#ffffff',
-                    titleFont: { size: 14, weight: '700' },
-                    bodyColor: '#ffffff',
-                    bodyFont: { size: 13, weight: '500' },
-                    padding: 16,
-                    cornerRadius: 12,
-                    displayColors: false,
-                    callbacks: {
-                        label: function(context) {
-                            return '💰 ' + new Intl.NumberFormat('vi-VN').format(context.raw) + ' VNĐ';
-                        }
-                    }
-                }
-            },
+            plugins: { legend: { display: false } },
             scales: {
-                y: {
-                    beginAtZero: true,
-                    grid: {
-                        color: 'rgba(0, 0, 0, 0.08)',
-                        lineWidth: 1
-                    },
-                    border: {
-                        color: '#e5e7eb',
-                        width: 2
-                    },
-                    ticks: {
-                        color: '#374151',
-                        font: { size: 12, weight: '600' },
-                        padding: 10,
-                        callback: function(value) {
-                            return new Intl.NumberFormat('vi-VN', { notation: 'compact' }).format(value);
-                        }
-                    }
-                },
-                x: {
-                    grid: {
-                        display: false
-                    },
-                    border: {
-                        color: '#e5e7eb',
-                        width: 2
-                    },
-                    ticks: {
-                        color: '#374151',
-                        font: { size: 12, weight: '600' },
-                        padding: 10
-                    }
-                }
+                y: { beginAtZero: true, grid: { color: '#f1f5f9' }, ticks: { callback: v => (v/1000000).toFixed(1) + 'Tr' } },
+                x: { grid: { display: false } }
             }
         }
     });
-    
-    // 2. Biểu đồ đơn hàng - Bar chart với màu gradient
-    const ordersCtx = document.getElementById('ordersChart').getContext('2d');
-    new Chart(ordersCtx, {
+
+    // Orders Chart
+    new Chart(document.getElementById('ordersChart'), {
         type: 'bar',
         data: {
-            labels: <?php echo json_encode($labels_7days); ?>,
-            datasets: [{
-                label: 'Số đơn hàng',
-                data: <?php echo json_encode($orders_7days); ?>,
-                backgroundColor: [
-                    'rgba(34, 197, 94, 0.9)',
-                    'rgba(59, 130, 246, 0.9)',
-                    'rgba(245, 158, 11, 0.9)',
-                    'rgba(139, 92, 246, 0.9)',
-                    'rgba(236, 72, 153, 0.9)',
-                    'rgba(6, 182, 212, 0.9)',
-                    'rgba(34, 197, 94, 0.9)'
-                ],
-                borderColor: [
-                    '#16a34a',
-                    '#2563eb',
-                    '#d97706',
-                    '#7c3aed',
-                    '#db2777',
-                    '#0891b2',
-                    '#16a34a'
-                ],
-                borderWidth: 3,
-                borderRadius: 10,
-                borderSkipped: false
-            }]
+            labels: <?= json_encode($labels_7days) ?>,
+            datasets: [{ data: <?= json_encode($orders_7days) ?>, backgroundColor: '#22c55e', borderRadius: 6 }]
         },
         options: {
             responsive: true,
             maintainAspectRatio: false,
-            plugins: {
-                legend: {
-                    display: true,
-                    position: 'top',
-                    labels: {
-                        color: '#1f2937',
-                        font: { size: 13, weight: '600' },
-                        padding: 20,
-                        usePointStyle: true,
-                        pointStyle: 'rectRounded'
-                    }
-                },
-                tooltip: {
-                    backgroundColor: '#1f2937',
-                    titleFont: { size: 14, weight: '700' },
-                    bodyFont: { size: 13, weight: '500' },
-                    padding: 16,
-                    cornerRadius: 12,
-                    displayColors: false,
-                    callbacks: {
-                        label: function(context) {
-                            return '📦 ' + context.raw + ' đơn hàng';
-                        }
-                    }
-                }
-            },
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    grid: {
-                        color: 'rgba(0, 0, 0, 0.08)',
-                        lineWidth: 1
-                    },
-                    border: {
-                        color: '#e5e7eb',
-                        width: 2
-                    },
-                    ticks: {
-                        color: '#374151',
-                        font: { size: 12, weight: '600' },
-                        padding: 10,
-                        stepSize: 1
-                    }
-                },
-                x: {
-                    grid: {
-                        display: false
-                    },
-                    border: {
-                        color: '#e5e7eb',
-                        width: 2
-                    },
-                    ticks: {
-                        color: '#374151',
-                        font: { size: 12, weight: '600' },
-                        padding: 10
-                    }
-                }
-            }
+            plugins: { legend: { display: false } },
+            scales: { y: { beginAtZero: true, grid: { color: '#f1f5f9' } }, x: { grid: { display: false } } }
         }
     });
-    
-    // 3. Biểu đồ trạng thái đơn hàng - Doughnut với border rõ ràng
-    const statusCtx = document.getElementById('statusChart').getContext('2d');
-    const statusLabels = {
-        'pending': '⏳ Chờ xử lý',
-        'confirmed': '✅ Đã xác nhận',
-        'preparing': '👨‍🍳 Đang chuẩn bị',
-        'ready': '🍽️ Sẵn sàng',
-        'delivered': '🚚 Đã giao',
-        'completed': '✔️ Hoàn thành',
-        'cancelled': '❌ Đã hủy'
-    };
-    const statusColors = {
-        'pending': '#f59e0b',
-        'confirmed': '#3b82f6',
-        'preparing': '#8b5cf6',
-        'ready': '#06b6d4',
-        'delivered': '#22c55e',
-        'completed': '#10b981',
-        'cancelled': '#ef4444'
-    };
-    const statusBorderColors = {
-        'pending': '#d97706',
-        'confirmed': '#2563eb',
-        'preparing': '#7c3aed',
-        'ready': '#0891b2',
-        'delivered': '#16a34a',
-        'completed': '#059669',
-        'cancelled': '#dc2626'
-    };
-    const orderStatus = <?php echo json_encode($order_status); ?>;
-    new Chart(statusCtx, {
+
+    // Status Chart
+    const statusMap = { pending: 'Chờ xử lý', confirmed: 'Đã xác nhận', preparing: 'Đang làm', completed: 'Hoàn thành', cancelled: 'Đã hủy' };
+    const colorMap = { pending: '#f59e0b', confirmed: '#3b82f6', preparing: '#8b5cf6', completed: '#22c55e', cancelled: '#ef4444' };
+    const status = <?= json_encode($order_status) ?>;
+    new Chart(document.getElementById('statusChart'), {
         type: 'doughnut',
         data: {
-            labels: Object.keys(orderStatus).map(key => statusLabels[key] || key),
-            datasets: [{
-                data: Object.values(orderStatus),
-                backgroundColor: Object.keys(orderStatus).map(key => statusColors[key] || '#6b7280'),
-                borderColor: Object.keys(orderStatus).map(key => statusBorderColors[key] || '#4b5563'),
-                borderWidth: 4,
-                hoverOffset: 15,
-                hoverBorderWidth: 5
-            }]
+            labels: Object.keys(status).map(k => statusMap[k] || k),
+            datasets: [{ data: Object.values(status), backgroundColor: Object.keys(status).map(k => colorMap[k] || '#94a3b8'), borderWidth: 0 }]
         },
         options: {
             responsive: true,
             maintainAspectRatio: false,
-            plugins: {
-                legend: {
-                    position: 'right',
-                    labels: {
-                        color: '#1f2937',
-                        font: { size: 12, weight: '600' },
-                        padding: 12,
-                        usePointStyle: true,
-                        pointStyle: 'circle',
-                        boxWidth: 12
-                    }
-                },
-                tooltip: {
-                    backgroundColor: '#1f2937',
-                    titleFont: { size: 14, weight: '700' },
-                    bodyFont: { size: 13, weight: '500' },
-                    padding: 16,
-                    cornerRadius: 12,
-                    callbacks: {
-                        label: function(context) {
-                            const total = context.dataset.data.reduce((a, b) => a + b, 0);
-                            const percentage = ((context.raw / total) * 100).toFixed(1);
-                            return context.raw + ' đơn (' + percentage + '%)';
-                        }
-                    }
-                }
-            },
-            cutout: '55%',
-            radius: '90%'
+            plugins: { legend: { position: 'right' } },
+            cutout: '60%'
         }
     });
-    
-    // 4. Biểu đồ top món ăn - Horizontal bar với màu sắc đa dạng
-    const topDishesCtx = document.getElementById('topDishesChart').getContext('2d');
-    const topDishes = <?php echo json_encode($top_dishes); ?>;
-    const dishColors = [
-        { bg: 'rgba(34, 197, 94, 0.9)', border: '#16a34a' },
-        { bg: 'rgba(59, 130, 246, 0.9)', border: '#2563eb' },
-        { bg: 'rgba(245, 158, 11, 0.9)', border: '#d97706' },
-        { bg: 'rgba(139, 92, 246, 0.9)', border: '#7c3aed' },
-        { bg: 'rgba(236, 72, 153, 0.9)', border: '#db2777' }
-    ];
-    
-    new Chart(topDishesCtx, {
+
+    // Top Dishes Chart
+    const dishes = <?= json_encode($top_dishes) ?>;
+    new Chart(document.getElementById('topDishesChart'), {
         type: 'bar',
         data: {
-            labels: topDishes.map((d, i) => '🏆 #' + (i+1) + ' ' + (d.name.length > 12 ? d.name.substring(0, 12) + '...' : d.name)),
-            datasets: [{
-                label: 'Số lượng bán',
-                data: topDishes.map(d => d.total_sold),
-                backgroundColor: dishColors.map(c => c.bg),
-                borderColor: dishColors.map(c => c.border),
-                borderWidth: 3,
-                borderRadius: 10,
-                borderSkipped: false
-            }]
+            labels: dishes.map((d,i) => '#'+(i+1)+' '+d.name.substring(0,15)),
+            datasets: [{ data: dishes.map(d => d.total_sold), backgroundColor: ['#22c55e','#3b82f6','#f59e0b','#8b5cf6','#ec4899'], borderRadius: 6 }]
         },
         options: {
             indexAxis: 'y',
             responsive: true,
             maintainAspectRatio: false,
-            plugins: {
-                legend: {
-                    display: false
-                },
-                tooltip: {
-                    backgroundColor: '#1f2937',
-                    titleFont: { size: 14, weight: '700' },
-                    bodyFont: { size: 13, weight: '500' },
-                    padding: 16,
-                    cornerRadius: 12,
-                    displayColors: false,
-                    callbacks: {
-                        title: function(context) {
-                            return '🍽️ ' + topDishes[context[0].dataIndex].name;
-                        },
-                        label: function(context) {
-                            return '📊 Đã bán: ' + context.raw + ' phần';
-                        }
-                    }
-                }
-            },
-            scales: {
-                x: {
-                    beginAtZero: true,
-                    grid: {
-                        color: 'rgba(0, 0, 0, 0.08)',
-                        lineWidth: 1
-                    },
-                    border: {
-                        color: '#e5e7eb',
-                        width: 2
-                    },
-                    ticks: {
-                        color: '#374151',
-                        font: { size: 12, weight: '600' },
-                        padding: 10
-                    }
-                },
-                y: {
-                    grid: {
-                        display: false
-                    },
-                    border: {
-                        color: '#e5e7eb',
-                        width: 2
-                    },
-                    ticks: {
-                        color: '#1f2937',
-                        font: { size: 11, weight: '700' },
-                        padding: 10
-                    }
-                }
-            }
+            plugins: { legend: { display: false } },
+            scales: { x: { beginAtZero: true, grid: { color: '#f1f5f9' } }, y: { grid: { display: false } } }
         }
     });
     </script>

@@ -7,6 +7,98 @@ if (!isset($_SESSION['customer_id'])) {
 $db = new Database();
 $conn = $db->connect();
 
+// Xử lý xóa đơn hàng
+$delete_message = '';
+$delete_type = '';
+if (isset($_POST['delete_order'])) {
+    $order_id = intval($_POST['order_id']);
+    
+    try {
+        // Kiểm tra đơn hàng thuộc về user này
+        $stmt = $conn->prepare("SELECT * FROM orders WHERE id = ? AND customer_id = ?");
+        $stmt->execute([$order_id, $_SESSION['customer_id']]);
+        $order = $stmt->fetch(PDO::FETCH_ASSOC);
+        
+        if ($order) {
+            // Chỉ cho phép xóa đơn đã hoàn thành, đã hủy hoặc đang chờ
+            if (in_array($order['status'], ['completed', 'cancelled', 'pending'])) {
+                // Xóa order_items trước
+                $conn->prepare("DELETE FROM order_items WHERE order_id = ?")->execute([$order_id]);
+                // Xóa order
+                $conn->prepare("DELETE FROM orders WHERE id = ?")->execute([$order_id]);
+                
+                $delete_message = "Đã xóa đơn hàng #{$order['order_number']} thành công!";
+                $delete_type = 'success';
+            } else {
+                $delete_message = "Không thể xóa đơn hàng đang xử lý. Vui lòng liên hệ nhà hàng!";
+                $delete_type = 'error';
+            }
+        } else {
+            $delete_message = "Không tìm thấy đơn hàng!";
+            $delete_type = 'error';
+        }
+    } catch (Exception $e) {
+        $delete_message = "Có lỗi xảy ra!";
+        $delete_type = 'error';
+    }
+}
+
+// Xử lý xóa tất cả đơn hàng cũ
+if (isset($_POST['delete_all_old_orders'])) {
+    try {
+        // Lấy tất cả đơn hàng có thể xóa (completed, cancelled, pending)
+        $stmt = $conn->prepare("SELECT id FROM orders WHERE customer_id = ? AND status IN ('completed', 'cancelled', 'pending')");
+        $stmt->execute([$_SESSION['customer_id']]);
+        $deletable_orders = $stmt->fetchAll(PDO::FETCH_COLUMN);
+        
+        if (count($deletable_orders) > 0) {
+            // Xóa order_items trước
+            $placeholders = implode(',', array_fill(0, count($deletable_orders), '?'));
+            $conn->prepare("DELETE FROM order_items WHERE order_id IN ($placeholders)")->execute($deletable_orders);
+            // Xóa orders
+            $conn->prepare("DELETE FROM orders WHERE id IN ($placeholders)")->execute($deletable_orders);
+            
+            $delete_message = "Đã xóa " . count($deletable_orders) . " đơn hàng cũ thành công!";
+            $delete_type = 'success';
+        } else {
+            $delete_message = "Không có đơn hàng nào có thể xóa!";
+            $delete_type = 'error';
+        }
+    } catch (Exception $e) {
+        $delete_message = "Có lỗi xảy ra!";
+        $delete_type = 'error';
+    }
+}
+
+// Xử lý hủy đơn hàng (chỉ cho pending)
+if (isset($_POST['cancel_order'])) {
+    $order_id = intval($_POST['order_id']);
+    $cancel_reason = trim($_POST['cancel_reason'] ?? '');
+    
+    try {
+        $stmt = $conn->prepare("SELECT * FROM orders WHERE id = ? AND customer_id = ?");
+        $stmt->execute([$order_id, $_SESSION['customer_id']]);
+        $order = $stmt->fetch(PDO::FETCH_ASSOC);
+        
+        if ($order && $order['status'] == 'pending') {
+            $full_reason = "Khách hàng tự hủy: " . $cancel_reason;
+            $conn->prepare("UPDATE orders SET status = 'cancelled', note = CONCAT(IFNULL(note, ''), ' | ', ?) WHERE id = ?")->execute([$full_reason, $order_id]);
+            
+            $delete_message = "Đã hủy đơn hàng #{$order['order_number']} thành công!";
+            $delete_type = 'success';
+        } elseif ($order && $order['status'] != 'pending') {
+            $delete_message = "Không thể hủy đơn hàng đã được xác nhận. Vui lòng liên hệ nhà hàng!";
+            $delete_type = 'error';
+        } else {
+            $delete_message = "Không tìm thấy đơn hàng!";
+            $delete_type = 'error';
+        }
+    } catch (Exception $e) {
+        $delete_message = "Có lỗi xảy ra!";
+        $delete_type = 'error';
+    }
+}
+
 // Lấy filter status từ URL
 $filter_status = $_GET['status'] ?? '';
 
@@ -51,10 +143,41 @@ $pending_orders = count(array_filter($orders, fn($o) => $o['status'] == 'pending
                 <h1><i class="fas fa-receipt"></i> Đơn hàng của tôi</h1>
                 <p class="header-subtitle">Theo dõi và quản lý các đơn hàng của bạn</p>
             </div>
-            <a href="?page=menu" class="new-order-btn">
-                <i class="fas fa-plus"></i> Đặt món mới
-            </a>
+            <div class="header-actions">
+                <?php 
+                // Đếm số đơn có thể xóa
+                $deletable_count = count(array_filter($orders, fn($o) => in_array($o['status'], ['completed', 'cancelled', 'pending'])));
+                if ($deletable_count > 0): 
+                ?>
+                <button type="button" class="delete-all-btn" onclick="confirmDeleteAllOrders(<?php echo $deletable_count; ?>)">
+                    <i class="fas fa-trash-alt"></i> Xóa tất cả (<?php echo $deletable_count; ?>)
+                </button>
+                <?php endif; ?>
+                <a href="?page=menu" class="new-order-btn">
+                    <i class="fas fa-plus"></i> Đặt món mới
+                </a>
+            </div>
         </div>
+
+        <?php if ($delete_message): ?>
+        <div class="delete-alert <?php echo $delete_type; ?>" id="deleteAlert">
+            <i class="fas <?php echo $delete_type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'; ?>"></i>
+            <?php echo $delete_message; ?>
+        </div>
+        <script>
+            setTimeout(function() {
+                var alert = document.getElementById('deleteAlert');
+                if (alert) {
+                    alert.style.transition = 'opacity 0.5s, transform 0.5s';
+                    alert.style.opacity = '0';
+                    alert.style.transform = 'translateY(-20px)';
+                    setTimeout(function() {
+                        alert.style.display = 'none';
+                    }, 500);
+                }
+            }, 5000);
+        </script>
+        <?php endif; ?>
 
         <!-- Filter -->
         <div class="orders-filter-bar">
@@ -221,6 +344,13 @@ $pending_orders = count(array_filter($orders, fn($o) => $o['status'] == 'pending
                             <i class="fas fa-check-circle"></i> Đã xác nhận
                         </span>
                         <?php endif; ?>
+                        <?php elseif ($order['payment_method'] == 'card'): ?>
+                        <span class="payment-badge card">
+                            <i class="fas fa-credit-card"></i> Thẻ thành viên
+                        </span>
+                        <span class="payment-status-badge paid">
+                            <i class="fas fa-check-circle"></i> Đã thanh toán
+                        </span>
                         <?php else: ?>
                         <span class="payment-badge cash">
                             <i class="fas fa-money-bill-wave"></i> Tiền mặt (COD)
@@ -275,6 +405,16 @@ $pending_orders = count(array_filter($orders, fn($o) => $o['status'] == 'pending
                         <a href="?page=review&order_id=<?php echo $order['id']; ?>" class="btn-review">
                             <i class="fas fa-star"></i> Đánh giá
                         </a>
+                        <?php endif; ?>
+                        <?php if ($order['status'] == 'pending'): ?>
+                        <button type="button" class="btn-cancel-order" onclick="openCancelOrderModal(<?php echo $order['id']; ?>, '<?php echo htmlspecialchars($order['order_number']); ?>')" title="Hủy đơn hàng">
+                            <i class="fas fa-times"></i> Hủy
+                        </button>
+                        <?php endif; ?>
+                        <?php if (in_array($order['status'], ['completed', 'cancelled', 'pending'])): ?>
+                        <button type="button" class="btn-delete-order" onclick="confirmDeleteOrder(<?php echo $order['id']; ?>, '<?php echo $order['status']; ?>', '<?php echo htmlspecialchars($order['order_number']); ?>')" title="Xóa đơn hàng">
+                            <i class="fas fa-trash-alt"></i>
+                        </button>
                         <?php endif; ?>
                     </div>
                 </div>
@@ -333,6 +473,61 @@ $pending_orders = count(array_filter($orders, fn($o) => $o['status'] == 'pending
         <?php endif; ?>
     </div>
 </section>
+
+<!-- Form xóa đơn hàng ẩn -->
+<form id="deleteOrderForm" method="POST" style="display: none;">
+    <input type="hidden" name="delete_order" value="1">
+    <input type="hidden" name="order_id" id="deleteOrderId">
+</form>
+
+<!-- Form xóa tất cả đơn hàng ẩn -->
+<form id="deleteAllOrdersForm" method="POST" style="display: none;">
+    <input type="hidden" name="delete_all_old_orders" value="1">
+</form>
+
+<!-- Modal Hủy đơn hàng -->
+<div id="cancelOrderModal" class="cancel-order-modal" style="display: none;">
+    <div class="modal-overlay" onclick="closeCancelOrderModal()"></div>
+    <div class="modal-box">
+        <div class="modal-header">
+            <h3><i class="fas fa-times-circle"></i> Hủy đơn hàng</h3>
+            <button class="modal-close" onclick="closeCancelOrderModal()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <form method="POST" class="cancel-form">
+            <input type="hidden" name="cancel_order" value="1">
+            <input type="hidden" name="order_id" id="cancelOrderId">
+            
+            <div class="cancel-info-box">
+                <p>Bạn đang hủy đơn hàng <strong id="cancelOrderNumber"></strong></p>
+                <small>Hành động này không thể hoàn tác</small>
+            </div>
+            
+            <div class="cancel-reason-input">
+                <label>Lý do hủy</label>
+                <textarea name="cancel_reason" id="cancelOrderReason" rows="3" placeholder="Vui lòng cho chúng tôi biết lý do..." required></textarea>
+                
+                <span class="quick-reasons-label">Chọn nhanh:</span>
+                <div class="quick-reasons">
+                    <span class="quick-btn" data-reason="Đặt nhầm món">Nhầm món</span>
+                    <span class="quick-btn" data-reason="Thay đổi kế hoạch">Đổi kế hoạch</span>
+                    <span class="quick-btn" data-reason="Muốn đặt lại với thông tin khác">Đặt lại</span>
+                    <span class="quick-btn" data-reason="Tìm được nơi khác">Nơi khác</span>
+                </div>
+            </div>
+            
+            <div class="modal-actions">
+                <button type="button" class="btn-back" onclick="closeCancelOrderModal()">
+                    Quay lại
+                </button>
+                <button type="submit" class="btn-confirm-cancel">
+                    Xác nhận hủy
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
 
 
 <style>
@@ -420,6 +615,32 @@ body.dark-theme .orders-page .stat-label,
 
 .new-order-btn:hover {
     background: #16a34a !important;
+}
+
+/* Header Actions */
+.header-actions {
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+}
+
+.delete-all-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.25rem;
+    background: #fee2e2 !important;
+    color: #dc2626 !important;
+    border: 2px solid #fecaca;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+.delete-all-btn:hover {
+    background: #ef4444 !important;
+    color: #fff !important;
+    border-color: #ef4444;
 }
 
 /* Filter Bar - Full Width */
@@ -928,6 +1149,12 @@ body.dark-theme .orders-page .filter-btn.active,
     border: 1px solid #bbf7d0;
 }
 
+.payment-badge.card {
+    background: #ede9fe !important;
+    color: #7c3aed !important;
+    border: 1px solid #c4b5fd;
+}
+
 /* Payment Status Badge */
 .payment-status-badge {
     display: inline-flex;
@@ -1131,6 +1358,241 @@ body.dark-theme .orders-page .filter-btn.active,
     background: #f59e0b;
 }
 
+/* Delete Order Button */
+.btn-delete-order {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    background: #f3f4f6;
+    border: 2px solid #e5e7eb;
+    border-radius: 6px;
+    color: #9ca3af;
+    font-size: 0.75rem;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.btn-delete-order:hover {
+    background: #fee2e2;
+    border-color: #fecaca;
+    color: #dc2626;
+}
+
+/* Cancel Order Button */
+.btn-cancel-order {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.4rem 0.7rem;
+    background: #fee2e2;
+    border: 2px solid #fecaca;
+    border-radius: 6px;
+    color: #dc2626;
+    font-size: 0.75rem;
+    font-weight: 600;
+    cursor: pointer;
+}
+.btn-cancel-order:hover {
+    background: #ef4444;
+    border-color: #ef4444;
+    color: white;
+}
+
+/* Cancel Order Modal */
+.cancel-order-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+}
+.cancel-order-modal .modal-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(4px);
+}
+.cancel-order-modal .modal-box {
+    position: relative;
+    background: white;
+    border-radius: 20px;
+    max-width: 450px;
+    width: 100%;
+    overflow: hidden;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+    border: 2px solid #e5e7eb;
+}
+.cancel-order-modal .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 1.25rem;
+    background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+    border-bottom: 2px solid #ef4444;
+}
+.cancel-order-modal .modal-header h3 {
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #b91c1c;
+}
+.cancel-order-modal .modal-header h3 i {
+    margin-right: 0.5rem;
+}
+.cancel-order-modal .modal-close {
+    background: white;
+    border: 2px solid #e5e7eb;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    color: #6b7280;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.cancel-order-modal .modal-close:hover {
+    background: #fee2e2;
+    border-color: #fecaca;
+    color: #ef4444;
+}
+.cancel-order-modal .cancel-info-box {
+    padding: 1rem 1.25rem;
+    background: #fef3c7;
+    border-bottom: 2px solid #fbbf24;
+}
+.cancel-order-modal .cancel-info-box p {
+    margin: 0;
+    color: #78350f;
+    font-size: 0.95rem;
+    font-weight: 600;
+}
+.cancel-order-modal .cancel-info-box small {
+    display: block;
+    color: #a16207;
+    font-size: 0.8rem;
+    margin-top: 0.25rem;
+}
+.cancel-order-modal .cancel-reason-input {
+    padding: 1.25rem;
+    background: white;
+}
+.cancel-order-modal .cancel-reason-input label {
+    display: block;
+    font-weight: 600;
+    color: #1f2937;
+    margin-bottom: 0.75rem;
+}
+.cancel-order-modal .cancel-reason-input textarea {
+    width: 100%;
+    padding: 0.85rem 1rem;
+    border: 2px solid #22c55e;
+    border-radius: 12px;
+    font-size: 0.95rem;
+    resize: none;
+    font-family: inherit;
+    background: #ffffff !important;
+    color: #1f2937 !important;
+}
+.cancel-order-modal .cancel-reason-input textarea:focus {
+    outline: none;
+    border-color: #16a34a;
+    box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.15);
+}
+.cancel-order-modal .quick-reasons-label {
+    display: block;
+    color: #1f2937;
+    font-weight: 600;
+    font-size: 0.9rem;
+    margin: 1rem 0 0.5rem;
+}
+.cancel-order-modal .quick-reasons {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.5rem;
+}
+.cancel-order-modal .quick-btn {
+    display: block;
+    background: #dcfce7;
+    border: 2px solid #22c55e;
+    color: #166534;
+    padding: 0.65rem 0.5rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    border-radius: 10px;
+    text-align: center;
+    cursor: pointer;
+}
+.cancel-order-modal .quick-btn:hover {
+    background: #22c55e;
+    color: #ffffff;
+}
+.cancel-order-modal .modal-actions {
+    display: flex;
+    gap: 0.75rem;
+    padding: 1rem 1.25rem;
+    background: #f9fafb;
+    border-top: 1px solid #e5e7eb;
+}
+.cancel-order-modal .btn-back {
+    flex: 1;
+    padding: 0.75rem;
+    background: white;
+    border: 2px solid #22c55e;
+    border-radius: 10px;
+    color: #22c55e;
+    font-weight: 600;
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+.cancel-order-modal .btn-back:hover {
+    background: #f0fdf4;
+}
+.cancel-order-modal .btn-confirm-cancel {
+    flex: 1;
+    padding: 0.75rem;
+    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+    border: none;
+    border-radius: 10px;
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+.cancel-order-modal .btn-confirm-cancel:hover {
+    box-shadow: 0 6px 20px rgba(239, 68, 68, 0.4);
+}
+
+/* Delete Alert */
+.delete-alert {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1rem 1.5rem;
+    border-radius: 12px;
+    margin-bottom: 1.5rem;
+    font-weight: 600;
+}
+.delete-alert.success {
+    background: #dcfce7;
+    border: 2px solid #22c55e;
+    color: #15803d;
+}
+.delete-alert.error {
+    background: #fee2e2;
+    border: 2px solid #ef4444;
+    color: #b91c1c;
+}
+
 /* Expanded Detail */
 .order-expanded-detail {
     border-top: 1px solid #f1f5f9;
@@ -1299,6 +1761,49 @@ function toggleOrderDetail(btn) {
         btn.innerHTML = '<i class="fas fa-chevron-down"></i> Chi tiết';
     }
 }
+
+function confirmDeleteOrder(orderId, status, orderNumber) {
+    var statusText = '';
+    if (status === 'completed') statusText = 'đã hoàn thành';
+    else if (status === 'cancelled') statusText = 'đã hủy';
+    else if (status === 'pending') statusText = 'đang chờ xác nhận';
+    
+    var message = 'Bạn có chắc muốn xóa đơn hàng #' + orderNumber + ' (' + statusText + ') khỏi danh sách?\n\nHành động này không thể hoàn tác!';
+    
+    if (confirm(message)) {
+        document.getElementById('deleteOrderId').value = orderId;
+        document.getElementById('deleteOrderForm').submit();
+    }
+}
+
+function confirmDeleteAllOrders(count) {
+    var message = 'Bạn có chắc muốn xóa TẤT CẢ ' + count + ' đơn hàng cũ?\n\n(Bao gồm: đã hoàn thành, đã hủy, chờ xác nhận)\n\n⚠️ Hành động này KHÔNG THỂ hoàn tác!';
+    
+    if (confirm(message)) {
+        document.getElementById('deleteAllOrdersForm').submit();
+    }
+}
+
+function openCancelOrderModal(orderId, orderNumber) {
+    document.getElementById('cancelOrderId').value = orderId;
+    document.getElementById('cancelOrderNumber').textContent = '#' + orderNumber;
+    document.getElementById('cancelOrderReason').value = '';
+    document.getElementById('cancelOrderModal').style.display = 'flex';
+}
+
+function closeCancelOrderModal() {
+    document.getElementById('cancelOrderModal').style.display = 'none';
+}
+
+// Quick reason buttons for cancel modal
+document.addEventListener('DOMContentLoaded', function() {
+    var quickBtns = document.querySelectorAll('.cancel-order-modal .quick-btn');
+    quickBtns.forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            document.getElementById('cancelOrderReason').value = this.getAttribute('data-reason');
+        });
+    });
+});
 
 function filterOrders() {
     const searchText = document.getElementById('searchOrder').value.toLowerCase();

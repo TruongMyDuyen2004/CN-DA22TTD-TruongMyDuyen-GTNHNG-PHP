@@ -195,8 +195,12 @@ try {
         <div class="two-column-layout">
             <!-- Cột trái: Yêu cầu nạp tiền -->
             <div class="column-left">
-                <div class="pending-topups-section">
-                    <h2><i class="fas fa-clock"></i> Yêu cầu nạp tiền</h2>
+                <div class="pending-topups-section collapsible-section">
+                    <h2 class="section-toggle" onclick="toggleSection('pendingList')">
+                        <i class="fas fa-clock"></i> Yêu cầu nạp tiền
+                        <i class="fas fa-chevron-down toggle-icon"></i>
+                    </h2>
+                    <div id="pendingList" class="section-content" style="display: none;">
                     <?php if (empty($pending_topups)): ?>
                     <div class="no-pending">
                         <i class="fas fa-check-circle"></i>
@@ -243,14 +247,18 @@ try {
                         <?php endforeach; ?>
                     </div>
                     <?php endif; ?>
+                    </div>
                 </div>
             </div>
             
             <!-- Cột phải: Lịch sử giao dịch -->
             <div class="column-right">
-                <div class="transactions-section">
-                    <h2><i class="fas fa-history"></i> Lịch sử giao dịch gần đây</h2>
-                    
+                <div class="transactions-section collapsible-section">
+                    <h2 class="section-toggle" onclick="toggleSection('transactionsList')">
+                        <i class="fas fa-history"></i> Lịch sử giao dịch gần đây
+                        <i class="fas fa-chevron-down toggle-icon"></i>
+                    </h2>
+                    <div id="transactionsList" class="section-content" style="display: none;">
                     <?php if (empty($transactions)): ?>
                     <div class="no-transactions">
                         <i class="fas fa-receipt"></i>
@@ -281,6 +289,7 @@ try {
                 <?php endforeach; ?>
                     </div>
                     <?php endif; ?>
+                    </div>
                 </div>
             </div>
         </div>
@@ -321,34 +330,8 @@ try {
                 <div class="method-section">
                     <label>Phương thức thanh toán</label>
                     <div class="payment-methods">
-                        <label class="method-option selected" data-method="momo">
-                            <input type="radio" name="payment_method" value="momo" checked>
-                            <div class="method-icon momo">
-                                <i class="fas fa-wallet"></i>
-                            </div>
-                            <div class="method-info">
-                                <strong>Ví Momo</strong>
-                                <span>Thanh toán qua ví điện tử Momo</span>
-                            </div>
-                            <div class="method-check">
-                                <i class="fas fa-check"></i>
-                            </div>
-                        </label>
-                        <label class="method-option" data-method="zalopay">
-                            <input type="radio" name="payment_method" value="zalopay">
-                            <div class="method-icon zalopay">
-                                <i class="fas fa-mobile-alt"></i>
-                            </div>
-                            <div class="method-info">
-                                <strong>ZaloPay</strong>
-                                <span>Thanh toán qua ví ZaloPay</span>
-                            </div>
-                            <div class="method-check">
-                                <i class="fas fa-check"></i>
-                            </div>
-                        </label>
-                        <label class="method-option" data-method="bank">
-                            <input type="radio" name="payment_method" value="bank">
+                        <label class="method-option selected" data-method="bank">
+                            <input type="radio" name="payment_method" value="bank" checked>
                             <div class="method-icon bank">
                                 <i class="fas fa-university"></i>
                             </div>
@@ -381,7 +364,14 @@ try {
                 </div>
                 
                 <div class="payment-note">
-                    <p><i class="fas fa-info-circle"></i> Vui lòng chuyển khoản đúng số tiền và nội dung để hệ thống tự động cộng tiền vào thẻ của bạn.</p>
+                    <p><i class="fas fa-info-circle"></i> Vui lòng chuyển khoản đúng số tiền và nội dung. Hệ thống sẽ <strong>tự động xác nhận</strong> sau khi nhận được tiền.</p>
+                </div>
+                
+                <div class="auto-check-status" id="autoCheckStatus" style="display:none;">
+                    <div class="checking-animation">
+                        <i class="fas fa-sync fa-spin"></i>
+                        <span>Đang chờ giao dịch từ ngân hàng...</span>
+                    </div>
                 </div>
                 
                 <button type="button" class="confirm-payment-btn" onclick="confirmPayment()">
@@ -407,10 +397,33 @@ try {
                         <i class="fas fa-info-circle"></i>
                         <span>Số tiền sẽ được cộng vào thẻ sau khi Admin xác nhận giao dịch của bạn.</span>
                     </div>
-                    <button type="button" class="topup-submit" onclick="closeAndReload()">
-                        <i class="fas fa-check"></i> Đã hiểu
-                    </button>
+                    <div class="step3-buttons">
+                        <button type="button" class="check-history-btn" onclick="checkTopupHistory()">
+                            <i class="fas fa-history"></i> Kiểm tra lịch sử nạp tiền
+                        </button>
+                        <button type="button" class="topup-submit" onclick="closeAndReload()">
+                            <i class="fas fa-check"></i> Đã hiểu
+                        </button>
+                    </div>
                 </div>
+            </div>
+        </div>
+        
+        <!-- Step 4: Lịch sử nạp tiền -->
+        <div id="topupStep4" style="display: none;">
+            <div class="modal-header">
+                <h3><i class="fas fa-history"></i> Lịch sử nạp tiền</h3>
+                <button class="modal-close" onclick="closeTopupModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="topupHistoryList" class="topup-history-list">
+                    <div class="loading-spinner">
+                        <i class="fas fa-spinner fa-spin"></i> Đang tải...
+                    </div>
+                </div>
+                <button type="button" class="cancel-payment-btn" onclick="backToStep3()">
+                    <i class="fas fa-arrow-left"></i> Quay lại
+                </button>
             </div>
         </div>
     </div>
@@ -418,8 +431,22 @@ try {
 
 <script>
 let selectedAmount = 0;
-let selectedMethod = 'momo';
+let selectedMethod = 'bank';
 let currentTransactionCode = '';
+
+// Toggle section (ẩn/hiện yêu cầu nạp tiền và lịch sử giao dịch)
+function toggleSection(sectionId) {
+    const content = document.getElementById(sectionId);
+    const toggle = content.previousElementSibling;
+    
+    if (content.style.display === 'none') {
+        content.style.display = 'block';
+        toggle.classList.add('active');
+    } else {
+        content.style.display = 'none';
+        toggle.classList.remove('active');
+    }
+}
 
 // Mở modal nạp tiền
 function openTopupModal() {
@@ -432,6 +459,7 @@ function openTopupModal() {
 function closeTopupModal() {
     document.getElementById('topupModal').classList.remove('active');
     document.body.style.overflow = '';
+    stopAutoCheckTransaction(); // Dừng auto-check khi đóng modal
 }
 
 // Reset form
@@ -448,6 +476,7 @@ function resetTopupForm() {
 function backToStep1() {
     document.getElementById('topupStep1').style.display = 'block';
     document.getElementById('topupStep2').style.display = 'none';
+    stopAutoCheckTransaction(); // Dừng auto-check khi quay lại
 }
 
 // Chọn số tiền preset
@@ -496,13 +525,18 @@ function createTopupRequest() {
         method: 'POST',
         body: formData
     })
-    .then(res => res.json())
+    .then(res => {
+        console.log('Response status:', res.status);
+        return res.json();
+    })
     .then(data => {
+        console.log('API Response:', data);
         btn.disabled = false;
         btn.innerHTML = '<i class="fas fa-arrow-right"></i> Tiếp tục';
         
         if (data.success) {
             currentTransactionCode = data.data.transaction_code;
+            console.log('Payment info:', data.data.payment_info);
             showPaymentInfo(data.data);
         } else {
             alert(data.message);
@@ -520,59 +554,19 @@ function showPaymentInfo(data) {
     const info = data.payment_info;
     let html = '';
     
-    if (data.method === 'momo') {
-        html = `
-            <h4><i class="fas fa-wallet" style="color:#d82d8b;"></i> Thanh toán qua Momo</h4>
-            <div class="payment-detail">
-                <span class="label">Số điện thoại</span>
-                <span class="value">${info.phone} <button class="copy-btn" onclick="copyText('${info.phone}')">Copy</button></span>
-            </div>
-            <div class="payment-detail">
-                <span class="label">Tên người nhận</span>
-                <span class="value">${info.name}</span>
-            </div>
-            <div class="payment-detail">
-                <span class="label">Số tiền</span>
-                <span class="value highlight">${formatMoney(data.amount)}đ</span>
-            </div>
-            <div class="payment-detail">
-                <span class="label">Nội dung CK</span>
-                <span class="value highlight">${info.content} <button class="copy-btn" onclick="copyText('${info.content}')">Copy</button></span>
-            </div>
-        `;
-    } else if (data.method === 'zalopay') {
-        html = `
-            <h4><i class="fas fa-mobile-alt" style="color:#0068ff;"></i> Thanh toán qua ZaloPay</h4>
-            <div class="payment-detail">
-                <span class="label">Số điện thoại</span>
-                <span class="value">${info.phone} <button class="copy-btn" onclick="copyText('${info.phone}')">Copy</button></span>
-            </div>
-            <div class="payment-detail">
-                <span class="label">Tên người nhận</span>
-                <span class="value">${info.name}</span>
-            </div>
-            <div class="payment-detail">
-                <span class="label">Số tiền</span>
-                <span class="value highlight">${formatMoney(data.amount)}đ</span>
-            </div>
-            <div class="payment-detail">
-                <span class="label">Nội dung CK</span>
-                <span class="value highlight">${info.content} <button class="copy-btn" onclick="copyText('${info.content}')">Copy</button></span>
-            </div>
-        `;
-    } else {
-        html = `
-            <h4><i class="fas fa-university" style="color:#059669;"></i> Chuyển khoản ngân hàng</h4>
-            <div class="payment-detail">
-                <span class="label">Ngân hàng</span>
-                <span class="value">${info.bank_name}</span>
-            </div>
+    html = `
+        <div class="qr-section">
+            <img src="${info.qr_url}" alt="QR Code" class="qr-code-img">
+            <p class="qr-hint">Quét mã QR để thanh toán</p>
+        </div>
+        <div class="bank-info-section">
+            <h4><i class="fas fa-university" style="color:#1a4d8f;"></i> ${info.bank_name}</h4>
             <div class="payment-detail">
                 <span class="label">Số tài khoản</span>
                 <span class="value highlight">${info.account_number} <button class="copy-btn" onclick="copyText('${info.account_number}')">Copy</button></span>
             </div>
             <div class="payment-detail">
-                <span class="label">Tên TK</span>
+                <span class="label">Chủ tài khoản</span>
                 <span class="value">${info.account_name}</span>
             </div>
             <div class="payment-detail">
@@ -583,16 +577,99 @@ function showPaymentInfo(data) {
                 <span class="label">Nội dung CK</span>
                 <span class="value highlight">${info.content} <button class="copy-btn" onclick="copyText('${info.content}')">Copy</button></span>
             </div>
-        `;
-    }
+        </div>
+    `;
     
     document.getElementById('paymentInfoBox').innerHTML = html;
     document.getElementById('topupStep1').style.display = 'none';
     document.getElementById('topupStep2').style.display = 'block';
+    
+    // Không cần auto-check SePay vì sẽ tự động cộng tiền khi user bấm xác nhận
+    // startAutoCheckTransaction();
 }
 
-// Xác nhận đã thanh toán
+// Biến để quản lý auto-check
+let autoCheckInterval = null;
+let autoCheckCount = 0;
+const MAX_AUTO_CHECK = 60; // Kiểm tra tối đa 60 lần (5 phút)
+
+// Bắt đầu tự động kiểm tra giao dịch
+function startAutoCheckTransaction() {
+    document.getElementById('autoCheckStatus').style.display = 'block';
+    autoCheckCount = 0;
+    
+    // Kiểm tra mỗi 5 giây
+    autoCheckInterval = setInterval(function() {
+        autoCheckCount++;
+        
+        if (autoCheckCount > MAX_AUTO_CHECK) {
+            stopAutoCheckTransaction();
+            return;
+        }
+        
+        // Gọi API kiểm tra giao dịch từ SePay và tự động cộng tiền
+        fetch('api/check-sepay-transaction.php?transaction_code=' + currentTransactionCode + '&amount=' + selectedAmount + '&auto_confirm=1')
+        .then(res => res.json())
+        .then(data => {
+            if (data.success && data.confirmed) {
+                // Tìm thấy và đã cộng tiền thành công
+                stopAutoCheckTransaction();
+                showTopupSuccess(data.amount, data.new_balance);
+            } else if (data.already_completed) {
+                // Đã xác nhận trước đó
+                stopAutoCheckTransaction();
+                showTopupSuccess(data.amount, data.amount);
+            }
+        })
+        .catch(err => {
+            console.log('Auto check error:', err);
+        });
+        
+    }, 5000); // 5 giây
+}
+
+// Dừng auto-check
+function stopAutoCheckTransaction() {
+    if (autoCheckInterval) {
+        clearInterval(autoCheckInterval);
+        autoCheckInterval = null;
+    }
+    document.getElementById('autoCheckStatus').style.display = 'none';
+}
+
+// Tự động xác nhận khi tìm thấy giao dịch
+function autoConfirmTopup() {
+    // Gọi API check-sepay để kiểm tra và tự động cộng tiền
+    fetch('api/check-sepay-transaction.php?transaction_code=' + currentTransactionCode + '&amount=' + selectedAmount + '&auto_confirm=1')
+    .then(res => res.json())
+    .then(data => {
+        if (data.success && data.confirmed) {
+            stopAutoCheckTransaction();
+            showTopupSuccess(data.amount, data.new_balance);
+        }
+    });
+}
+
+// Hiển thị thông báo nạp tiền thành công
+function showTopupSuccess(amount, newBalance) {
+    document.getElementById('waitingAmountDisplay').textContent = formatMoney(amount) + 'đ';
+    document.getElementById('topupStep2').style.display = 'none';
+    document.getElementById('topupStep3').style.display = 'block';
+    
+    // Hiển thị thông báo thành công
+    document.querySelector('#topupStep3 .waiting-icon').innerHTML = '<i class="fas fa-check-circle" style="color: #22c55e;"></i>';
+    document.querySelector('#topupStep3 h3').textContent = 'Nạp tiền thành công!';
+    document.querySelector('#topupStep3 p').textContent = 'Số dư mới: ' + formatMoney(newBalance) + 'đ';
+    document.querySelector('#topupStep3 .waiting-note span').textContent = 'Bạn có thể sử dụng số dư để thanh toán ngay bây giờ.';
+}
+
+// Xác nhận đã thanh toán - Gửi yêu cầu chờ Admin duyệt
 function confirmPayment() {
+    const btn = document.querySelector('.confirm-payment-btn');
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang gửi yêu cầu...';
+    
+    // Gọi API confirm_topup để chuyển sang trạng thái chờ duyệt
     const formData = new FormData();
     formData.append('action', 'confirm_topup');
     formData.append('transaction_code', currentTransactionCode);
@@ -603,23 +680,140 @@ function confirmPayment() {
     })
     .then(res => res.json())
     .then(data => {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fas fa-check-circle"></i> Tôi đã thanh toán';
+        
         if (data.success) {
-            document.getElementById('waitingAmountDisplay').textContent = formatMoney(data.data.amount) + 'đ';
-            document.getElementById('topupStep2').style.display = 'none';
-            document.getElementById('topupStep3').style.display = 'block';
+            stopAutoCheckTransaction();
+            
+            if (data.data?.status === 'completed') {
+                // Đã được duyệt trước đó
+                showTopupSuccess(data.data.amount, data.data.new_balance);
+            } else {
+                // Chuyển sang trạng thái chờ duyệt
+                showWaitingForApproval(data.data?.amount || selectedAmount);
+            }
         } else {
-            alert(data.message);
+            alert(data.message || 'Có lỗi xảy ra, vui lòng thử lại!');
         }
     })
     .catch(err => {
-        alert('Có lỗi xảy ra, vui lòng thử lại!');
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fas fa-check-circle"></i> Tôi đã thanh toán';
+        console.error('Error:', err);
+        alert('Không thể kết nối server. Vui lòng thử lại!');
     });
+}
+
+// Hiển thị màn hình chờ Admin duyệt
+function showWaitingForApproval(amount) {
+    document.getElementById('waitingAmountDisplay').textContent = formatMoney(amount) + 'đ';
+    document.getElementById('topupStep2').style.display = 'none';
+    document.getElementById('topupStep3').style.display = 'block';
+    
+    // Hiển thị thông báo chờ duyệt
+    document.querySelector('#topupStep3 .waiting-icon').innerHTML = '<i class="fas fa-clock" style="color: #f59e0b;"></i>';
+    document.querySelector('#topupStep3 h3').textContent = 'Yêu cầu đã được gửi!';
+    document.querySelector('#topupStep3 p').textContent = 'Vui lòng chờ Admin xác nhận giao dịch';
+    document.querySelector('#topupStep3 .waiting-note span').textContent = 'Số tiền sẽ được cộng vào thẻ sau khi Admin xác nhận giao dịch chuyển khoản của bạn.';
 }
 
 // Đóng và reload trang
 function closeAndReload() {
     closeTopupModal();
     window.location.reload();
+}
+
+// Quay lại step 3
+function backToStep3() {
+    document.getElementById('topupStep4').style.display = 'none';
+    document.getElementById('topupStep3').style.display = 'block';
+}
+
+// Kiểm tra lịch sử nạp tiền
+function checkTopupHistory() {
+    document.getElementById('topupStep3').style.display = 'none';
+    document.getElementById('topupStep4').style.display = 'block';
+    
+    // Gọi API lấy lịch sử
+    fetch('api/topup-card.php?action=get_history')
+    .then(res => res.json())
+    .then(data => {
+        if (data.success && data.data.length > 0) {
+            let html = '';
+            data.data.forEach(item => {
+                const statusClass = getStatusClass(item.status);
+                const statusText = getStatusText(item.status);
+                const date = new Date(item.created_at);
+                const formattedDate = date.toLocaleDateString('vi-VN') + ' ' + date.toLocaleTimeString('vi-VN', {hour: '2-digit', minute: '2-digit'});
+                
+                html += `
+                    <div class="history-item ${statusClass}">
+                        <div class="history-icon">
+                            ${getStatusIcon(item.status)}
+                        </div>
+                        <div class="history-info">
+                            <div class="history-amount">${formatMoney(item.amount)}đ</div>
+                            <div class="history-code">${item.transaction_code}</div>
+                            <div class="history-date">${formattedDate}</div>
+                        </div>
+                        <div class="history-status">
+                            <span class="status-badge ${statusClass}">${statusText}</span>
+                        </div>
+                    </div>
+                `;
+            });
+            document.getElementById('topupHistoryList').innerHTML = html;
+        } else {
+            document.getElementById('topupHistoryList').innerHTML = `
+                <div class="no-history">
+                    <i class="fas fa-inbox"></i>
+                    <p>Chưa có lịch sử nạp tiền</p>
+                </div>
+            `;
+        }
+    })
+    .catch(err => {
+        document.getElementById('topupHistoryList').innerHTML = `
+            <div class="no-history">
+                <i class="fas fa-exclamation-circle"></i>
+                <p>Không thể tải lịch sử</p>
+            </div>
+        `;
+    });
+}
+
+function getStatusClass(status) {
+    switch(status) {
+        case 'completed': return 'status-completed';
+        case 'waiting': return 'status-waiting';
+        case 'pending': return 'status-pending';
+        case 'failed': return 'status-failed';
+        case 'expired': return 'status-expired';
+        default: return '';
+    }
+}
+
+function getStatusText(status) {
+    switch(status) {
+        case 'completed': return 'Thành công';
+        case 'waiting': return 'Chờ duyệt';
+        case 'pending': return 'Đang xử lý';
+        case 'failed': return 'Từ chối';
+        case 'expired': return 'Hết hạn';
+        default: return status;
+    }
+}
+
+function getStatusIcon(status) {
+    switch(status) {
+        case 'completed': return '<i class="fas fa-check-circle"></i>';
+        case 'waiting': return '<i class="fas fa-clock"></i>';
+        case 'pending': return '<i class="fas fa-hourglass-half"></i>';
+        case 'failed': return '<i class="fas fa-times-circle"></i>';
+        case 'expired': return '<i class="fas fa-calendar-times"></i>';
+        default: return '<i class="fas fa-question-circle"></i>';
+    }
 }
 
 // Format tiền
@@ -1178,11 +1372,26 @@ function copyText(text) {
     grid-template-columns: 1fr 1fr;
     gap: 1.5rem;
     margin-bottom: 2rem;
+    align-items: start;
 }
 
 .column-left,
 .column-right {
     min-width: 0;
+}
+
+.column-left .collapsible-section,
+.column-right .collapsible-section {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.column-left .section-content,
+.column-right .section-content {
+    flex: 1;
+    max-height: 350px;
+    overflow-y: auto;
 }
 
 /* No pending state */
@@ -1203,25 +1412,169 @@ function copyText(text) {
     margin: 0;
 }
 
+/* Collapsible Section Styles - Modern Design */
+.collapsible-section {
+    background: white;
+    border-radius: 20px;
+    border: none;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+}
+
+.collapsible-section:hover {
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+    transform: translateY(-2px);
+}
+
+.section-toggle {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #1f2937;
+    margin: 0;
+    padding: 1.25rem 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    cursor: pointer;
+    user-select: none;
+    transition: all 0.3s ease;
+    background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+    border-bottom: none;
+    position: relative;
+}
+
+.section-toggle::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background: linear-gradient(180deg, #f59e0b 0%, #f97316 100%);
+    border-radius: 0 4px 4px 0;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.pending-topups-section .section-toggle::before {
+    background: linear-gradient(180deg, #f59e0b 0%, #f97316 100%);
+}
+
+.transactions-section .section-toggle::before {
+    background: linear-gradient(180deg, #6366f1 0%, #8b5cf6 100%);
+}
+
+.section-toggle:hover::before,
+.section-toggle.active::before {
+    opacity: 1;
+}
+
+.section-toggle:hover {
+    background: linear-gradient(135deg, #fefefe 0%, #f1f5f9 100%);
+    padding-left: 1.75rem;
+}
+
+.section-toggle > i:first-child {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+}
+
+.pending-topups-section .section-toggle > i:first-child {
+    background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+    color: #d97706;
+}
+
+.transactions-section .section-toggle > i:first-child {
+    background: linear-gradient(135deg, #e0e7ff 0%, #c7d2fe 100%);
+    color: #6366f1;
+}
+
+.section-toggle .toggle-icon {
+    margin-left: auto;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: #f3f4f6;
+    transition: all 0.3s ease;
+    color: #9ca3af;
+    font-size: 0.8rem;
+}
+
+.section-toggle:hover .toggle-icon {
+    background: #e5e7eb;
+    color: #6b7280;
+}
+
+.section-toggle.active .toggle-icon {
+    transform: rotate(180deg);
+    background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+    color: white;
+}
+
+.section-content {
+    padding: 1.5rem;
+    background: #fafbfc;
+    animation: slideDown 0.3s ease;
+    border-top: 1px solid #f1f5f9;
+    min-height: 300px;
+    max-height: 350px;
+    overflow-y: auto;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        max-height: 0;
+    }
+    to {
+        opacity: 1;
+        max-height: 500px;
+    }
+}
+
+/* Badge count for pending items */
+.section-toggle .badge-count {
+    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+    color: white;
+    font-size: 0.7rem;
+    font-weight: 700;
+    padding: 0.2rem 0.5rem;
+    border-radius: 20px;
+    min-width: 20px;
+    text-align: center;
+    margin-left: 0.5rem;
+    box-shadow: 0 2px 8px rgba(239, 68, 68, 0.4);
+}
+
 /* Pending Topups Section */
 .pending-topups-section {
     background: white;
-    border-radius: 16px;
-    padding: 1.5rem;
-    border: 1px solid #e5e7eb;
-    height: 100%;
+    border-radius: 20px;
+    border: none;
+    height: fit-content;
 }
 
 .pending-topups-section h2 {
-    font-size: 1.1rem;
+    font-size: 1rem;
+    font-weight: 600;
     color: #1f2937;
-    margin: 0 0 1.5rem;
+    margin: 0;
     display: flex;
     align-items: center;
     gap: 0.5rem;
 }
 
-.pending-topups-section h2 i {
+.pending-topups-section h2 i:first-child {
     color: #f59e0b;
 }
 
@@ -1374,16 +1727,16 @@ function copyText(text) {
 /* Transactions */
 .transactions-section {
     background: white;
-    border-radius: 16px;
-    padding: 1.5rem;
-    border: 1px solid #e5e7eb;
-    height: 100%;
+    border-radius: 20px;
+    border: none;
+    height: fit-content;
 }
 
 .transactions-section h2 {
-    font-size: 1.1rem;
+    font-size: 1rem;
+    font-weight: 600;
     color: #1f2937;
-    margin: 0 0 1.5rem;
+    margin: 0;
     display: flex;
     align-items: center;
     gap: 0.5rem;
@@ -1828,6 +2181,60 @@ function copyText(text) {
     margin-bottom: 1.5rem;
 }
 
+/* QR Code Section */
+.qr-section {
+    text-align: center;
+    padding: 1.5rem;
+    background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+    border-radius: 16px;
+    margin-bottom: 1.5rem;
+    border: 2px solid #e2e8f0;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+}
+
+.qr-code-img {
+    max-width: 200px;
+    width: 100%;
+    height: auto;
+    border-radius: 12px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    border: 3px solid #22c55e;
+    padding: 8px;
+    background: white;
+}
+
+.qr-hint {
+    margin: 1rem 0 0;
+    color: #374151;
+    font-size: 0.95rem;
+    font-weight: 600;
+}
+
+.bank-info-section {
+    background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+    border-radius: 16px;
+    padding: 1.5rem;
+    border: 2px solid #22c55e;
+    box-shadow: 0 4px 15px rgba(34, 197, 94, 0.15);
+}
+
+.bank-info-section h4 {
+    margin: 0 0 1.25rem;
+    color: #166534;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 1.2rem;
+    font-weight: 700;
+    padding-bottom: 0.75rem;
+    border-bottom: 2px solid #bbf7d0;
+}
+
+.bank-info-section h4 i {
+    font-size: 1.3rem;
+    color: #1a4d8f;
+}
+
 .payment-info-box h4 {
     margin: 0 0 1rem;
     color: #1f2937;
@@ -1839,77 +2246,127 @@ function copyText(text) {
 .payment-detail {
     display: flex;
     justify-content: space-between;
-    padding: 0.75rem 0;
-    border-bottom: 1px dashed #e5e7eb;
+    align-items: center;
+    padding: 1rem;
+    margin-bottom: 0.5rem;
+    background: white;
+    border-radius: 10px;
+    border: 1px solid #e5e7eb;
 }
 
 .payment-detail:last-child {
-    border-bottom: none;
+    margin-bottom: 0;
 }
 
 .payment-detail .label {
     color: #6b7280;
+    font-size: 0.9rem;
+    font-weight: 500;
 }
 
 .payment-detail .value {
-    font-weight: 600;
+    font-weight: 700;
     color: #1f2937;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
 }
 
 .payment-detail .value.highlight {
-    color: #8b5cf6;
-    font-family: monospace;
-    font-size: 1.1rem;
+    color: #dc2626;
+    font-family: 'Courier New', monospace;
+    font-size: 1.15rem;
+    font-weight: 800;
 }
 
 .copy-btn {
-    background: #8b5cf6;
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
     color: white;
     border: none;
-    padding: 0.3rem 0.75rem;
-    border-radius: 6px;
+    padding: 0.4rem 0.85rem;
+    border-radius: 8px;
     font-size: 0.8rem;
+    font-weight: 600;
     cursor: pointer;
-    margin-left: 0.5rem;
+    transition: all 0.2s;
+    box-shadow: 0 2px 6px rgba(59, 130, 246, 0.3);
 }
 
 .copy-btn:hover {
-    background: #7c3aed;
+    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
 }
 
 .payment-note {
-    background: #fef3c7;
-    border: 1px solid #fcd34d;
-    border-radius: 10px;
-    padding: 1rem;
+    background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+    border: 2px solid #f59e0b;
+    border-radius: 12px;
+    padding: 1.25rem;
     margin-bottom: 1.5rem;
 }
 
 .payment-note p {
     margin: 0;
     color: #92400e;
-    font-size: 0.9rem;
+    font-size: 0.95rem;
+    font-weight: 500;
     display: flex;
     align-items: flex-start;
-    gap: 0.5rem;
+    gap: 0.75rem;
+    line-height: 1.5;
 }
 
 .payment-note i {
     color: #f59e0b;
-    margin-top: 2px;
+    margin-top: 3px;
+    font-size: 1.1rem;
+}
+
+.auto-check-status {
+    background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+    border: 2px solid #3b82f6;
+    border-radius: 12px;
+    padding: 1.25rem;
+    margin-bottom: 1.25rem;
+    text-align: center;
+}
+
+.checking-animation {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    color: #1d4ed8;
+    font-weight: 700;
+    font-size: 1rem;
+}
+
+.checking-animation i {
+    font-size: 1.5rem;
+    color: #3b82f6;
 }
 
 .confirm-payment-btn {
     width: 100%;
-    padding: 1rem;
+    padding: 1.25rem;
     background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
     color: white;
     border: none;
     border-radius: 12px;
-    font-size: 1rem;
+    font-size: 1.1rem;
     font-weight: 700;
     cursor: pointer;
     margin-bottom: 0.75rem;
+    box-shadow: 0 4px 15px rgba(34, 197, 94, 0.3);
+    transition: all 0.2s;
+}
+
+.confirm-payment-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(34, 197, 94, 0.4);
+}
 }
 
 .cancel-payment-btn {
@@ -2016,6 +2473,203 @@ function copyText(text) {
     color: #92400e;
     font-size: 0.9rem;
     line-height: 1.5;
+}
+
+/* Step 3 Buttons */
+.step3-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.check-history-btn {
+    width: 100%;
+    padding: 0.85rem;
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    transition: all 0.3s;
+}
+
+.check-history-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
+}
+
+/* Topup History List */
+.topup-history-list {
+    max-height: 400px;
+    overflow-y: auto;
+    margin-bottom: 1rem;
+}
+
+.history-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    background: #f9fafb;
+    border-radius: 12px;
+    margin-bottom: 0.75rem;
+    border-left: 4px solid #d1d5db;
+}
+
+.history-item.status-completed {
+    border-left-color: #22c55e;
+    background: #f0fdf4;
+}
+
+.history-item.status-waiting {
+    border-left-color: #f59e0b;
+    background: #fffbeb;
+}
+
+.history-item.status-pending {
+    border-left-color: #6b7280;
+    background: #f9fafb;
+}
+
+.history-item.status-failed {
+    border-left-color: #ef4444;
+    background: #fef2f2;
+}
+
+.history-item.status-expired {
+    border-left-color: #9ca3af;
+    background: #f3f4f6;
+}
+
+.history-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    flex-shrink: 0;
+}
+
+.status-completed .history-icon {
+    background: #dcfce7;
+    color: #16a34a;
+}
+
+.status-waiting .history-icon {
+    background: #fef3c7;
+    color: #d97706;
+}
+
+.status-pending .history-icon {
+    background: #e5e7eb;
+    color: #6b7280;
+}
+
+.status-failed .history-icon {
+    background: #fee2e2;
+    color: #dc2626;
+}
+
+.status-expired .history-icon {
+    background: #e5e7eb;
+    color: #9ca3af;
+}
+
+.history-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.history-amount {
+    font-weight: 700;
+    color: #1f2937;
+    font-size: 1.1rem;
+}
+
+.history-code {
+    font-size: 0.8rem;
+    color: #6b7280;
+    font-family: monospace;
+    margin-top: 0.2rem;
+}
+
+.history-date {
+    font-size: 0.75rem;
+    color: #9ca3af;
+    margin-top: 0.2rem;
+}
+
+.history-status {
+    flex-shrink: 0;
+}
+
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.3rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.status-badge.status-completed {
+    background: #dcfce7;
+    color: #16a34a;
+}
+
+.status-badge.status-waiting {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.status-badge.status-pending {
+    background: #e5e7eb;
+    color: #6b7280;
+}
+
+.status-badge.status-failed {
+    background: #fee2e2;
+    color: #dc2626;
+}
+
+.status-badge.status-expired {
+    background: #e5e7eb;
+    color: #9ca3af;
+}
+
+.no-history {
+    text-align: center;
+    padding: 2rem;
+    color: #6b7280;
+}
+
+.no-history i {
+    font-size: 2.5rem;
+    margin-bottom: 0.75rem;
+    opacity: 0.5;
+}
+
+.no-history p {
+    margin: 0;
+}
+
+.loading-spinner {
+    text-align: center;
+    padding: 2rem;
+    color: #6b7280;
+}
+
+.loading-spinner i {
+    font-size: 1.5rem;
+    margin-right: 0.5rem;
 }
 
 @media (max-width: 900px) {

@@ -85,6 +85,8 @@ $total = count($menu_items);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quản lý thực đơn - Admin</title>
+    <link rel="icon" type="image/jpeg" href="../assets/images/logo.jpg">
+    <link rel="shortcut icon" type="image/jpeg" href="../assets/images/logo.jpg">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="../assets/css/admin-dark-modern.css">
     <link rel="stylesheet" href="../assets/css/admin-green-override.css">
@@ -131,6 +133,322 @@ $total = count($menu_items);
             display: flex;
             gap: 0.75rem;
             justify-content: flex-end;
+        }
+        
+        /* ========================================
+           MODERN MENU CARD GRID STYLES
+           ======================================== */
+        
+        .menu-section {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+        }
+        
+        .menu-section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 24px;
+            background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+            border-bottom: 2px solid #bbf7d0;
+        }
+        
+        .menu-section-header h3 {
+            margin: 0;
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #166534;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .menu-section-header h3 i {
+            color: #22c55e;
+        }
+        
+        .menu-count {
+            background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3);
+        }
+        
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 16px;
+            padding: 20px;
+        }
+        
+        .menu-card {
+            background: white;
+            border-radius: 12px;
+            border: 2px solid #e5e7eb;
+            overflow: hidden;
+            transition: all 0.25s ease;
+            position: relative;
+        }
+        
+        .menu-card:hover {
+            border-color: #22c55e;
+            box-shadow: 0 8px 20px rgba(34, 197, 94, 0.12);
+        }
+        
+        .menu-card.unavailable {
+            border-color: #fecaca;
+        }
+        
+        /* Card Image */
+        .menu-card-image {
+            position: relative;
+            height: 140px;
+            overflow: hidden;
+            background: #f3f4f6;
+        }
+        
+        .menu-card-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .menu-card-placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+        }
+        
+        .menu-card-placeholder i {
+            font-size: 2.5rem;
+            color: white;
+        }
+        
+        /* Status Badge */
+        .menu-card-status {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            z-index: 2;
+        }
+        
+        .menu-card-status.available {
+            background: #22c55e;
+            color: white;
+        }
+        
+        .menu-card-status.sold-out {
+            background: #ef4444;
+            color: white;
+        }
+        
+        /* Index Number */
+        .menu-card-index {
+            position: absolute;
+            top: 8px;
+            left: 8px;
+            width: 28px;
+            height: 28px;
+            background: #22c55e;
+            color: white;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.8rem;
+            z-index: 2;
+        }
+        
+        /* Quick Action Buttons - Always Visible */
+        .menu-card-actions-top {
+            position: absolute;
+            bottom: 8px;
+            right: 8px;
+            display: flex;
+            gap: 6px;
+            z-index: 2;
+        }
+        
+        .action-btn-small {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 0.85rem;
+            color: white;
+            text-decoration: none;
+        }
+        
+        .action-btn-small:hover {
+            transform: scale(1.1);
+        }
+        
+        .action-btn-small.view {
+            background: #3b82f6;
+        }
+        
+        .action-btn-small.edit {
+            background: #f59e0b;
+        }
+        
+        .action-btn-small.delete {
+            background: #ef4444;
+        }
+        
+        /* Card Content */
+        .menu-card-content {
+            padding: 12px;
+        }
+        
+        .menu-card-title {
+            margin: 0 0 2px 0;
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: #1f2937;
+            line-height: 1.3;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .menu-card-subtitle {
+            margin: 0 0 8px 0;
+            font-size: 0.75rem;
+            color: #9ca3af;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        /* Tags */
+        .menu-card-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-bottom: 10px;
+        }
+        
+        .tag {
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+        
+        .tag.category {
+            background: #fef3c7;
+            color: #92400e;
+        }
+        
+        .tag.region {
+            border: 1px solid currentColor;
+        }
+        
+        /* Card Footer */
+        .menu-card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 10px;
+            border-top: 1px solid #f3f4f6;
+        }
+        
+        .menu-card-price {
+            font-size: 1.1rem;
+            font-weight: 800;
+            color: #22c55e;
+        }
+        
+        .action-btn {
+            padding: 6px 12px;
+            border-radius: 6px;
+            border: none;
+            font-size: 0.75rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        
+        .action-btn.edit {
+            background: #f0fdf4;
+            color: #166534;
+            border: 1px solid #bbf7d0;
+        }
+        
+        .action-btn.edit:hover {
+            background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+            color: white;
+            border-color: transparent;
+        }
+        
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+        }
+        
+        .empty-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+        }
+        
+        .empty-icon i {
+            font-size: 2rem;
+            color: #9ca3af;
+        }
+        
+        .empty-state h4 {
+            margin: 0 0 8px 0;
+            color: #374151;
+            font-size: 1.1rem;
+        }
+        
+        .empty-state p {
+            margin: 0 0 20px 0;
+            color: #9ca3af;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .menu-grid {
+                grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+                gap: 16px;
+                padding: 16px;
+            }
+            
+            .menu-card-image {
+                height: 150px;
+            }
         }
     </style>
 </head>
@@ -224,128 +542,111 @@ $total = count($menu_items);
             </form>
         </div>
 
-        <!-- Kết quả -->
-        <div class="card">
-            <div class="card-header">
-                <h3><i class="fas fa-list"></i> Danh sách món ăn (<?php echo $total; ?> món)</h3>
+        <!-- Kết quả - Modern Card Grid -->
+        <div class="menu-section">
+            <div class="menu-section-header">
+                <h3><i class="fas fa-utensils"></i> Danh sách món ăn</h3>
+                <span class="menu-count"><?php echo $total; ?> món</span>
             </div>
-            <div class="card-body">
-                <div class="table-responsive">
-                    <table class="data-table">
-                        <thead>
-                            <tr>
-                                <th width="60">STT</th>
-                                <th width="80">Hình</th>
-                                <th>Tên món</th>
-                                <th width="150">Danh mục</th>
-                                <th width="120">Vùng miền</th>
-                                <th width="120">Giá</th>
-                                <th width="120">Trạng thái</th>
-                                <th width="150">Thao tác</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php if (count($menu_items) > 0): ?>
-                                <?php foreach ($menu_items as $index => $item): ?>
-                                <tr>
-                                    <td style="text-align: center; font-weight: 600;">
-                                        <?php echo $index + 1; ?>
-                                    </td>
-                                    <td>
-                                        <?php if ($item['image']): ?>
-                                            <img src="../<?php echo htmlspecialchars($item['image']); ?>" 
-                                                 alt="<?php echo htmlspecialchars($item['name']); ?>"
-                                                 style="width: 50px; height: 50px; object-fit: cover; border-radius: 6px;">
-                                        <?php else: ?>
-                                            <div style="width: 50px; height: 50px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem;">
-                                                🍽️
-                                            </div>
-                                        <?php endif; ?>
-                                    </td>
-                                    <td>
-                                        <strong style="display: block; margin-bottom: 2px; color: #1f2937;">
-                                            <?php echo htmlspecialchars($item['name']); ?>
-                                        </strong>
-                                        <?php if ($item['name_en']): ?>
-                                            <small style="color: #9ca3af;">
-                                                <?php echo htmlspecialchars($item['name_en']); ?>
-                                            </small>
-                                        <?php endif; ?>
-                                    </td>
-                                    <td>
-                                        <span class="badge badge-warning">
-                                            <?php echo htmlspecialchars($item['category_name'] ?? 'Chưa phân loại'); ?>
-                                        </span>
-                                    </td>
-                                    <td>
-                                        <?php 
-                                        $region_labels = [
-                                            'mien_bac' => ['🏔️ Miền Bắc', '#3b82f6'],
-                                            'mien_trung' => ['🏖️ Miền Trung', '#f59e0b'],
-                                            'mien_nam' => ['🌴 Miền Nam', '#22c55e'],
-                                            'quoc_te' => ['🌍 Quốc tế', '#8b5cf6']
-                                        ];
-                                        $region = $item['region'] ?? '';
-                                        if ($region && isset($region_labels[$region])):
-                                        ?>
-                                        <span class="badge" style="background: <?php echo $region_labels[$region][1]; ?>; color: white;">
-                                            <?php echo $region_labels[$region][0]; ?>
-                                        </span>
-                                        <?php else: ?>
-                                        <span class="badge" style="background: #9ca3af; color: white;">❓ Chưa có</span>
-                                        <?php endif; ?>
-                                    </td>
-                                    <td>
-                                        <strong style="color: #f97316; font-size: 1.05rem;">
-                                            <?php echo number_format($item['price'], 0, ',', '.'); ?>đ
-                                        </strong>
-                                    </td>
-                                    <td>
-                                        <?php if ($item['is_available']): ?>
-                                            <span class="badge badge-success">
-                                                <i class="fas fa-check-circle"></i> Còn món
-                                            </span>
-                                        <?php else: ?>
-                                            <span class="badge badge-danger">
-                                                <i class="fas fa-times-circle"></i> Hết món
-                                            </span>
-                                        <?php endif; ?>
-                                    </td>
-                                    <td>
-                                        <div style="display: flex; gap: 0.4rem; justify-content: center;">
-                                            <a href="../index.php?page=menu-item-detail&id=<?php echo $item['id']; ?>" 
-                                               target="_blank" 
-                                               class="btn-icon btn-info" 
-                                               title="Xem">
-                                                <i class="fas fa-eye"></i>
-                                            </a>
-                                            <button onclick="editMenuItem(<?php echo htmlspecialchars(json_encode($item)); ?>)" 
-                                                    class="btn-icon btn-warning" 
-                                                    title="Sửa">
-                                                <i class="fas fa-edit"></i>
-                                            </button>
-                                            <button onclick="deleteMenuItem(<?php echo $item['id']; ?>, '<?php echo htmlspecialchars($item['name'], ENT_QUOTES); ?>')" 
-                                                    class="btn-icon btn-danger" 
-                                                    title="Xóa">
-                                                <i class="fas fa-trash"></i>
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <?php endforeach; ?>
-                            <?php else: ?>
-                                <tr>
-                                    <td colspan="8" style="text-align: center; padding: 3rem; color: #9ca3af;">
-                                        <i class="fas fa-search" style="font-size: 3rem; margin-bottom: 1rem; display: block; opacity: 0.3;"></i>
-                                        <strong>Không tìm thấy món ăn nào</strong>
-                                        <p style="margin-top: 0.5rem;">Thử thay đổi bộ lọc hoặc thêm món mới</p>
-                                    </td>
-                                </tr>
+            
+            <?php if (count($menu_items) > 0): ?>
+            <div class="menu-grid">
+                <?php foreach ($menu_items as $index => $item): 
+                    $region_labels = [
+                        'mien_bac' => ['🏔️ Miền Bắc', '#3b82f6', 'rgba(59, 130, 246, 0.1)'],
+                        'mien_trung' => ['🏖️ Miền Trung', '#f59e0b', 'rgba(245, 158, 11, 0.1)'],
+                        'mien_nam' => ['🌴 Miền Nam', '#22c55e', 'rgba(34, 197, 94, 0.1)'],
+                        'quoc_te' => ['🌍 Quốc tế', '#8b5cf6', 'rgba(139, 92, 246, 0.1)']
+                    ];
+                    $region = $item['region'] ?? '';
+                ?>
+                <div class="menu-card <?php echo !$item['is_available'] ? 'unavailable' : ''; ?>">
+                    <!-- Card Image -->
+                    <div class="menu-card-image">
+                        <?php if ($item['image']): ?>
+                            <img src="../<?php echo htmlspecialchars($item['image']); ?>" 
+                                 alt="<?php echo htmlspecialchars($item['name']); ?>">
+                        <?php else: ?>
+                            <div class="menu-card-placeholder">
+                                <i class="fas fa-utensils"></i>
+                            </div>
+                        <?php endif; ?>
+                        
+                        <!-- Status Badge -->
+                        <div class="menu-card-status <?php echo $item['is_available'] ? 'available' : 'sold-out'; ?>">
+                            <?php echo $item['is_available'] ? '✓ Còn món' : '✗ Hết'; ?>
+                        </div>
+                        
+                        <!-- Index Number -->
+                        <div class="menu-card-index"><?php echo $index + 1; ?></div>
+                        
+                        <!-- Quick Action Buttons -->
+                        <div class="menu-card-actions-top">
+                            <a href="../index.php?page=menu-item-detail&id=<?php echo $item['id']; ?>" 
+                               target="_blank" 
+                               class="action-btn-small view" 
+                               title="Xem">
+                                <i class="fas fa-eye"></i>
+                            </a>
+                            <button onclick="editMenuItem(<?php echo htmlspecialchars(json_encode($item)); ?>)" 
+                                    class="action-btn-small edit" 
+                                    title="Sửa">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button onclick="deleteMenuItem(<?php echo $item['id']; ?>, '<?php echo htmlspecialchars($item['name'], ENT_QUOTES); ?>')" 
+                                    class="action-btn-small delete" 
+                                    title="Xóa">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Card Content -->
+                    <div class="menu-card-content">
+                        <h4 class="menu-card-title"><?php echo htmlspecialchars($item['name']); ?></h4>
+                        <?php if ($item['name_en']): ?>
+                            <p class="menu-card-subtitle"><?php echo htmlspecialchars($item['name_en']); ?></p>
+                        <?php endif; ?>
+                        
+                        <div class="menu-card-tags">
+                            <span class="tag category">
+                                <i class="fas fa-tag"></i>
+                                <?php echo htmlspecialchars($item['category_name'] ?? 'Chưa phân loại'); ?>
+                            </span>
+                            <?php if ($region && isset($region_labels[$region])): ?>
+                            <span class="tag region" style="background: <?php echo $region_labels[$region][2]; ?>; color: <?php echo $region_labels[$region][1]; ?>;">
+                                <?php echo $region_labels[$region][0]; ?>
+                            </span>
                             <?php endif; ?>
-                        </tbody>
-                    </table>
+                        </div>
+                        
+                        <div class="menu-card-footer">
+                            <div class="menu-card-price">
+                                <?php echo number_format($item['price'], 0, ',', '.'); ?>đ
+                            </div>
+                            <div class="menu-card-actions">
+                                <button onclick="editMenuItem(<?php echo htmlspecialchars(json_encode($item)); ?>)" 
+                                        class="action-btn edit">
+                                    <i class="fas fa-pen"></i> Sửa
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
+                <?php endforeach; ?>
             </div>
+            <?php else: ?>
+            <div class="empty-state">
+                <div class="empty-icon">
+                    <i class="fas fa-search"></i>
+                </div>
+                <h4>Không tìm thấy món ăn nào</h4>
+                <p>Thử thay đổi bộ lọc hoặc thêm món mới</p>
+                <button onclick="showAddModal()" class="btn btn-primary">
+                    <i class="fas fa-plus"></i> Thêm món mới
+                </button>
+            </div>
+            <?php endif; ?>
         </div>
     </div>
 

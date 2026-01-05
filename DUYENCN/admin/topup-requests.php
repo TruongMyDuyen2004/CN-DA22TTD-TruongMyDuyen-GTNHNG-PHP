@@ -18,12 +18,12 @@ if (isset($_POST['approve_topup'])) {
     $request_id = intval($_POST['request_id']);
     
     try {
-        // Lấy thông tin yêu cầu
+        // Lấy thông tin yêu cầu (cho phép duyệt cả pending và waiting)
         $stmt = $conn->prepare("
             SELECT tr.*, mc.balance, mc.id as card_id
             FROM topup_requests tr
             JOIN member_cards mc ON tr.card_id = mc.id
-            WHERE tr.id = ? AND tr.status = 'waiting'
+            WHERE tr.id = ? AND tr.status IN ('pending', 'waiting')
         ");
         $stmt->execute([$request_id]);
         $request = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -60,12 +60,12 @@ if (isset($_POST['approve_topup'])) {
     }
 }
 
-// Xử lý từ chối yêu cầu
+// Xử lý từ chối yêu cầu (cho phép từ chối cả pending và waiting)
 if (isset($_POST['reject_topup'])) {
     $request_id = intval($_POST['request_id']);
     $reason = trim($_POST['reject_reason'] ?? 'Không xác nhận được giao dịch');
     
-    $stmt = $conn->prepare("UPDATE topup_requests SET status = 'failed', payment_info = ? WHERE id = ? AND status = 'waiting'");
+    $stmt = $conn->prepare("UPDATE topup_requests SET status = 'failed', payment_info = ? WHERE id = ? AND status IN ('pending', 'waiting')");
     $stmt->execute([$reason, $request_id]);
     
     if ($stmt->rowCount() > 0) {
@@ -86,19 +86,26 @@ $sql = "
     JOIN member_cards mc ON tr.card_id = mc.id
 ";
 if ($status_filter && $status_filter != 'all') {
-    $sql .= " WHERE tr.status = :status";
+    // Nếu chọn "Chờ duyệt" thì hiển thị waiting trước, rồi đến pending
+    if ($status_filter == 'waiting') {
+        $sql .= " WHERE tr.status IN ('waiting', 'pending')";
+    } else {
+        $sql .= " WHERE tr.status = :status";
+    }
 }
-$sql .= " ORDER BY tr.created_at DESC LIMIT 100";
+// Sắp xếp: waiting trước, pending sau, mới nhất trước
+$sql .= " ORDER BY FIELD(tr.status, 'waiting', 'pending', 'completed', 'failed'), tr.created_at DESC LIMIT 100";
 
 $stmt = $conn->prepare($sql);
-if ($status_filter && $status_filter != 'all') {
+if ($status_filter && $status_filter != 'all' && $status_filter != 'waiting') {
     $stmt->bindParam(':status', $status_filter);
 }
 $stmt->execute();
 $requests = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-// Đếm số yêu cầu chờ duyệt
+// Đếm số yêu cầu chờ duyệt (ưu tiên waiting - user đã xác nhận chuyển tiền)
 $waiting_count = $conn->query("SELECT COUNT(*) FROM topup_requests WHERE status = 'waiting'")->fetchColumn();
+$pending_count = $conn->query("SELECT COUNT(*) FROM topup_requests WHERE status = 'pending'")->fetchColumn();
 ?>
 <!DOCTYPE html>
 <html lang="vi">
@@ -106,6 +113,8 @@ $waiting_count = $conn->query("SELECT COUNT(*) FROM topup_requests WHERE status 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Yêu cầu nạp tiền - Admin</title>
+    <link rel="icon" type="image/jpeg" href="../assets/images/logo.jpg">
+    <link rel="shortcut icon" type="image/jpeg" href="../assets/images/logo.jpg">
     <link rel="stylesheet" href="../assets/css/admin-dark-modern.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -228,7 +237,10 @@ $waiting_count = $conn->query("SELECT COUNT(*) FROM topup_requests WHERE status 
             <h1>
                 <i class="fas fa-money-bill-wave"></i> Yêu cầu nạp tiền
                 <?php if ($waiting_count > 0): ?>
-                <span class="waiting-badge"><?php echo $waiting_count; ?> chờ duyệt</span>
+                <span class="waiting-badge" style="background:#fef3c7;color:#92400e;"><?php echo $waiting_count; ?> chờ duyệt</span>
+                <?php endif; ?>
+                <?php if ($pending_count > 0): ?>
+                <span class="waiting-badge" style="background:#e5e7eb;color:#6b7280;"><?php echo $pending_count; ?> đang tạo</span>
                 <?php endif; ?>
             </h1>
         </div>
@@ -243,7 +255,7 @@ $waiting_count = $conn->query("SELECT COUNT(*) FROM topup_requests WHERE status 
         <!-- Filter Tabs -->
         <div class="filter-tabs">
             <a href="?status=waiting" class="filter-tab <?php echo $status_filter == 'waiting' ? 'active' : ''; ?>">
-                <i class="fas fa-clock"></i> Chờ duyệt
+                <i class="fas fa-clock"></i> Chờ duyệt <?php if ($waiting_count > 0) echo "($waiting_count)"; ?>
             </a>
             <a href="?status=completed" class="filter-tab <?php echo $status_filter == 'completed' ? 'active completed' : ''; ?>">
                 <i class="fas fa-check"></i> Đã duyệt
@@ -304,11 +316,19 @@ $waiting_count = $conn->query("SELECT COUNT(*) FROM topup_requests WHERE status 
                         </td>
                         <td>
                             <?php
-                            $status_labels = ['pending' => 'Đang tạo', 'waiting' => 'Chờ duyệt', 'completed' => 'Đã duyệt', 'failed' => 'Từ chối'];
+                            $status_labels = [
+                                'pending' => 'Đang tạo', 
+                                'waiting' => 'Chờ duyệt', 
+                                'completed' => 'Đã duyệt', 
+                                'failed' => 'Từ chối'
+                            ];
                             ?>
                             <span class="status-badge status-<?php echo $req['status']; ?>">
                                 <?php echo $status_labels[$req['status']] ?? $req['status']; ?>
                             </span>
+                            <?php if ($req['status'] == 'waiting'): ?>
+                            <br><small style="color:#f59e0b;font-size:0.7rem;">User đã xác nhận</small>
+                            <?php endif; ?>
                         </td>
                         <td>
                             <?php echo date('d/m/Y H:i', strtotime($req['created_at'])); ?>
@@ -317,7 +337,7 @@ $waiting_count = $conn->query("SELECT COUNT(*) FROM topup_requests WHERE status 
                             <?php endif; ?>
                         </td>
                         <td>
-                            <?php if ($req['status'] == 'waiting'): ?>
+                            <?php if ($req['status'] == 'waiting' || $req['status'] == 'pending'): ?>
                             <form method="POST" style="display:inline;">
                                 <input type="hidden" name="request_id" value="<?php echo $req['id']; ?>">
                                 <button type="submit" name="approve_topup" class="btn btn-approve" onclick="return confirm('Xác nhận duyệt nạp <?php echo number_format($req['amount']); ?>đ?')">

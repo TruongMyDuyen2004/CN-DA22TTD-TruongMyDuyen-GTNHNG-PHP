@@ -1,44 +1,35 @@
-/* Profile Page - Modern Green Theme */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+/* Profile Page - Ultra Modern Design 2024 */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
 
-/* Profile Section */
+/* ============================================
+   PROFILE SECTION - MAIN CONTAINER
+   ============================================ */
 body.dark-theme .profile-section,
 .profile-section {
-    padding: 2rem !important;
-    background: linear-gradient(180deg, #f0fdf4 0%, #dcfce7 50%, #f0fdf4 100%) !important;
-    min-height: calc(100vh - 80px) !important;
+    padding: 0 !important;
+    background: #f8fafc !important;
+    min-height: 100vh !important;
     position: relative !important;
-}
-
-body.dark-theme .profile-section::before,
-.profile-section::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: 
-        radial-gradient(ellipse at 20% 0%, rgba(34, 197, 94, 0.15) 0%, transparent 50%),
-        radial-gradient(ellipse at 80% 100%, rgba(34, 197, 94, 0.1) 0%, transparent 50%);
-    pointer-events: none;
 }
 
 body.dark-theme .profile-section .container,
 .profile-section .container {
-    max-width: 900px !important;
+    max-width: 1000px !important;
     margin: 0 auto !important;
-    position: relative !important;
-    z-index: 1 !important;
+    padding: 0 1.5rem 3rem !important;
 }
 
-/* Alerts */
+/* ============================================
+   ALERTS
+   ============================================ */
 body.dark-theme .profile-section .alert,
 .profile-section .alert {
     padding: 1rem 1.5rem !important;
-    border-radius: 16px !important;
-    margin-bottom: 1.5rem !important;
+    border-radius: 12px !important;
+    margin: 1.5rem auto !important;
+    max-width: 1000px !important;
     font-size: 0.95rem !important;
+    font-weight: 500 !important;
     display: flex !important;
     align-items: center !important;
     gap: 0.75rem !important;
@@ -52,33 +43,34 @@ body.dark-theme .profile-section .alert,
 
 body.dark-theme .profile-section .alert-success,
 .profile-section .alert-success {
-    background: #dcfce7 !important;
-    color: #166534 !important;
-    border: 1px solid #86efac !important;
+    background: #ecfdf5 !important;
+    color: #065f46 !important;
+    border: 1px solid #a7f3d0 !important;
 }
 
 body.dark-theme .profile-section .alert-error,
 .profile-section .alert-error {
-    background: #fee2e2 !important;
-    color: #dc2626 !important;
+    background: #fef2f2 !important;
+    color: #991b1b !important;
     border: 1px solid #fecaca !important;
 }
 
-/* Profile Hero - Modern Green Style */
+/* ============================================
+   PROFILE HERO - COVER PHOTO STYLE
+   ============================================ */
 body.dark-theme .profile-hero,
 .profile-hero {
-    background: linear-gradient(135deg, #22c55e 0%, #16a34a 50%, #15803d 100%) !important;
-    border-radius: 28px !important;
-    padding: 2rem !important;
-    padding-bottom: 2.5rem !important;
-    margin-bottom: 1.5rem !important;
+    background: linear-gradient(135deg, #065f46 0%, #047857 25%, #059669 50%, #10b981 75%, #34d399 100%) !important;
+    border-radius: 0 0 40px 40px !important;
+    padding: 3rem 2rem 5rem !important;
+    margin-bottom: -60px !important;
     position: relative !important;
-    overflow: visible !important;
+    overflow: hidden !important;
     border: none !important;
-    box-shadow: 0 20px 50px rgba(34, 197, 94, 0.3) !important;
+    min-height: 200px !important;
 }
 
-/* Decorative overlay */
+/* Animated background pattern */
 body.dark-theme .profile-hero::before,
 .profile-hero::before {
     content: '';
@@ -87,85 +79,87 @@ body.dark-theme .profile-hero::before,
     left: 0;
     right: 0;
     bottom: 0;
-    border-radius: 28px;
     background: 
-        radial-gradient(ellipse at 70% 30%, rgba(255, 255, 255, 0.2) 0%, transparent 50%),
-        radial-gradient(ellipse at 30% 70%, rgba(255, 255, 255, 0.15) 0%, transparent 40%);
+        url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
     pointer-events: none;
 }
 
+/* Glowing orbs */
 body.dark-theme .profile-hero-bg,
 .profile-hero-bg {
     position: absolute !important;
-    top: -50% !important;
-    right: -20% !important;
+    top: -100px !important;
+    right: -100px !important;
     width: 400px !important;
     height: 400px !important;
     background: radial-gradient(circle, rgba(255, 255, 255, 0.15) 0%, transparent 70%) !important;
     border-radius: 50% !important;
     pointer-events: none !important;
+    animation: pulse-glow 4s ease-in-out infinite !important;
 }
 
-/* Decorative circle bottom */
 body.dark-theme .profile-hero::after,
 .profile-hero::after {
     content: '';
     position: absolute;
-    bottom: -20%;
-    left: -10%;
-    width: 250px;
-    height: 250px;
+    bottom: -80px;
+    left: -80px;
+    width: 300px;
+    height: 300px;
     background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
     border-radius: 50%;
     pointer-events: none;
+    animation: pulse-glow 5s ease-in-out infinite reverse;
+}
+
+@keyframes pulse-glow {
+    0%, 100% { transform: scale(1); opacity: 0.5; }
+    50% { transform: scale(1.1); opacity: 0.8; }
 }
 
 body.dark-theme .profile-hero-content,
 .profile-hero-content {
     display: flex !important;
-    align-items: center !important;
-    justify-content: flex-start !important;
-    gap: 2rem !important;
-    position: relative !important;
-    z-index: 3 !important;
-}
-
-/* Profile Info - Center text */
-body.dark-theme .profile-info,
-.profile-info {
-    flex: 1 !important;
-    display: flex !important;
     flex-direction: column !important;
     align-items: center !important;
+    justify-content: center !important;
+    position: relative !important;
+    z-index: 3 !important;
     text-align: center !important;
 }
 
-/* Avatar - Clean Style */
+/* ============================================
+   AVATAR - FLOATING CARD STYLE
+   ============================================ */
 body.dark-theme .avatar-wrapper,
 .avatar-wrapper {
     position: relative !important;
-    flex-shrink: 0 !important;
+    margin-bottom: 1rem !important;
 }
 
 body.dark-theme .avatar-preview,
 .avatar-preview {
-    width: 110px !important;
-    height: 110px !important;
+    width: 140px !important;
+    height: 140px !important;
     border-radius: 50% !important;
     background: #ffffff !important;
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
-    border: 4px solid rgba(255, 255, 255, 0.9) !important;
+    border: 6px solid #ffffff !important;
     overflow: hidden !important;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2) !important;
-    transition: all 0.3s ease !important;
+    box-shadow: 
+        0 20px 60px rgba(0, 0, 0, 0.3),
+        0 8px 25px rgba(5, 150, 105, 0.4) !important;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
 }
 
 body.dark-theme .avatar-preview:hover,
 .avatar-preview:hover {
     transform: scale(1.05) !important;
-    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25) !important;
+    box-shadow: 
+        0 25px 70px rgba(0, 0, 0, 0.35),
+        0 12px 35px rgba(5, 150, 105, 0.5) !important;
 }
 
 body.dark-theme .avatar-preview img,
@@ -177,48 +171,50 @@ body.dark-theme .avatar-preview img,
 
 body.dark-theme .avatar-letter,
 .avatar-letter {
-    font-size: 2.8rem !important;
-    font-weight: 800 !important;
-    color: #22c55e !important;
+    font-size: 3.5rem !important;
+    font-weight: 900 !important;
+    background: linear-gradient(135deg, #059669 0%, #10b981 100%) !important;
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    background-clip: text !important;
 }
 
 body.dark-theme .avatar-edit-btn,
 .avatar-edit-btn {
     position: absolute !important;
-    bottom: 0 !important;
-    right: 0 !important;
-    width: 36px !important;
-    height: 36px !important;
+    bottom: 8px !important;
+    right: 8px !important;
+    width: 44px !important;
+    height: 44px !important;
     border-radius: 50% !important;
     background: #ffffff !important;
-    border: 3px solid #22c55e !important;
+    border: 3px solid #10b981 !important;
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
     cursor: pointer !important;
-    transition: all 0.3s ease !important;
-    color: #22c55e !important;
-    font-size: 0.85rem !important;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    color: #059669 !important;
+    font-size: 1rem !important;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2) !important;
 }
 
 body.dark-theme .avatar-edit-btn:hover,
 .avatar-edit-btn:hover {
-    background: #22c55e !important;
+    background: #10b981 !important;
     color: #ffffff !important;
-    transform: scale(1.1) !important;
+    transform: scale(1.15) rotate(15deg) !important;
 }
 
-/* Avatar Actions - Separated Buttons */
+/* Avatar Actions */
 body.dark-theme .avatar-actions,
 .avatar-actions {
     position: absolute !important;
-    bottom: -45px !important;
+    bottom: -50px !important;
     left: 50% !important;
     transform: translateX(-50%) !important;
     display: flex !important;
-    gap: 1rem !important;
-    white-space: nowrap !important;
+    gap: 0.75rem !important;
     z-index: 10 !important;
 }
 
@@ -226,195 +222,199 @@ body.dark-theme .btn-cancel-avatar,
 body.dark-theme .btn-confirm-avatar,
 .btn-cancel-avatar,
 .btn-confirm-avatar {
-    padding: 0.5rem 1rem !important;
-    border-radius: 8px !important;
-    font-size: 0.75rem !important;
-    font-weight: 600 !important;
+    padding: 0.6rem 1.2rem !important;
+    border-radius: 25px !important;
+    font-size: 0.8rem !important;
+    font-weight: 700 !important;
     border: none !important;
     cursor: pointer !important;
     display: flex !important;
     align-items: center !important;
-    gap: 0.35rem !important;
+    gap: 0.4rem !important;
     transition: all 0.3s ease !important;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15) !important;
 }
 
 body.dark-theme .btn-cancel-avatar,
 .btn-cancel-avatar {
     background: #ffffff !important;
-    color: #dc2626 !important;
-    border: 1px solid #fecaca !important;
+    color: #ef4444 !important;
 }
 
 body.dark-theme .btn-cancel-avatar:hover,
 .btn-cancel-avatar:hover {
-    background: #fee2e2 !important;
+    background: #fef2f2 !important;
     transform: translateY(-2px) !important;
 }
 
 body.dark-theme .btn-confirm-avatar,
 .btn-confirm-avatar {
-    background: #ffffff !important;
-    color: #16a34a !important;
-    border: 1px solid #86efac !important;
+    background: #10b981 !important;
+    color: #ffffff !important;
 }
 
 body.dark-theme .btn-confirm-avatar:hover,
 .btn-confirm-avatar:hover {
-    background: #dcfce7 !important;
+    background: #059669 !important;
     transform: translateY(-2px) !important;
 }
 
-/* Profile Info */
+/* ============================================
+   PROFILE INFO
+   ============================================ */
+body.dark-theme .profile-info,
+.profile-info {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    text-align: center !important;
+}
+
 body.dark-theme .profile-info h1,
 .profile-info h1 {
-    font-size: 1.75rem !important;
+    font-size: 2.25rem !important;
     font-weight: 800 !important;
     color: #ffffff !important;
-    margin: 0 0 0.4rem 0 !important;
+    margin: 0.5rem 0 !important;
+    text-shadow: 0 2px 20px rgba(0, 0, 0, 0.2) !important;
     letter-spacing: -0.5px !important;
 }
 
 body.dark-theme .profile-email,
 .profile-email {
-    color: rgba(255, 255, 255, 0.9) !important;
-    font-size: 0.9rem !important;
-    margin: 0 0 0.75rem 0 !important;
-    display: flex !important;
+    color: rgba(255, 255, 255, 0.95) !important;
+    font-size: 1rem !important;
+    font-weight: 500 !important;
+    margin: 0.25rem 0 0.5rem !important;
+    display: inline-flex !important;
     align-items: center !important;
     gap: 0.5rem !important;
 }
 
-body.dark-theme .profile-email i,
-.profile-email i {
-    font-size: 0.8rem !important;
-    opacity: 0.8 !important;
-}
-
-/* Join Date */
 body.dark-theme .profile-join-date,
 .profile-join-date {
-    color: rgba(255, 255, 255, 0.85) !important;
-    font-size: 0.85rem !important;
-    margin: 0 0 0.75rem 0 !important;
-    display: flex !important;
+    color: rgba(255, 255, 255, 0.8) !important;
+    font-size: 0.9rem !important;
+    margin: 0 0 1rem !important;
+    display: inline-flex !important;
     align-items: center !important;
     gap: 0.5rem !important;
-}
-
-body.dark-theme .profile-join-date i,
-.profile-join-date i {
-    font-size: 0.75rem !important;
-    opacity: 0.8 !important;
 }
 
 body.dark-theme .profile-badges,
 .profile-badges {
     display: flex !important;
-    gap: 0.6rem !important;
+    gap: 0.75rem !important;
     flex-wrap: wrap !important;
     justify-content: center !important;
+    margin-top: 0.5rem !important;
 }
 
 body.dark-theme .badge,
 .badge {
     display: inline-flex !important;
     align-items: center !important;
-    gap: 0.4rem !important;
-    padding: 0.45rem 0.9rem !important;
-    border-radius: 25px !important;
-    font-size: 0.8rem !important;
+    gap: 0.5rem !important;
+    padding: 0.5rem 1rem !important;
+    border-radius: 50px !important;
+    font-size: 0.85rem !important;
     font-weight: 600 !important;
-    transition: transform 0.2s ease !important;
+    background: rgba(255, 255, 255, 0.2) !important;
+    color: #ffffff !important;
+    backdrop-filter: blur(10px) !important;
+    border: 1px solid rgba(255, 255, 255, 0.3) !important;
+    transition: all 0.3s ease !important;
 }
 
 body.dark-theme .badge:hover,
 .badge:hover {
+    background: rgba(255, 255, 255, 0.3) !important;
     transform: translateY(-2px) !important;
 }
 
-body.dark-theme .badge-member,
-body.dark-theme .badge-verified,
-.badge-member,
-.badge-verified {
-    background: rgba(255, 255, 255, 0.2) !important;
-    color: #ffffff !important;
-    border: 1px solid rgba(255, 255, 255, 0.3) !important;
-    backdrop-filter: blur(10px) !important;
-}
-
-/* Profile Stats - Modern Design */
+/* ============================================
+   PROFILE STATS - FLOATING CARDS
+   ============================================ */
 body.dark-theme .profile-stats,
 .profile-stats {
     display: grid !important;
     grid-template-columns: repeat(4, 1fr) !important;
     gap: 1rem !important;
-    margin-bottom: 1.5rem !important;
+    margin-bottom: 2rem !important;
+    position: relative !important;
+    z-index: 5 !important;
 }
 
 body.dark-theme .stat-card,
 .stat-card {
     background: #ffffff !important;
     border-radius: 20px !important;
-    padding: 1.5rem !important;
+    padding: 1.5rem 1rem !important;
     display: flex !important;
     flex-direction: column !important;
     align-items: center !important;
     text-align: center !important;
     gap: 0.75rem !important;
-    border: 2px solid #e5e7eb !important;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05) !important;
+    border: none !important;
+    box-shadow: 
+        0 10px 40px rgba(0, 0, 0, 0.08),
+        0 4px 12px rgba(0, 0, 0, 0.05) !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+body.dark-theme .stat-card:hover,
+.stat-card:hover {
+    transform: translateY(-8px) !important;
+    box-shadow: 
+        0 20px 50px rgba(0, 0, 0, 0.12),
+        0 8px 20px rgba(0, 0, 0, 0.08) !important;
 }
 
 body.dark-theme .stat-icon,
 .stat-icon {
-    width: 60px !important;
-    height: 60px !important;
-    min-width: 60px !important;
-    min-height: 60px !important;
+    width: 56px !important;
+    height: 56px !important;
     border-radius: 16px !important;
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
-    font-size: 1.5rem !important;
-    flex-shrink: 0 !important;
+    font-size: 1.4rem !important;
 }
 
 body.dark-theme .stat-icon.stat-orders,
 .stat-icon.stat-orders {
-    background: #dbeafe !important;
-    color: #2563eb !important;
+    background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%) !important;
+    color: #1d4ed8 !important;
 }
 
 body.dark-theme .stat-icon.stat-completed,
 .stat-icon.stat-completed {
-    background: #dcfce7 !important;
-    color: #16a34a !important;
+    background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%) !important;
+    color: #15803d !important;
 }
 
 body.dark-theme .stat-icon.stat-pending,
 .stat-icon.stat-pending {
-    background: #fef3c7 !important;
-    color: #d97706 !important;
+    background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%) !important;
+    color: #b45309 !important;
 }
 
 body.dark-theme .stat-icon.stat-spent,
 .stat-icon.stat-spent {
-    background: #fce7f3 !important;
-    color: #db2777 !important;
+    background: linear-gradient(135deg, #fce7f3 0%, #fbcfe8 100%) !important;
+    color: #be185d !important;
 }
 
 body.dark-theme .stat-info,
 .stat-info {
     display: flex !important;
     flex-direction: column !important;
-    align-items: center !important;
     gap: 0.25rem !important;
 }
 
 body.dark-theme .stat-number,
 .stat-number {
-    font-size: 1.5rem !important;
+    font-size: 1.75rem !important;
     font-weight: 800 !important;
     color: #111827 !important;
     line-height: 1.2 !important;
@@ -429,53 +429,68 @@ body.dark-theme .stat-label,
     letter-spacing: 0.5px !important;
 }
 
-/* Profile Content */
+/* ============================================
+   PROFILE CONTENT - FORM CARDS
+   ============================================ */
 body.dark-theme .profile-content,
 .profile-content {
     display: flex !important;
     flex-direction: column !important;
-    gap: 1.25rem !important;
+    gap: 1.5rem !important;
 }
 
-
-/* Profile Card - White Clean Design */
 body.dark-theme .profile-card,
 .profile-card {
     background: #ffffff !important;
-    border-radius: 20px !important;
+    border-radius: 24px !important;
     padding: 2rem !important;
-    border: 2px solid #22c55e !important;
-    box-shadow: 0 10px 40px rgba(34, 197, 94, 0.15) !important;
-    transition: transform 0.3s ease, box-shadow 0.3s ease !important;
+    border: none !important;
+    box-shadow: 
+        0 10px 40px rgba(0, 0, 0, 0.06),
+        0 4px 12px rgba(0, 0, 0, 0.04) !important;
+    transition: all 0.3s ease !important;
 }
 
 body.dark-theme .profile-card:hover,
 .profile-card:hover {
-    transform: translateY(-4px) !important;
-    box-shadow: 0 20px 50px rgba(34, 197, 94, 0.2) !important;
+    box-shadow: 
+        0 15px 50px rgba(0, 0, 0, 0.1),
+        0 6px 16px rgba(0, 0, 0, 0.06) !important;
 }
 
 body.dark-theme .card-header,
 .card-header {
     display: flex !important;
     align-items: center !important;
-    justify-content: center !important;
     gap: 0.75rem !important;
-    margin-bottom: 1.5rem !important;
+    margin-bottom: 1.75rem !important;
     padding-bottom: 1rem !important;
-    border-bottom: 2px solid #dcfce7 !important;
-    color: #166534 !important;
-    font-size: 1.1rem !important;
-    font-weight: 700 !important;
+    border-bottom: 2px solid #f3f4f6 !important;
 }
 
 body.dark-theme .card-header i,
 .card-header i {
-    color: #22c55e !important;
+    width: 40px !important;
+    height: 40px !important;
+    background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%) !important;
+    color: #059669 !important;
+    border-radius: 12px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
     font-size: 1rem !important;
 }
 
-/* Form */
+body.dark-theme .card-header span,
+.card-header span {
+    font-size: 1.15rem !important;
+    font-weight: 700 !important;
+    color: #111827 !important;
+}
+
+/* ============================================
+   FORM STYLES
+   ============================================ */
 body.dark-theme .profile-form,
 .profile-form {
     display: flex !important;
@@ -504,35 +519,25 @@ body.dark-theme .profile-section .form-group,
 
 body.dark-theme .profile-section .form-group label,
 .profile-section .form-group label {
-    display: block !important;
-    color: #166534 !important;
-    font-size: 0.85rem !important;
+    font-size: 0.9rem !important;
     font-weight: 600 !important;
-    margin-bottom: 0.25rem !important;
+    color: #374151 !important;
 }
 
-/* Input Fields - White background with green accent */
+/* Input Fields */
 body.dark-theme .profile-section .form-group input,
 body.dark-theme .profile-section .profile-form input,
-body.dark-theme .profile-section .profile-card input,
-body.dark-theme .profile-card input[type="text"],
-body.dark-theme .profile-card input[type="email"],
-body.dark-theme .profile-card input[type="tel"],
-body.dark-theme .profile-card input[type="password"],
+body.dark-theme .profile-card input,
 .profile-section .form-group input,
 .profile-section .profile-form input,
-.profile-section .profile-card input,
-.profile-card input[type="text"],
-.profile-card input[type="email"],
-.profile-card input[type="tel"],
-.profile-card input[type="password"] {
+.profile-card input {
     width: 100% !important;
-    padding: 0.9rem 1.1rem !important;
-    background: #f0fdf4 !important;
-    border: 2px solid #86efac !important;
+    padding: 0.9rem 1rem !important;
+    background: #f9fafb !important;
+    border: 2px solid #e5e7eb !important;
     border-radius: 12px !important;
-    color: #166534 !important;
-    font-size: 0.95rem !important;
+    color: #111827 !important;
+    font-size: 1rem !important;
     font-weight: 500 !important;
     transition: all 0.3s ease !important;
 }
@@ -541,7 +546,7 @@ body.dark-theme .profile-section .form-group input::placeholder,
 body.dark-theme .profile-card input::placeholder,
 .profile-section .form-group input::placeholder,
 .profile-card input::placeholder {
-    color: #4ade80 !important;
+    color: #9ca3af !important;
     font-weight: 400 !important;
 }
 
@@ -549,7 +554,7 @@ body.dark-theme .profile-section .form-group input:hover,
 body.dark-theme .profile-card input:hover,
 .profile-section .form-group input:hover,
 .profile-card input:hover {
-    border-color: #22c55e !important;
+    border-color: #10b981 !important;
     background: #ffffff !important;
 }
 
@@ -558,79 +563,56 @@ body.dark-theme .profile-card input:focus,
 .profile-section .form-group input:focus,
 .profile-card input:focus {
     outline: none !important;
-    border-color: #16a34a !important;
+    border-color: #10b981 !important;
     background: #ffffff !important;
-    box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.2) !important;
+    box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.15) !important;
 }
 
 /* Disabled Input */
 body.dark-theme .profile-section .form-group input.disabled,
-body.dark-theme .profile-card input.disabled,
 body.dark-theme .profile-section .form-group input:disabled,
-body.dark-theme .profile-card input:disabled,
 .profile-section .form-group input.disabled,
-.profile-card input.disabled,
-.profile-section .form-group input:disabled,
-.profile-card input:disabled {
-    background: #ecfdf5 !important;
-    color: #15803d !important;
+.profile-section .form-group input:disabled {
+    background: #f3f4f6 !important;
+    color: #6b7280 !important;
     cursor: not-allowed !important;
-    border-color: #bbf7d0 !important;
-    opacity: 0.8 !important;
+    border-color: #e5e7eb !important;
 }
 
 /* Select Dropdown */
 body.dark-theme .profile-section .form-select,
 body.dark-theme .profile-card .form-select,
-body.dark-theme .form-select,
 .profile-section .form-select,
-.profile-card .form-select,
-.form-select {
+.profile-card .form-select {
     width: 100% !important;
-    padding: 0.9rem 1.1rem !important;
-    background: #f0fdf4 !important;
-    border: 2px solid #86efac !important;
+    padding: 0.9rem 1rem !important;
+    background: #f9fafb !important;
+    border: 2px solid #e5e7eb !important;
     border-radius: 12px !important;
-    color: #166534 !important;
-    font-size: 0.95rem !important;
+    color: #111827 !important;
+    font-size: 1rem !important;
     font-weight: 500 !important;
     cursor: pointer !important;
     appearance: none !important;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2322c55e' d='M6 8L1 3h10z'/%3E%3C/svg%3E") !important;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236b7280' d='M6 8L1 3h10z'/%3E%3C/svg%3E") !important;
     background-repeat: no-repeat !important;
-    background-position: right 14px center !important;
-    padding-right: 40px !important;
+    background-position: right 1rem center !important;
+    padding-right: 2.5rem !important;
     transition: all 0.3s ease !important;
 }
 
 body.dark-theme .profile-section .form-select:hover,
-body.dark-theme .profile-card .form-select:hover,
-body.dark-theme .form-select:hover,
-.profile-section .form-select:hover,
-.profile-card .form-select:hover,
-.form-select:hover {
-    border-color: #22c55e !important;
+.profile-section .form-select:hover {
+    border-color: #10b981 !important;
     background-color: #ffffff !important;
 }
 
 body.dark-theme .profile-section .form-select:focus,
-body.dark-theme .profile-card .form-select:focus,
-body.dark-theme .form-select:focus,
-.profile-section .form-select:focus,
-.profile-card .form-select:focus,
-.form-select:focus {
+.profile-section .form-select:focus {
     outline: none !important;
-    border-color: #16a34a !important;
+    border-color: #10b981 !important;
     background-color: #ffffff !important;
-    box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.2) !important;
-}
-
-/* Date Input */
-body.dark-theme .profile-section input[type="date"],
-body.dark-theme .profile-card input[type="date"],
-.profile-section input[type="date"],
-.profile-card input[type="date"] {
-    cursor: pointer !important;
+    box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.15) !important;
 }
 
 /* Password Input */
@@ -639,35 +621,29 @@ body.dark-theme .profile-card input[type="date"],
 }
 
 body.dark-theme .profile-section .input-password input,
-body.dark-theme .profile-card .input-password input,
-.profile-section .input-password input,
-.profile-card .input-password input {
+.profile-section .input-password input {
     padding-right: 50px !important;
 }
 
 body.dark-theme .profile-section .input-password button,
-body.dark-theme .profile-card .input-password button,
-.profile-section .input-password button,
-.profile-card .input-password button {
+.profile-section .input-password button {
     position: absolute !important;
     right: 12px !important;
     top: 50% !important;
     transform: translateY(-50%) !important;
     background: none !important;
     border: none !important;
-    color: #22c55e !important;
+    color: #9ca3af !important;
     cursor: pointer !important;
-    padding: 0.4rem !important;
+    padding: 0.5rem !important;
     border-radius: 8px !important;
     transition: all 0.2s ease !important;
 }
 
 body.dark-theme .profile-section .input-password button:hover,
-body.dark-theme .profile-card .input-password button:hover,
-.profile-section .input-password button:hover,
-.profile-card .input-password button:hover {
-    color: #16a34a !important;
-    background: rgba(34, 197, 94, 0.1) !important;
+.profile-section .input-password button:hover {
+    color: #10b981 !important;
+    background: rgba(16, 185, 129, 0.1) !important;
 }
 
 /* Form Actions */
@@ -682,94 +658,68 @@ body.dark-theme .btn-save,
 body.dark-theme .btn-password,
 .btn-save,
 .btn-password {
-    padding: 0.85rem 1.75rem !important;
+    padding: 0.9rem 2rem !important;
     border-radius: 12px !important;
-    font-size: 0.9rem !important;
+    font-size: 0.95rem !important;
     font-weight: 700 !important;
     border: none !important;
     cursor: pointer !important;
     display: inline-flex !important;
     align-items: center !important;
     gap: 0.5rem !important;
-    transition: all 0.3s ease !important;
-    text-transform: uppercase !important;
-    letter-spacing: 0.5px !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
 }
 
 body.dark-theme .btn-save,
 .btn-save {
-    background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%) !important;
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
     color: #ffffff !important;
-    box-shadow: 0 4px 16px rgba(34, 197, 94, 0.4) !important;
+    box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4) !important;
 }
 
 body.dark-theme .btn-save:hover,
 .btn-save:hover {
     transform: translateY(-2px) !important;
-    box-shadow: 0 8px 24px rgba(34, 197, 94, 0.5) !important;
+    box-shadow: 0 8px 25px rgba(16, 185, 129, 0.5) !important;
 }
 
 body.dark-theme .btn-password,
 .btn-password {
-    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%) !important;
+    background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%) !important;
     color: #ffffff !important;
-    box-shadow: 0 4px 16px rgba(59, 130, 246, 0.4) !important;
+    box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4) !important;
 }
 
 body.dark-theme .btn-password:hover,
 .btn-password:hover {
     transform: translateY(-2px) !important;
-    box-shadow: 0 8px 24px rgba(59, 130, 246, 0.5) !important;
+    box-shadow: 0 8px 25px rgba(59, 130, 246, 0.5) !important;
 }
 
-/* Responsive */
+/* ============================================
+   RESPONSIVE
+   ============================================ */
 @media (max-width: 768px) {
-    body.dark-theme .profile-section,
-    .profile-section {
-        padding: 1.5rem !important;
-    }
-    
     body.dark-theme .profile-hero,
     .profile-hero {
-        padding: 1.75rem !important;
-        border-radius: 20px !important;
-    }
-    
-    body.dark-theme .profile-hero-content,
-    .profile-hero-content {
-        flex-direction: column !important;
-        text-align: center !important;
-        gap: 1.5rem !important;
+        padding: 2rem 1.5rem 4rem !important;
+        border-radius: 0 0 30px 30px !important;
     }
     
     body.dark-theme .profile-info h1,
     .profile-info h1 {
-        font-size: 1.5rem !important;
+        font-size: 1.75rem !important;
     }
     
-    body.dark-theme .profile-badges,
-    .profile-badges {
-        justify-content: center !important;
-    }
-    
-    body.dark-theme .profile-join-date,
-    .profile-join-date {
-        justify-content: center !important;
+    body.dark-theme .avatar-preview,
+    .avatar-preview {
+        width: 110px !important;
+        height: 110px !important;
     }
     
     body.dark-theme .profile-stats,
     .profile-stats {
         grid-template-columns: repeat(2, 1fr) !important;
-    }
-    
-    body.dark-theme .stat-card,
-    .stat-card {
-        padding: 1rem !important;
-    }
-    
-    body.dark-theme .stat-number,
-    .stat-number {
-        font-size: 1.1rem !important;
     }
     
     body.dark-theme .profile-section .form-row,
@@ -782,40 +732,35 @@ body.dark-theme .btn-password:hover,
     body.dark-theme .profile-card,
     .profile-card {
         padding: 1.5rem !important;
-        border-radius: 16px !important;
-    }
-    
-    body.dark-theme .avatar-preview,
-    .avatar-preview {
-        width: 90px !important;
-        height: 90px !important;
-    }
-    
-    body.dark-theme .avatar-letter,
-    .avatar-letter {
-        font-size: 2.2rem !important;
+        border-radius: 20px !important;
     }
 }
 
 @media (max-width: 480px) {
-    body.dark-theme .profile-section,
-    .profile-section {
-        padding: 1rem !important;
+    body.dark-theme .profile-section .container,
+    .profile-section .container {
+        padding: 0 1rem 2rem !important;
     }
     
     body.dark-theme .profile-hero,
     .profile-hero {
-        padding: 1.5rem !important;
-    }
-    
-    body.dark-theme .profile-card,
-    .profile-card {
-        padding: 1.25rem !important;
+        padding: 1.5rem 1rem 3.5rem !important;
     }
     
     body.dark-theme .profile-stats,
     .profile-stats {
-        grid-template-columns: 1fr !important;
+        grid-template-columns: 1fr 1fr !important;
+        gap: 0.75rem !important;
+    }
+    
+    body.dark-theme .stat-card,
+    .stat-card {
+        padding: 1rem !important;
+    }
+    
+    body.dark-theme .stat-number,
+    .stat-number {
+        font-size: 1.25rem !important;
     }
     
     body.dark-theme .btn-save,

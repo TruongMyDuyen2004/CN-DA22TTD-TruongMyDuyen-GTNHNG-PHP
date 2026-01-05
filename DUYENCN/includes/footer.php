@@ -5,10 +5,10 @@
                 <h3>Ngon Gallery</h3>
                 <p>Nhà hàng Việt Nam với hương vị truyền thống đậm đà, không gian sang trọng và phục vụ tận tâm.</p>
                 <div class="social-links">
-                    <a href="#" title="Facebook"><i class="fab fa-facebook"></i></a>
-                    <a href="#" title="Instagram"><i class="fab fa-instagram"></i></a>
-                    <a href="#" title="Youtube"><i class="fab fa-youtube"></i></a>
-                    <a href="#" title="TikTok"><i class="fab fa-tiktok"></i></a>
+                    <a href="https://www.facebook.com/ngongallery" target="_blank" rel="noopener" title="Facebook"><i class="fab fa-facebook"></i></a>
+                    <a href="https://www.instagram.com/ngongallery" target="_blank" rel="noopener" title="Instagram"><i class="fab fa-instagram"></i></a>
+                    <a href="https://www.youtube.com/@ngongallery" target="_blank" rel="noopener" title="Youtube"><i class="fab fa-youtube"></i></a>
+                    <a href="https://www.tiktok.com/@ngongallery" target="_blank" rel="noopener" title="TikTok"><i class="fab fa-tiktok"></i></a>
                 </div>
             </div>
             <div class="footer-section">

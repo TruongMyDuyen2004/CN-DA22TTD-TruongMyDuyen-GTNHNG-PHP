@@ -1,0 +1,76 @@
+@startuml UseCase - Ngon Gallery
+
+skinparam actorStyle awesome
+skinparam backgroundColor #FEFEFE
+skinparam handwritten false
+
+skinparam usecase {
+    BackgroundColor #E8F5E9
+    BorderColor #2E7D32
+    FontColor #1B5E20
+    ArrowColor #388E3C
+}
+
+skinparam actor {
+    BackgroundColor #E3F2FD
+    BorderColor #1565C0
+    FontColor #0D47A1
+}
+
+skinparam rectangle {
+    BackgroundColor #FFFDE7
+    BorderColor #F9A825
+    FontColor #F57F17
+    RoundCorner 20
+}
+
+left to right direction
+
+actor "Khách Hàng" as Customer #LightBlue
+actor "Quản Trị Viên" as Admin #LightCoral
+
+rectangle "Hệ thống Nhà hàng Ngon Gallery" {
+    
+    ' Customer Use Cases
+    usecase "Quản lý thông tin\ncá nhân" as UC1 #E8F5E9
+    usecase "Tìm kiếm,\nxem thực đơn" as UC2 #E8F5E9
+    usecase "Đặt hàng" as UC3 #E8F5E9
+    usecase "Quản lý giỏ hàng" as UC4 #DCEDC8
+    usecase "Xem lịch sử\nđơn hàng" as UC5 #E8F5E9
+    usecase "Đánh giá,\nyêu thích" as UC6 #E8F5E9
+    usecase "Đặt bàn" as UC7 #E8F5E9
+    usecase "Xem thông báo,\nliên hệ" as UC8 #FFF9C4
+    
+    ' Admin Use Cases
+    usecase "Quản lý thực đơn,\ndanh mục" as UC9 #FFCDD2
+    usecase "Quản lý đơn hàng" as UC10 #FFCDD2
+    usecase "Quản lý đặt bàn" as UC11 #FFCDD2
+    usecase "Quản lý người dùng" as UC12 #FFCDD2
+    usecase "Trả lời liên hệ" as UC13 #FFCDD2
+    usecase "Đăng nhập" as UC14 #FFF9C4
+    usecase "Xác thực\nngười dùng" as UC15 #FFE0B2
+}
+
+' Customer connections
+Customer --> UC1
+Customer --> UC2
+Customer --> UC3
+Customer --> UC5
+Customer --> UC6
+Customer --> UC7
+Customer --> UC8
+Customer --> UC14
+
+' Admin connections
+Admin --> UC9
+Admin --> UC10
+Admin --> UC11
+Admin --> UC12
+Admin --> UC13
+Admin --> UC14
+
+' Relationships
+UC3 .right.> UC4 : <<extend>>
+UC14 .right.> UC15 : <<include>>
+
+@enduml

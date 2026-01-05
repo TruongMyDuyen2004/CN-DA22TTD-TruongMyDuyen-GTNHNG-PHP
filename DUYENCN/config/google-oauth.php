@@ -13,11 +13,12 @@
  */
 
 // Google OAuth Credentials
-// Thay YOUR_CLIENT_ID và YOUR_CLIENT_SECRET bằng credentials của bạn
-define('GOOGLE_CLIENT_ID', 'YOUR_CLIENT_ID');
-define('GOOGLE_CLIENT_SECRET', 'YOUR_CLIENT_SECRET');
+// QUAN TRỌNG: Thay thế bằng credentials thật của bạn từ Google Cloud Console
+// KHÔNG commit credentials thật lên GitHub!
+define('GOOGLE_CLIENT_ID', getenv('GOOGLE_CLIENT_ID') ?: 'YOUR_GOOGLE_CLIENT_ID');
+define('GOOGLE_CLIENT_SECRET', getenv('GOOGLE_CLIENT_SECRET') ?: 'YOUR_GOOGLE_CLIENT_SECRET');
 
-// Redirect URI - Thay đổi theo domain của bạn
+// Redirect URI - Phải khớp với cấu hình trong Google Cloud Console
 define('GOOGLE_REDIRECT_URI', 'http://localhost/DUYENCN/DUYENCN/auth/google-callback.php');
 
 // Google OAuth URLs

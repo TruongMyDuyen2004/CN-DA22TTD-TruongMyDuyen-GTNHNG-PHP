@@ -1,0 +1,30 @@
+2026-01-01 17:15:17 - Webhook received
+Raw: 
+---
+2026-01-01 17:17:44 - Webhook received
+Raw: {"id":"TEST_1767284264","gateway":"MBBank","transactionDate":"2026-01-01 17:17:44","accountNumber":"444418062004","transferType":"in","transferAmount":20000,"accumulated":0,"code":null,"content":"NAP260101170956789","referenceCode":"FT20260101171744","description":"NAP260101170956789"}
+---
+2026-01-01 17:17:44 - Parsed data
+Type: in, Amount: 20000, Content: NAP260101170956789, ID: TEST_1767284264
+---
+2026-01-01 17:17:44 - SUCCESS
+Matched request ID: 40, Code: NAP260101170250970, Amount: 20000
+---
+2026-01-01 17:18:22 - Webhook received
+Raw: {"id":"TEST_1767284302","gateway":"MBBank","transactionDate":"2026-01-01 17:18:22","accountNumber":"444418062004","transferType":"in","transferAmount":20000,"accumulated":0,"code":null,"content":"NAP260101170956789","referenceCode":"FT20260101171822","description":"NAP260101170956789"}
+---
+2026-01-01 17:18:22 - Parsed data
+Type: in, Amount: 20000, Content: NAP260101170956789, ID: TEST_1767284302
+---
+2026-01-01 17:18:22 - SUCCESS
+Matched request ID: 37, Code: NAP260101164207455, Amount: 20000
+---
+2026-01-01 17:28:37 - Webhook received
+Raw: {"gateway":"MBBank","transactionDate":"2026-01-01 23:28:00","accountNumber":"444418062004","subAccount":null,"code":null,"content":"MBVCB.12398714409.095309.NAP260101172753771.CT tu 9384848127 TRUONG MY DUYEN toi 444418062004 TRUONG MY DUYEN tai MB- Ma GD ACSP\/ hv095309","transferType":"in","description":"BankAPINotify MBVCB.12398714409.095309.NAP260101172753771.CT tu 9384848127 TRUONG MY DUYEN toi 444418062004 TRUONG MY DUYEN tai MB- Ma GD ACSP\/ hv095309","transferAmount":20000,"referenceCode":"FT26001064493006","accumulated":0,"id":37437306}
+---
+2026-01-01 17:28:37 - Parsed data
+Type: in, Amount: 20000, Content: MBVCB.12398714409.095309.NAP260101172753771.CT tu 9384848127 TRUONG MY DUYEN toi 444418062004 TRUONG MY DUYEN tai MB- Ma GD ACSP/ hv095309, ID: 37437306
+---
+2026-01-01 17:28:37 - SUCCESS
+Matched request ID: 43, Code: NAP260101172753771, Amount: 20000
+---

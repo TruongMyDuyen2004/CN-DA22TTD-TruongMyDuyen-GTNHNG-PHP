@@ -55,10 +55,9 @@ function createTopupRequest($conn) {
         return;
     }
     
-    $valid_methods = ['momo', 'zalopay', 'bank'];
+    $valid_methods = ['bank'];
     if (!in_array($method, $valid_methods)) {
-        echo json_encode(['success' => false, 'message' => 'Phương thức thanh toán không hợp lệ']);
-        return;
+        $method = 'bank'; // Mặc định là chuyển khoản ngân hàng
     }
     
     // Kiểm tra thẻ thành viên
@@ -123,7 +122,7 @@ function createTopupRequest($conn) {
 }
 
 /**
- * Xác nhận đã thanh toán - chuyển sang trạng thái chờ admin duyệt
+ * Xác nhận đã thanh toán - Chuyển sang trạng thái CHỜ ADMIN DUYỆT
  */
 function confirmTopup($conn) {
     $transaction_code = $_POST['transaction_code'] ?? '';
@@ -149,7 +148,21 @@ function confirmTopup($conn) {
     }
     
     if ($request['status'] == 'completed') {
-        echo json_encode(['success' => false, 'message' => 'Giao dịch này đã được xử lý']);
+        // Lấy số dư hiện tại
+        $stmt = $conn->prepare("SELECT balance FROM member_cards WHERE id = ?");
+        $stmt->execute([$request['card_id']]);
+        $currentBalance = $stmt->fetchColumn();
+        
+        echo json_encode([
+            'success' => true,
+            'message' => 'Giao dịch này đã được xử lý trước đó',
+            'data' => [
+                'status' => 'completed',
+                'transaction_code' => $transaction_code,
+                'amount' => $request['amount'],
+                'new_balance' => $currentBalance
+            ]
+        ]);
         return;
     }
     
@@ -159,18 +172,37 @@ function confirmTopup($conn) {
     }
     
     if ($request['status'] == 'waiting') {
-        echo json_encode(['success' => false, 'message' => 'Yêu cầu đang chờ admin xác nhận']);
+        echo json_encode([
+            'success' => true,
+            'message' => 'Yêu cầu đã được gửi, vui lòng chờ Admin xác nhận',
+            'data' => [
+                'status' => 'waiting',
+                'transaction_code' => $transaction_code,
+                'amount' => $request['amount']
+            ]
+        ]);
         return;
     }
     
     try {
-        // Cập nhật trạng thái sang "waiting" - chờ admin duyệt
-        $stmt = $conn->prepare("UPDATE topup_requests SET status = 'waiting' WHERE id = ?");
-        $stmt->execute([$request['id']]);
+        // Chuyển trạng thái sang "waiting" (chờ admin duyệt)
+        $stmt = $conn->prepare("
+            UPDATE topup_requests 
+            SET status = 'waiting',
+                payment_info = ?
+            WHERE id = ? AND status = 'pending'
+        ");
+        $stmt->execute([
+            json_encode([
+                'user_confirmed' => true,
+                'confirmed_at' => date('Y-m-d H:i:s')
+            ]),
+            $request['id']
+        ]);
         
         echo json_encode([
             'success' => true,
-            'message' => 'Yêu cầu nạp tiền đã được gửi! Vui lòng chờ admin xác nhận.',
+            'message' => 'Yêu cầu đã được gửi! Vui lòng chờ Admin xác nhận giao dịch.',
             'data' => [
                 'status' => 'waiting',
                 'transaction_code' => $transaction_code,
@@ -225,36 +257,25 @@ function getTopupHistory($conn) {
 }
 
 /**
- * Tạo thông tin thanh toán giả lập
+ * Tạo thông tin thanh toán ngân hàng MB Bank với VietQR
  */
 function generatePaymentInfo($method, $amount, $code) {
-    switch ($method) {
-        case 'momo':
-            return [
-                'type' => 'momo',
-                'phone' => '0912345678',
-                'name' => 'NGON GALLERY',
-                'content' => $code,
-                'qr_data' => "momo://pay?phone=0912345678&amount=$amount&comment=$code"
-            ];
-        case 'zalopay':
-            return [
-                'type' => 'zalopay',
-                'phone' => '0912345678',
-                'name' => 'NGON GALLERY',
-                'content' => $code,
-                'qr_data' => "zalopay://pay?amount=$amount&desc=$code"
-            ];
-        case 'bank':
-            return [
-                'type' => 'bank',
-                'bank_name' => 'Vietcombank',
-                'account_number' => '9384848127',
-                'account_name' => 'TRUONG MY DUYEN',
-                'content' => $code,
-                'branch' => 'Chi nhánh Hà Nội'
-            ];
-        default:
-            return [];
-    }
+    // Thông tin ngân hàng MB Bank
+    $bank_id = 'MB';
+    $account_number = '444418062004';
+    $account_name = 'TRUONG MY DUYEN';
+    
+    // Tạo URL mã QR VietQR (template print - đẹp hơn)
+    $qr_url = "https://img.vietqr.io/image/{$bank_id}-{$account_number}-print.png?amount={$amount}&addInfo={$code}&accountName=" . urlencode($account_name);
+    
+    return [
+        'type' => 'bank',
+        'bank_name' => 'MB Bank',
+        'bank_full_name' => 'Ngân hàng TMCP Quân đội',
+        'bank_branch' => '',
+        'account_number' => $account_number,
+        'account_name' => $account_name,
+        'content' => $code,
+        'qr_url' => $qr_url
+    ];
 }

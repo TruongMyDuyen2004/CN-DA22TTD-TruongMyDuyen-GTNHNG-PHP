@@ -59,6 +59,8 @@ $stats = $stmt->fetch(PDO::FETCH_ASSOC);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chi tiết khách hàng - Admin</title>
+    <link rel="icon" type="image/jpeg" href="../assets/images/logo.jpg">
+    <link rel="shortcut icon" type="image/jpeg" href="../assets/images/logo.jpg">
     <link rel="stylesheet" href="../assets/css/admin-dark-modern.css">
     <link rel="stylesheet" href="../assets/css/admin-green-override.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -67,6 +69,59 @@ $stats = $stmt->fetch(PDO::FETCH_ASSOC);
         /* ========================================
            CUSTOMER DETAIL - MODERN MINIMAL DESIGN
            ======================================== */
+        
+        * { box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; }
+        .main-content { background: #f8fafc !important; padding: 24px; min-height: 100vh; }
+        
+        /* Page Header - Modern Style */
+        .page-header {
+            display: flex !important;
+            justify-content: space-between !important;
+            align-items: center !important;
+            margin-bottom: 28px !important;
+            padding: 24px 28px !important;
+            background: linear-gradient(135deg, #ffffff 0%, #f0fdf4 100%) !important;
+            border-radius: 20px !important;
+            border: 2px solid #bbf7d0 !important;
+            box-shadow: 0 4px 20px rgba(34, 197, 94, 0.1) !important;
+        }
+        .page-header h1 {
+            font-size: 28px !important;
+            font-weight: 800 !important;
+            color: #166534 !important;
+            margin: 0 !important;
+            display: flex !important;
+            align-items: center !important;
+            gap: 14px !important;
+        }
+        .page-header h1 i {
+            font-size: 32px !important;
+            color: #22c55e !important;
+            background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%) !important;
+            padding: 14px !important;
+            border-radius: 16px !important;
+        }
+        .btn-back {
+            background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%) !important;
+            color: #fff !important;
+            padding: 14px 28px !important;
+            border-radius: 12px !important;
+            border: none !important;
+            cursor: pointer !important;
+            font-weight: 700 !important;
+            font-size: 15px !important;
+            display: flex !important;
+            align-items: center !important;
+            gap: 10px !important;
+            text-decoration: none !important;
+            box-shadow: 0 4px 15px rgba(34, 197, 94, 0.35) !important;
+            transition: all 0.3s ease !important;
+        }
+        .btn-back:hover {
+            transform: translateY(-3px) !important;
+            box-shadow: 0 8px 25px rgba(34, 197, 94, 0.45) !important;
+        }
         
         /* Profile + Info Row */
         .profile-info-row {
@@ -220,55 +275,61 @@ $stats = $stmt->fetch(PDO::FETCH_ASSOC);
         
         /* Stats Cards - Modern Minimal */
         .stats-cards {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 16px;
-            margin-bottom: 24px;
+            display: flex !important;
+            justify-content: center !important;
+            flex-wrap: wrap !important;
+            gap: 20px !important;
+            margin-bottom: 28px !important;
         }
         
         .stat-card-modern {
             background: #ffffff;
             border: 2px solid #d1d5db;
-            border-radius: 14px;
-            padding: 20px;
-            display: flex;
-            align-items: center;
-            gap: 16px;
+            border-radius: 20px;
+            padding: 24px 32px;
+            display: flex !important;
+            flex-direction: column !important;
+            align-items: center !important;
+            justify-content: center !important;
+            text-align: center !important;
+            gap: 16px !important;
             transition: all 0.25s ease;
             position: relative;
             overflow: hidden;
+            min-width: 180px;
+            max-width: 220px;
+            flex: 0 0 auto !important;
         }
         
-        .stat-card-modern::after {
+        .stat-card-modern::before {
             content: '';
             position: absolute;
-            bottom: 0;
+            top: 0;
             left: 0;
             right: 0;
-            height: 3px;
-            background: linear-gradient(90deg, transparent, #22c55e, transparent);
-            opacity: 0;
-            transition: opacity 0.25s ease;
+            height: 4px;
+            border-radius: 20px 20px 0 0;
         }
+        
+        .stat-card-modern:nth-child(1)::before { background: linear-gradient(90deg, #3b82f6, #60a5fa); }
+        .stat-card-modern:nth-child(2)::before { background: linear-gradient(90deg, #22c55e, #4ade80); }
+        .stat-card-modern:nth-child(3)::before { background: linear-gradient(90deg, #f59e0b, #fbbf24); }
+        .stat-card-modern:nth-child(4)::before { background: linear-gradient(90deg, #8b5cf6, #a78bfa); }
         
         .stat-card-modern:hover {
             border-color: #22c55e;
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(34, 197, 94, 0.12);
-        }
-        
-        .stat-card-modern:hover::after {
-            opacity: 1;
+            transform: translateY(-6px);
+            box-shadow: 0 12px 35px rgba(34, 197, 94, 0.15);
         }
         
         .stat-icon-modern {
-            width: 52px;
-            height: 52px;
-            border-radius: 12px;
+            width: 60px;
+            height: 60px;
+            border-radius: 16px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.3rem;
+            font-size: 1.5rem;
             color: #ffffff;
             flex-shrink: 0;
         }
@@ -279,23 +340,24 @@ $stats = $stmt->fetch(PDO::FETCH_ASSOC);
         .stat-icon-modern.purple { background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); box-shadow: 0 4px 14px rgba(139, 92, 246, 0.3); }
         
         .stat-content {
-            flex: 1;
-            min-width: 0;
+            text-align: center !important;
         }
         
         .stat-number {
             display: block;
-            font-size: 1.5rem;
-            font-weight: 700;
+            font-size: 1.8rem;
+            font-weight: 800;
             color: #1f2937;
-            line-height: 1.2;
+            line-height: 1;
+            text-align: center !important;
         }
         
         .stat-label {
-            font-size: 0.85rem;
+            font-size: 0.9rem;
             color: #6b7280;
-            font-weight: 500;
-            margin-top: 4px;
+            font-weight: 600;
+            margin-top: 6px;
+            text-align: center !important;
         }
         
         /* Modern Cards */
@@ -333,6 +395,16 @@ $stats = $stmt->fetch(PDO::FETCH_ASSOC);
             border-bottom: 2px solid #d1d5db;
         }
         
+        .card-header-modern.collapsible {
+            cursor: pointer;
+            transition: all 0.3s ease;
+            user-select: none;
+        }
+        
+        .card-header-modern.collapsible:hover {
+            background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+        }
+        
         .card-header-modern i {
             width: 40px;
             height: 40px;
@@ -353,13 +425,98 @@ $stats = $stmt->fetch(PDO::FETCH_ASSOC);
         }
         
         .badge-count {
-            margin-left: auto;
             background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
             color: #ffffff;
-            padding: 6px 14px;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            font-weight: 600;
+            min-width: 36px;
+            height: 36px;
+            padding: 0 12px;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3);
+        }
+        
+        /* Modern Toggle Button - Pill Style */
+        .toggle-btn {
+            display: flex !important;
+            align-items: center !important;
+            gap: 8px !important;
+            margin-left: auto !important;
+            background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%) !important;
+            color: #ffffff !important;
+            padding: 10px 18px !important;
+            border-radius: 50px !important;
+            font-size: 0.85rem !important;
+            font-weight: 600 !important;
+            box-shadow: 0 4px 15px rgba(34, 197, 94, 0.35) !important;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+            cursor: pointer !important;
+            border: none !important;
+        }
+        
+        .toggle-btn:hover {
+            transform: translateX(4px) !important;
+            box-shadow: 0 6px 20px rgba(34, 197, 94, 0.45) !important;
+        }
+        
+        .toggle-btn .count {
+            background: rgba(255, 255, 255, 0.25) !important;
+            padding: 4px 10px !important;
+            border-radius: 20px !important;
+            font-weight: 700 !important;
+        }
+        
+        .toggle-btn i {
+            width: auto !important;
+            height: auto !important;
+            background: none !important;
+            box-shadow: none !important;
+            font-size: 0.9rem !important;
+            transition: transform 0.3s ease !important;
+        }
+        
+        .toggle-btn.collapsed i {
+            transform: rotate(0deg) !important;
+        }
+        
+        .toggle-btn:not(.collapsed) i {
+            transform: rotate(90deg) !important;
+        }
+        
+        /* Collapsible Content Animation */
+        .card-body-modern.collapsible-content {
+            max-height: 2000px;
+            overflow: hidden;
+            transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1), 
+                        padding 0.4s cubic-bezier(0.4, 0, 0.2, 1), 
+                        opacity 0.3s ease;
+            opacity: 1;
+        }
+        
+        .card-body-modern.collapsible-content.collapsed {
+            max-height: 0;
+            padding-top: 0;
+            padding-bottom: 0;
+            opacity: 0;
+        }
+        
+        /* Card Header with Toggle - Modern Style */
+        .card-header-modern.collapsible {
+            cursor: pointer;
+            transition: all 0.3s ease;
+            user-select: none;
+            padding: 18px 24px !important;
+        }
+        
+        .card-header-modern.collapsible:hover {
+            background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+        }
+        
+        .card-header-modern.collapsible:active {
+            transform: scale(0.995);
         }
         
         .card-body-modern {
@@ -568,7 +725,7 @@ $stats = $stmt->fetch(PDO::FETCH_ASSOC);
     <div class="main-content">
         <div class="page-header">
             <h1><i class="fas fa-user"></i> Chi tiết khách hàng</h1>
-            <a href="customers.php" class="btn btn-secondary">
+            <a href="customers.php" class="btn-back">
                 <i class="fas fa-arrow-left"></i> Quay lại
             </a>
         </div>
@@ -671,12 +828,15 @@ $stats = $stmt->fetch(PDO::FETCH_ASSOC);
         <div class="info-cards-grid">
             <!-- Đơn hàng gần đây -->
             <div class="modern-card">
-                <div class="card-header-modern">
+                <div class="card-header-modern collapsible" onclick="toggleSection('orders')">
                     <i class="fas fa-shopping-cart"></i>
                     <span>Đơn hàng gần đây</span>
-                    <span class="badge-count"><?php echo count($orders); ?></span>
+                    <div class="toggle-btn collapsed" id="orders-toggle">
+                        <span class="count"><?php echo count($orders); ?></span>
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
                 </div>
-                <div class="card-body-modern">
+                <div class="card-body-modern collapsible-content collapsed" id="orders-content">
                     <?php if (empty($orders)): ?>
                         <div class="empty-state">
                             <i class="fas fa-box-open"></i>
@@ -684,7 +844,7 @@ $stats = $stmt->fetch(PDO::FETCH_ASSOC);
                         </div>
                     <?php else: ?>
                         <div class="orders-list">
-                            <?php foreach (array_slice($orders, 0, 5) as $order): ?>
+                            <?php foreach ($orders as $order): ?>
                             <div class="order-item" onclick="viewOrderDetail(<?php echo $order['id']; ?>)">
                                 <div class="order-info">
                                     <span class="order-id">#<?php echo htmlspecialchars($order['order_number']); ?></span>
@@ -712,12 +872,15 @@ $stats = $stmt->fetch(PDO::FETCH_ASSOC);
 
         <!-- Đánh giá -->
         <div class="modern-card full-width">
-            <div class="card-header-modern">
+            <div class="card-header-modern collapsible" onclick="toggleSection('reviews')">
                 <i class="fas fa-star"></i>
                 <span>Đánh giá của khách hàng</span>
-                <span class="badge-count"><?php echo count($reviews); ?></span>
+                <div class="toggle-btn collapsed" id="reviews-toggle">
+                    <span class="count"><?php echo count($reviews); ?></span>
+                    <i class="fas fa-chevron-right"></i>
+                </div>
             </div>
-            <div class="card-body-modern">
+            <div class="card-body-modern collapsible-content collapsed" id="reviews-content">
                 <?php if (empty($reviews)): ?>
                     <div class="empty-state">
                         <i class="fas fa-comment-slash"></i>
@@ -859,6 +1022,20 @@ $stats = $stmt->fetch(PDO::FETCH_ASSOC);
     
     <script>
     const ordersData = <?php echo json_encode($orders); ?>;
+    
+    // Toggle section collapse/expand
+    function toggleSection(sectionId) {
+        const content = document.getElementById(sectionId + '-content');
+        const toggle = document.getElementById(sectionId + '-toggle');
+        
+        if (content.classList.contains('collapsed')) {
+            content.classList.remove('collapsed');
+            toggle.classList.remove('collapsed');
+        } else {
+            content.classList.add('collapsed');
+            toggle.classList.add('collapsed');
+        }
+    }
     
     function viewOrderDetail(orderId) {
         document.getElementById('orderDetailModal').style.display = 'flex';

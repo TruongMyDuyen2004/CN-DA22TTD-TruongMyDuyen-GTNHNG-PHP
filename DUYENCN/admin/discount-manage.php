@@ -165,308 +165,314 @@ $discounted = $stats['discounted'] ?? 0;
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quản lý giảm giá - Admin</title>
+    <link rel="icon" type="image/jpeg" href="../assets/images/logo.jpg">
+    <link rel="shortcut icon" type="image/jpeg" href="../assets/images/logo.jpg">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="../assets/css/admin-dark-modern.css">
     <link rel="stylesheet" href="../assets/css/admin-green-override.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        .discount-stats {
-            display: grid !important;
-            grid-template-columns: repeat(3, 1fr) !important;
-            gap: 1rem !important;
-            margin-bottom: 1.5rem !important;
+        /* Reset để tránh xung đột với dark theme */
+        .main-content {
+            background: #f5f5f5 !important;
         }
-        .stat-card {
+        
+        .page-header {
             background: white !important;
+            padding: 1.25rem 1.5rem !important;
             border-radius: 12px !important;
-            padding: 1rem 1.25rem !important;
+            margin-bottom: 1.5rem !important;
             box-shadow: 0 2px 8px rgba(0,0,0,0.06) !important;
-            display: flex !important;
-            align-items: center !important;
-            gap: 1rem !important;
-            border: 1px solid #e5e7eb !important;
         }
-        .stat-icon {
-            width: 48px !important;
-            height: 48px !important;
-            border-radius: 10px !important;
-            display: flex !important;
-            align-items: center !important;
-            justify-content: center !important;
-            font-size: 1.2rem !important;
-            color: white !important;
-        }
-        .stat-icon.total { background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%) !important; }
-        .stat-icon.discount { background: linear-gradient(135deg, #f97316 0%, #ea580c 100%) !important; }
-        .stat-icon.normal { background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%) !important; }
-        .stat-info h3 { font-size: 1.5rem !important; font-weight: 700 !important; color: #1f2937 !important; margin: 0 !important; }
-        .stat-info p { color: #6b7280 !important; margin: 0 !important; font-size: 0.8rem !important; }
-        
-        .filter-bar {
-            background: white !important;
-            padding: 1rem !important;
-            border-radius: 10px !important;
-            margin-bottom: 1.25rem !important;
-            display: flex !important;
-            gap: 0.75rem !important;
-            align-items: center !important;
-            flex-wrap: wrap !important;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.04) !important;
-            border: 1px solid #e5e7eb !important;
-        }
-        .filter-bar select {
-            padding: 0.5rem 0.75rem !important;
-            border: 1px solid #d1d5db !important;
-            border-radius: 6px !important;
-            font-size: 0.85rem !important;
-            min-width: 150px !important;
-            background: white !important;
-            color: #374151 !important;
-        }
-        .filter-bar select:focus { outline: none !important; border-color: #22c55e !important; }
-        
-        .bulk-actions {
-            display: flex !important;
-            gap: 0.5rem !important;
-            margin-left: auto !important;
-            align-items: center !important;
-        }
-        .bulk-discount-input {
-            display: flex !important;
-            align-items: center !important;
-            gap: 0.25rem !important;
-        }
-        .bulk-discount-input input {
-            width: 50px !important;
-            padding: 0.4rem !important;
-            border: 1px solid #d1d5db !important;
-            border-radius: 6px !important;
-            text-align: center !important;
-            font-weight: 600 !important;
-            font-size: 0.85rem !important;
-            background: white !important;
+        .page-header h1 {
             color: #1f2937 !important;
+            font-size: 1.5rem !important;
         }
-        .bulk-discount-input span {
-            color: #6b7280 !important;
-            font-size: 0.85rem !important;
+        .page-header h1 i {
+            color: #22c55e !important;
         }
-        .bulk-btn {
-            padding: 0.5rem 1rem !important;
-            border: none !important;
-            border-radius: 6px !important;
-            font-weight: 600 !important;
-            cursor: pointer !important;
-            display: flex !important;
-            align-items: center !important;
-            gap: 0.4rem !important;
-            background: #22c55e !important;
-            color: white !important;
-            font-size: 0.85rem !important;
-            transition: all 0.2s !important;
-        }
-        .bulk-btn:disabled { opacity: 0.5 !important; cursor: not-allowed !important; }
-        .bulk-btn:hover:not(:disabled) { background: #16a34a !important; }
         
+        /* Grid layout - card lớn hơn, ít card hơn mỗi hàng */
         .discount-grid {
-            display: grid !important;
-            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)) !important;
-            gap: 1rem !important;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
         }
+        
+        /* Card đơn giản, sạch sẽ */
         .discount-card {
-            background: white !important;
-            border-radius: 10px !important;
-            overflow: hidden !important;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.06) !important;
-            position: relative !important;
-            border: 1px solid #e5e7eb !important;
-            transition: all 0.2s !important;
+            background: #ffffff;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+            position: relative;
+            border: 2px solid #e5e7eb;
+            transition: all 0.2s ease;
         }
         .discount-card:hover {
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1) !important;
-            border-color: #22c55e !important;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.12);
+            border-color: #22c55e;
         }
         .discount-card.has-discount { 
-            border-color: #f97316 !important;
-            background: linear-gradient(to bottom, #fff7ed 0%, white 30%) !important;
+            border-color: #f97316;
         }
+        
+        /* Checkbox */
         .card-checkbox {
-            position: absolute !important;
-            top: 8px !important;
-            left: 8px !important;
-            z-index: 10 !important;
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            z-index: 10;
+            background: white;
+            border-radius: 6px;
+            padding: 3px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
         }
         .card-checkbox input {
-            width: 18px !important;
-            height: 18px !important;
-            cursor: pointer !important;
-            accent-color: #22c55e !important;
+            width: 22px;
+            height: 22px;
+            cursor: pointer;
+            accent-color: #22c55e;
         }
+        
+        /* Hình ảnh */
         .card-image {
-            height: 120px !important;
-            overflow: hidden !important;
-            position: relative !important;
+            height: 160px;
+            overflow: hidden;
+            position: relative;
         }
         .card-image img {
-            width: 100% !important;
-            height: 100% !important;
-            object-fit: cover !important;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
         .card-image .placeholder {
-            width: 100% !important;
-            height: 100% !important;
-            background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%) !important;
-            display: flex !important;
-            align-items: center !important;
-            justify-content: center !important;
-            font-size: 2rem !important;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
         }
+        
+        /* Badge giảm giá */
         .discount-badge {
-            position: absolute !important;
-            top: 8px !important;
-            right: 8px !important;
-            padding: 4px 10px !important;
-            background: linear-gradient(135deg, #f97316 0%, #ea580c 100%) !important;
-            color: white !important;
-            border-radius: 15px !important;
-            font-size: 0.75rem !important;
-            font-weight: 700 !important;
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            padding: 8px 14px;
+            background: #ef4444;
+            color: white;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 800;
         }
-        .card-body { padding: 12px !important; background: white !important; }
+        
+        /* Nội dung card */
+        .card-body { 
+            padding: 16px 18px;
+            background: #ffffff;
+        }
+        
+        /* Danh mục */
         .card-category {
-            font-size: 0.7rem !important;
-            color: #22c55e !important;
-            font-weight: 600 !important;
-            margin-bottom: 4px !important;
-            text-transform: uppercase !important;
+            display: inline-block;
+            font-size: 0.8rem;
+            color: white;
+            font-weight: 700;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            background: #22c55e;
+            padding: 4px 10px;
+            border-radius: 6px;
         }
+        
+        /* Tên món */
         .card-title {
-            font-size: 0.9rem !important;
-            font-weight: 600 !important;
-            color: #1f2937 !important;
-            margin-bottom: 8px !important;
-            white-space: nowrap !important;
-            overflow: hidden !important;
-            text-overflow: ellipsis !important;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #1f2937;
+            margin-bottom: 10px;
+            line-height: 1.3;
         }
+        
+        /* Giá */
         .price-row {
-            display: flex !important;
-            align-items: center !important;
-            gap: 8px !important;
-            margin-bottom: 10px !important;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 14px;
+            padding-bottom: 14px;
+            border-bottom: 2px solid #f3f4f6;
         }
         .current-price {
-            font-size: 1rem !important;
-            font-weight: 700 !important;
-            color: #dc2626 !important;
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: #dc2626;
         }
         .original-price {
-            font-size: 0.8rem !important;
-            color: #9ca3af !important;
-            text-decoration: line-through !important;
+            font-size: 1rem;
+            color: #9ca3af;
+            text-decoration: line-through;
         }
+        
+        /* Control giảm giá - đơn giản hơn */
         .discount-control {
-            display: flex !important;
-            align-items: center !important;
-            gap: 6px !important;
-            padding: 8px 10px !important;
-            background: #f9fafb !important;
-            border-radius: 8px !important;
-            border: 1px solid #e5e7eb !important;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
         .discount-control label {
-            font-size: 0.8rem !important;
-            color: #6b7280 !important;
-            font-weight: 500 !important;
+            font-size: 0.95rem;
+            color: #374151;
+            font-weight: 600;
         }
         .discount-input {
-            display: flex !important;
-            align-items: center !important;
-            gap: 2px !important;
-            flex: 1 !important;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            flex: 1;
         }
         .discount-input input {
-            width: 45px !important;
-            padding: 6px !important;
-            border: 1px solid #d1d5db !important;
-            border-radius: 6px !important;
-            text-align: center !important;
-            font-weight: 600 !important;
-            font-size: 0.85rem !important;
-            background: white !important;
-            color: #1f2937 !important;
+            width: 60px;
+            padding: 10px;
+            border: 2px solid #d1d5db;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: 700;
+            font-size: 1rem;
+            background: #ffffff;
+            color: #1f2937;
         }
-        .discount-input input:focus { outline: none !important; border-color: #22c55e !important; }
+        .discount-input input:focus { 
+            outline: none;
+            border-color: #22c55e;
+        }
         .discount-input span {
-            color: #6b7280 !important;
-            font-size: 0.8rem !important;
+            color: #374151;
+            font-size: 1rem;
+            font-weight: 700;
         }
-        .btn-apply {
-            padding: 6px 10px !important;
-            background: #22c55e !important;
-            color: white !important;
-            border: none !important;
-            border-radius: 6px !important;
-            font-weight: 600 !important;
-            cursor: pointer !important;
-            font-size: 0.8rem !important;
-            transition: all 0.2s !important;
-        }
-        .btn-apply:hover { background: #16a34a !important; }
-        .btn-remove {
-            padding: 6px 8px !important;
-            background: #fee2e2 !important;
-            color: #dc2626 !important;
-            border: none !important;
-            border-radius: 6px !important;
-            cursor: pointer !important;
-            font-size: 0.75rem !important;
-            transition: all 0.2s !important;
-        }
-        .btn-remove:hover { background: #fecaca !important; }
         
+        /* Nút áp dụng */
+        .btn-apply {
+            padding: 10px 16px;
+            background: #22c55e;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 700;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+        .btn-apply:hover { 
+            background: #16a34a;
+        }
+        
+        /* Nút xóa */
+        .btn-remove {
+            padding: 10px 12px;
+            background: #fee2e2;
+            color: #dc2626;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+        .btn-remove:hover { 
+            background: #fecaca;
+        }
+        
+        /* Quick buttons - gọn hơn */
         .quick-discount-btns {
-            display: flex !important;
-            gap: 4px !important;
-            margin-top: 8px !important;
-            flex-wrap: wrap !important;
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
         }
         .quick-btn {
-            padding: 4px 8px !important;
-            background: #f0fdf4 !important;
-            color: #16a34a !important;
-            border: 1px solid #bbf7d0 !important;
-            border-radius: 4px !important;
-            font-size: 0.7rem !important;
-            font-weight: 600 !important;
-            cursor: pointer !important;
-            transition: all 0.2s !important;
+            flex: 1;
+            padding: 8px 0;
+            background: #f3f4f6;
+            color: #374151;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            cursor: pointer;
+            text-align: center;
         }
         .quick-btn:hover { 
-            background: #22c55e !important; 
-            color: white !important;
-            border-color: #22c55e !important;
+            background: #22c55e;
+            color: white;
+            border-color: #22c55e;
         }
         
+        /* Toast */
         .toast {
-            position: fixed !important;
-            bottom: 2rem !important;
-            right: 2rem !important;
-            padding: 0.75rem 1.25rem !important;
-            border-radius: 8px !important;
-            color: white !important;
-            font-weight: 600 !important;
-            font-size: 0.9rem !important;
-            display: flex !important;
-            align-items: center !important;
-            gap: 0.5rem !important;
-            z-index: 9999 !important;
-            transform: translateY(100px) !important;
-            opacity: 0 !important;
-            transition: all 0.3s ease !important;
-            background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%) !important;
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            color: white;
+            font-weight: 700;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            z-index: 9999;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.3s ease;
+            background: #22c55e;
         }
         .toast.show { transform: translateY(0); opacity: 1; }
+        
+        /* Filter bar */
+        .filter-bar-custom {
+            background: #ffffff;
+            padding: 1.25rem 1.5rem;
+            border-radius: 14px;
+            margin-bottom: 1.5rem;
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            flex-wrap: wrap;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+            border: 2px solid #e5e7eb;
+        }
+        .filter-bar-custom input,
+        .filter-bar-custom select {
+            padding: 0.7rem 1rem;
+            border: 2px solid #d1d5db;
+            border-radius: 10px;
+            font-size: 0.95rem;
+            background: #ffffff;
+            color: #374151;
+            font-weight: 500;
+        }
+        .filter-bar-custom input:focus,
+        .filter-bar-custom select:focus {
+            outline: none;
+            border-color: #22c55e;
+        }
+        .filter-bar-custom .bulk-btn {
+            padding: 0.7rem 1.25rem;
+            border: none;
+            border-radius: 10px;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.95rem;
+        }
+        .filter-bar-custom .bulk-btn:disabled { 
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
     </style>
 </head>
 <body>
@@ -480,49 +486,54 @@ $discounted = $stats['discounted'] ?? 0;
             </a>
         </div>
 
-        <!-- Thống kê - Style giống trang khách hàng với hiệu ứng hover -->
+        <!-- Thống kê - Đơn giản, dễ nhìn -->
         <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; margin-bottom: 1.5rem;">
-            <div style="background: white; border-radius: 14px; padding: 1.25rem 1.5rem; box-shadow: 0 4px 12px rgba(0,0,0,0.08); display: flex; align-items: center; gap: 1.25rem; border: 2px solid #d1d5db; transition: all 0.2s; cursor: pointer;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 20px rgba(0,0,0,0.12)'; this.style.borderColor='#3b82f6';" onmouseout="this.style.transform='none'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.08)'; this.style.borderColor='#d1d5db';">
-                <div style="width: 56px; height: 56px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; color: white; background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%); flex-shrink: 0;">
+            <!-- Tổng số món -->
+            <a href="?discount=" style="text-decoration: none; background: white; border-radius: 14px; padding: 1.25rem 1.5rem; box-shadow: 0 2px 10px rgba(0,0,0,0.06); display: flex; align-items: center; gap: 1rem; border: 3px solid <?php echo $discount_filter === '' ? '#3b82f6' : '#e5e7eb'; ?>; cursor: pointer;">
+                <div style="width: 56px; height: 56px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; color: white; background: #3b82f6;">
                     <i class="fas fa-utensils"></i>
                 </div>
                 <div>
-                    <h3 style="font-size: 1.75rem; font-weight: 800; color: #1f2937; margin: 0; line-height: 1;"><?php echo $total; ?></h3>
-                    <p style="color: #6b7280; margin: 0.25rem 0 0; font-size: 0.9rem; font-weight: 500;">Tổng số món</p>
+                    <h3 style="font-size: 2rem; font-weight: 800; color: #1f2937; margin: 0;"><?php echo $total; ?></h3>
+                    <p style="color: #6b7280; margin: 0.25rem 0 0; font-size: 0.9rem; font-weight: 600;">Tổng số món</p>
                 </div>
-            </div>
-            <div style="background: white; border-radius: 14px; padding: 1.25rem 1.5rem; box-shadow: 0 4px 12px rgba(0,0,0,0.08); display: flex; align-items: center; gap: 1.25rem; border: 2px solid #d1d5db; transition: all 0.2s; cursor: pointer;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 20px rgba(0,0,0,0.12)'; this.style.borderColor='#f97316';" onmouseout="this.style.transform='none'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.08)'; this.style.borderColor='#d1d5db';">
-                <div style="width: 56px; height: 56px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; color: white; background: linear-gradient(135deg, #f97316 0%, #ea580c 100%); flex-shrink: 0;">
+            </a>
+            
+            <!-- Đang giảm giá -->
+            <a href="?discount=has" style="text-decoration: none; background: white; border-radius: 14px; padding: 1.25rem 1.5rem; box-shadow: 0 2px 10px rgba(0,0,0,0.06); display: flex; align-items: center; gap: 1rem; border: 3px solid <?php echo $discount_filter === 'has' ? '#f97316' : '#e5e7eb'; ?>; cursor: pointer;">
+                <div style="width: 56px; height: 56px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; color: white; background: #f97316;">
                     <i class="fas fa-tags"></i>
                 </div>
                 <div>
-                    <h3 style="font-size: 1.75rem; font-weight: 800; color: #1f2937; margin: 0; line-height: 1;"><?php echo $discounted; ?></h3>
-                    <p style="color: #6b7280; margin: 0.25rem 0 0; font-size: 0.9rem; font-weight: 500;">Đang giảm giá</p>
+                    <h3 style="font-size: 2rem; font-weight: 800; color: #1f2937; margin: 0;"><?php echo $discounted; ?></h3>
+                    <p style="color: #6b7280; margin: 0.25rem 0 0; font-size: 0.9rem; font-weight: 600;">Đang giảm giá</p>
                 </div>
-            </div>
-            <div style="background: white; border-radius: 14px; padding: 1.25rem 1.5rem; box-shadow: 0 4px 12px rgba(0,0,0,0.08); display: flex; align-items: center; gap: 1.25rem; border: 2px solid #d1d5db; transition: all 0.2s; cursor: pointer;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 20px rgba(0,0,0,0.12)'; this.style.borderColor='#22c55e';" onmouseout="this.style.transform='none'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.08)'; this.style.borderColor='#d1d5db';">
-                <div style="width: 56px; height: 56px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; color: white; background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%); flex-shrink: 0;">
+            </a>
+            
+            <!-- Giá gốc -->
+            <a href="?discount=none" style="text-decoration: none; background: white; border-radius: 14px; padding: 1.25rem 1.5rem; box-shadow: 0 2px 10px rgba(0,0,0,0.06); display: flex; align-items: center; gap: 1rem; border: 3px solid <?php echo $discount_filter === 'none' ? '#22c55e' : '#e5e7eb'; ?>; cursor: pointer;">
+                <div style="width: 56px; height: 56px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; color: white; background: #22c55e;">
                     <i class="fas fa-check"></i>
                 </div>
                 <div>
-                    <h3 style="font-size: 1.75rem; font-weight: 800; color: #1f2937; margin: 0; line-height: 1;"><?php echo $total - $discounted; ?></h3>
-                    <p style="color: #6b7280; margin: 0.25rem 0 0; font-size: 0.9rem; font-weight: 500;">Giá gốc</p>
+                    <h3 style="font-size: 2rem; font-weight: 800; color: #1f2937; margin: 0;"><?php echo $total - $discounted; ?></h3>
+                    <p style="color: #6b7280; margin: 0.25rem 0 0; font-size: 0.9rem; font-weight: 600;">Giá gốc</p>
                 </div>
-            </div>
+            </a>
         </div>
 
         <!-- Bộ lọc -->
-        <div style="background: white; padding: 1.25rem; border-radius: 12px; margin-bottom: 1.25rem; display: flex; gap: 1rem; align-items: center; flex-wrap: wrap; box-shadow: 0 4px 12px rgba(0,0,0,0.08); border: 2px solid #d1d5db;">
+        <div class="filter-bar-custom">
             <!-- Thanh tìm kiếm -->
-            <div style="position: relative; flex: 0 0 220px;">
-                <i class="fas fa-search" style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #9ca3af;"></i>
+            <div style="position: relative; flex: 0 0 240px;">
+                <i class="fas fa-search" style="position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: #9ca3af; font-size: 0.95rem;"></i>
                 <input type="text" id="searchInput" placeholder="Tìm tên món..." value="<?php echo htmlspecialchars($search); ?>" 
                        onkeypress="if(event.key==='Enter')applyFilter()"
-                       style="width: 100%; padding: 0.6rem 1rem 0.6rem 2.5rem; border: 2px solid #d1d5db; border-radius: 8px; font-size: 0.9rem; background: white; color: #374151;">
+                       style="width: 100%; padding-left: 2.75rem;">
             </div>
             
-            <select id="categoryFilter" onchange="applyFilter()" style="padding: 0.6rem 1rem; border: 2px solid #d1d5db; border-radius: 8px; font-size: 0.9rem; min-width: 160px; background: white; color: #374151;">
-                <option value="">Tất cả danh mục</option>
+            <select id="categoryFilter" onchange="applyFilter()" style="min-width: 180px;">
+                <option value="">📂 Tất cả danh mục</option>
                 <?php foreach ($categories as $cat): ?>
                 <option value="<?php echo $cat['id']; ?>" <?php echo $category_filter == $cat['id'] ? 'selected' : ''; ?>>
                     <?php echo htmlspecialchars($cat['name']); ?>
@@ -530,25 +541,25 @@ $discounted = $stats['discounted'] ?? 0;
                 <?php endforeach; ?>
             </select>
             
-            <select id="discountFilter" onchange="applyFilter()" style="padding: 0.6rem 1rem; border: 2px solid #d1d5db; border-radius: 8px; font-size: 0.9rem; min-width: 160px; background: white; color: #374151;">
-                <option value="">Tất cả</option>
-                <option value="has" <?php echo $discount_filter === 'has' ? 'selected' : ''; ?>>Đang giảm giá</option>
-                <option value="none" <?php echo $discount_filter === 'none' ? 'selected' : ''; ?>>Chưa giảm giá</option>
+            <select id="discountFilter" onchange="applyFilter()" style="min-width: 170px;">
+                <option value="">📊 Tất cả trạng thái</option>
+                <option value="has" <?php echo $discount_filter === 'has' ? 'selected' : ''; ?>>🏷️ Đang giảm giá</option>
+                <option value="none" <?php echo $discount_filter === 'none' ? 'selected' : ''; ?>>💰 Chưa giảm giá</option>
             </select>
             
             <div style="display: flex; gap: 0.75rem; margin-left: auto; align-items: center;">
-                <span id="selectedCount" style="color: #6b7280; font-size: 0.9rem; font-weight: 500;">Đã chọn: 0</span>
-                <div style="display: flex; align-items: center; gap: 0.25rem;">
-                    <input type="number" id="bulkDiscount" min="0" max="100" value="15" placeholder="%" style="width: 55px; padding: 0.5rem; border: 2px solid #d1d5db; border-radius: 8px; text-align: center; font-weight: 600; font-size: 0.9rem; background: white; color: #1f2937;">
-                    <span style="color: #6b7280; font-size: 0.9rem;">%</span>
+                <span id="selectedCount" style="color: #374151; font-size: 0.95rem; font-weight: 600; background: #f3f4f6; padding: 0.5rem 1rem; border-radius: 8px;">Đã chọn: 0</span>
+                <div style="display: flex; align-items: center; gap: 4px; background: #f8fafc; padding: 4px 8px; border-radius: 8px; border: 2px solid #e5e7eb;">
+                    <input type="number" id="bulkDiscount" min="0" max="100" value="15" placeholder="%" style="width: 55px; padding: 0.5rem; border: none; text-align: center; font-weight: 700; font-size: 1rem; background: transparent; color: #1f2937;">
+                    <span style="color: #6b7280; font-size: 1rem; font-weight: 600;">%</span>
                 </div>
-                <button class="bulk-btn" onclick="bulkDiscount()" id="btnBulk" disabled style="padding: 0.6rem 1.25rem; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 0.5rem; background: #22c55e; color: white; font-size: 0.9rem;">
+                <button class="bulk-btn" onclick="bulkDiscount()" id="btnBulk" disabled style="background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%); color: white;">
                     <i class="fas fa-tags"></i> Áp dụng
                 </button>
-                <button onclick="applyAllDiscounts()" style="padding: 0.6rem 1rem; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 0.5rem; background: #f97316; color: white; font-size: 0.85rem;">
+                <button class="bulk-btn" onclick="applyAllDiscounts()" style="background: linear-gradient(135deg, #f97316 0%, #ea580c 100%); color: white;">
                     <i class="fas fa-percent"></i> Giảm toàn bộ
                 </button>
-                <button onclick="removeAllDiscounts()" style="padding: 0.6rem 1rem; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 0.5rem; background: #ef4444; color: white; font-size: 0.85rem;">
+                <button class="bulk-btn" onclick="removeAllDiscounts()" style="background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); color: white;">
                     <i class="fas fa-trash"></i> Xóa toàn bộ
                 </button>
             </div>

@@ -51,6 +51,7 @@ $status_labels = [
     'confirmed' => 'Đã xác nhận',
     'preparing' => 'Đang chuẩn bị',
     'shipping' => 'Đang giao',
+    'delivering' => 'Đang giao',
     'completed' => 'Hoàn thành',
     'cancelled' => 'Đã hủy'
 ];
@@ -186,6 +187,7 @@ $status_text = $status_labels[$order['status']] ?? $order['status'];
         .status-confirmed { background: #dbeafe; color: #2563eb; }
         .status-preparing { background: #e0e7ff; color: #4f46e5; }
         .status-shipping { background: #fce7f3; color: #db2777; }
+        .status-delivering { background: #cffafe; color: #0891b2; }
         .status-completed { background: #dcfce7; color: #16a34a; }
         .status-cancelled { background: #fee2e2; color: #dc2626; }
         
@@ -470,7 +472,15 @@ $status_text = $status_labels[$order['status']] ?? $order['status'];
                     </div>
                     <div class="info-row">
                         <span class="label">Thanh toán:</span>
-                        <span class="value"><?php echo $order['payment_method'] === 'cash' ? 'COD - Thanh toán khi nhận hàng' : 'Chuyển khoản ngân hàng'; ?></span>
+                        <span class="value"><?php 
+                            if ($order['payment_method'] === 'cash') {
+                                echo 'COD - Thanh toán khi nhận hàng';
+                            } elseif ($order['payment_method'] === 'card') {
+                                echo 'Thẻ thành viên';
+                            } else {
+                                echo 'Chuyển khoản ngân hàng';
+                            }
+                        ?></span>
                     </div>
                 </div>
                 

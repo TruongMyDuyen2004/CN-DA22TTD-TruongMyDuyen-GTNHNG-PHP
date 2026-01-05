@@ -107,7 +107,22 @@ try {
             <?php endif; ?>
         </a>
         
-        <a href="settings.php" class="nav-item <?php echo basename($_SERVER['PHP_SELF']) == 'settings.php' ? 'active' : ''; ?>">>
+        <a href="sync-sepay.php" class="nav-item <?php echo basename($_SERVER['PHP_SELF']) == 'sync-sepay.php' ? 'active' : ''; ?>">
+            <i class="fas fa-sync-alt"></i>
+            <span>Sync SePay</span>
+        </a>
+        
+        <a href="vouchers.php" class="nav-item <?php echo basename($_SERVER['PHP_SELF']) == 'vouchers.php' ? 'active' : ''; ?>">
+            <i class="fas fa-ticket-alt"></i>
+            <span>Voucher</span>
+        </a>
+        
+        <a href="points.php" class="nav-item <?php echo basename($_SERVER['PHP_SELF']) == 'points.php' ? 'active' : ''; ?>">
+            <i class="fas fa-star"></i>
+            <span>Điểm tích lũy</span>
+        </a>
+        
+        <a href="settings.php" class="nav-item <?php echo basename($_SERVER['PHP_SELF']) == 'settings.php' ? 'active' : ''; ?>">
             <i class="fas fa-cog"></i>
             <span>Cài đặt</span>
         </a>

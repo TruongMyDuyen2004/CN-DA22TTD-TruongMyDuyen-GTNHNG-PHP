@@ -1,35 +1,40 @@
 /* Admin Dark Modern Theme - Đồng bộ với trang người dùng */
 :root {
-    /* Dark Theme Colors - Matching User Side */
-    --admin-bg-primary: #020617;
-    --admin-bg-secondary: #0f172a;
-    --admin-bg-tertiary: #1e293b;
-    --admin-surface: rgba(15, 23, 42, 0.95);
-    --admin-surface-hover: rgba(30, 41, 59, 0.95);
+    /* Dark Theme Colors - Warm Dark Theme */
+    --admin-bg-primary: #1a1a1a;
+    --admin-bg-secondary: #242424;
+    --admin-bg-tertiary: #2d2d2d;
+    --admin-surface: rgba(36, 36, 36, 0.95);
+    --admin-surface-hover: rgba(45, 45, 45, 0.95);
     
-    /* Accent Colors - Gold/Amber theme */
-    --admin-accent: #d4a574;
-    --admin-accent-light: #e8c49a;
-    --admin-accent-dark: #c89456;
+    /* Accent Colors - Green/Gold theme matching main site */
+    --admin-accent: #22c55e;
+    --admin-accent-light: #4ade80;
+    --admin-accent-dark: #16a34a;
+    
+    /* Secondary Accent - Gold */
+    --admin-gold: #d4a574;
+    --admin-gold-light: #e8c49a;
+    --admin-gold-dark: #c89456;
     
     /* Status Colors */
-    --admin-success: #10b981;
+    --admin-success: #22c55e;
     --admin-warning: #f59e0b;
     --admin-danger: #ef4444;
     --admin-info: #3b82f6;
     
     /* Text Colors */
-    --admin-text-primary: #f1f5f9;
-    --admin-text-secondary: #cbd5e1;
-    --admin-text-muted: #94a3b8;
-    --admin-text-dim: #64748b;
+    --admin-text-primary: #f5f5f5;
+    --admin-text-secondary: #d4d4d4;
+    --admin-text-muted: #a3a3a3;
+    --admin-text-dim: #737373;
     
     /* Border & Shadow */
-    --admin-border: rgba(148, 163, 184, 0.15);
-    --admin-border-hover: rgba(212, 165, 116, 0.3);
-    --admin-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-    --admin-shadow-lg: 0 10px 40px rgba(0, 0, 0, 0.4);
-    --admin-glow: 0 0 20px rgba(212, 165, 116, 0.2);
+    --admin-border: rgba(255, 255, 255, 0.1);
+    --admin-border-hover: rgba(34, 197, 94, 0.3);
+    --admin-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    --admin-shadow-lg: 0 10px 40px rgba(0, 0, 0, 0.5);
+    --admin-glow: 0 0 20px rgba(34, 197, 94, 0.2);
     
     /* Radius */
     --admin-radius-sm: 8px;
@@ -43,7 +48,7 @@
 
 body {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    background: linear-gradient(135deg, var(--admin-bg-primary) 0%, var(--admin-bg-secondary) 50%, var(--admin-bg-tertiary) 100%);
+    background: linear-gradient(135deg, #1a1a1a 0%, #242424 50%, #2d2d2d 100%);
     background-attachment: fixed;
     color: var(--admin-text-primary);
     min-height: 100vh;
@@ -59,8 +64,8 @@ body {
 /* Sidebar */
 .sidebar {
     width: 280px;
-    background: linear-gradient(180deg, #0a1628 0%, #0f1d32 100%);
-    border-right: 1px solid var(--admin-border);
+    background: linear-gradient(180deg, #1a1a1a 0%, #242424 100%);
+    border-right: 1px solid rgba(34, 197, 94, 0.15);
     position: fixed;
     top: 0;
     left: 0;
@@ -68,20 +73,20 @@ body {
     display: flex;
     flex-direction: column;
     z-index: 100;
-    box-shadow: 4px 0 20px rgba(0, 0, 0, 0.3);
+    box-shadow: 4px 0 20px rgba(0, 0, 0, 0.4);
 }
 
 .sidebar-header {
     padding: 1.5rem;
-    border-bottom: 1px solid var(--admin-border);
+    border-bottom: 1px solid rgba(34, 197, 94, 0.15);
     text-align: center;
-    background: linear-gradient(135deg, rgba(212, 165, 116, 0.1) 0%, transparent 100%);
+    background: linear-gradient(135deg, rgba(34, 197, 94, 0.1) 0%, transparent 100%);
 }
 
 .sidebar-header h2 {
     font-size: 1.4rem;
     font-weight: 800;
-    color: var(--admin-accent);
+    color: #22c55e;
     margin-bottom: 0.25rem;
     letter-spacing: 0.05em;
 }
@@ -2138,4 +2143,246 @@ a:hover {
 .notification-badge {
     background: #22c55e !important;
     color: #ffffff !important;
+}
+
+/* ========================================
+   ACTION BUTTONS - CLEAR & VISIBLE STYLE
+   ======================================== */
+
+/* Action Buttons Container */
+.action-buttons {
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+}
+
+/* Base Action Button */
+.action-btn {
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    border: 2px solid;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    transition: all 0.2s ease;
+    text-decoration: none;
+}
+
+.action-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.action-btn i {
+    font-size: 1rem;
+}
+
+/* Confirm Button - Green */
+.action-btn.btn-confirm {
+    background: #dcfce7 !important;
+    border-color: #22c55e !important;
+    color: #16a34a !important;
+}
+.action-btn.btn-confirm:hover {
+    background: #22c55e !important;
+    color: white !important;
+}
+.action-btn.btn-confirm i {
+    color: inherit !important;
+}
+
+/* Prepare Button - Purple */
+.action-btn.btn-prepare {
+    background: #ede9fe !important;
+    border-color: #8b5cf6 !important;
+    color: #7c3aed !important;
+}
+.action-btn.btn-prepare:hover {
+    background: #8b5cf6 !important;
+    color: white !important;
+}
+.action-btn.btn-prepare i {
+    color: inherit !important;
+}
+
+/* Deliver Button - Cyan */
+.action-btn.btn-deliver {
+    background: #cffafe !important;
+    border-color: #06b6d4 !important;
+    color: #0891b2 !important;
+}
+.action-btn.btn-deliver:hover {
+    background: #06b6d4 !important;
+    color: white !important;
+}
+.action-btn.btn-deliver i {
+    color: inherit !important;
+}
+
+/* Complete Button - Green */
+.action-btn.btn-complete {
+    background: #dcfce7 !important;
+    border-color: #22c55e !important;
+    color: #16a34a !important;
+}
+.action-btn.btn-complete:hover {
+    background: #22c55e !important;
+    color: white !important;
+}
+.action-btn.btn-complete i {
+    color: inherit !important;
+}
+
+/* View Button - Blue */
+.action-btn.btn-view {
+    background: #dbeafe !important;
+    border-color: #3b82f6 !important;
+    color: #2563eb !important;
+}
+.action-btn.btn-view:hover {
+    background: #3b82f6 !important;
+    color: white !important;
+}
+.action-btn.btn-view i {
+    color: inherit !important;
+}
+
+/* Edit Button - Yellow */
+.action-btn.btn-edit {
+    background: #fef3c7 !important;
+    border-color: #f59e0b !important;
+    color: #d97706 !important;
+}
+.action-btn.btn-edit:hover {
+    background: #f59e0b !important;
+    color: white !important;
+}
+.action-btn.btn-edit i {
+    color: inherit !important;
+}
+
+/* Cancel Button - Gray */
+.action-btn.btn-cancel {
+    background: #f3f4f6 !important;
+    border-color: #9ca3af !important;
+    color: #6b7280 !important;
+}
+.action-btn.btn-cancel:hover {
+    background: #ef4444 !important;
+    border-color: #ef4444 !important;
+    color: white !important;
+}
+.action-btn.btn-cancel i {
+    color: inherit !important;
+}
+
+/* Delete Button - Red */
+.action-btn.btn-delete {
+    background: #fee2e2 !important;
+    border-color: #f87171 !important;
+    color: #dc2626 !important;
+}
+.action-btn.btn-delete:hover {
+    background: #ef4444 !important;
+    border-color: #ef4444 !important;
+    color: white !important;
+}
+.action-btn.btn-delete i {
+    color: inherit !important;
+}
+
+/* Payment Button - Orange/Yellow */
+.action-btn.btn-payment {
+    background: #fef3c7 !important;
+    border-color: #f59e0b !important;
+    color: #d97706 !important;
+}
+.action-btn.btn-payment:hover {
+    background: #f59e0b !important;
+    color: white !important;
+}
+.action-btn.btn-payment i {
+    color: inherit !important;
+}
+
+/* Info Button - Blue */
+.action-btn.btn-info {
+    background: #dbeafe !important;
+    border-color: #3b82f6 !important;
+    color: #2563eb !important;
+}
+.action-btn.btn-info:hover {
+    background: #3b82f6 !important;
+    color: white !important;
+}
+.action-btn.btn-info i {
+    color: inherit !important;
+}
+
+/* Success Button - Green */
+.action-btn.btn-success {
+    background: #dcfce7 !important;
+    border-color: #22c55e !important;
+    color: #16a34a !important;
+}
+.action-btn.btn-success:hover {
+    background: #22c55e !important;
+    color: white !important;
+}
+.action-btn.btn-success i {
+    color: inherit !important;
+}
+
+/* Warning Button - Yellow */
+.action-btn.btn-warning {
+    background: #fef3c7 !important;
+    border-color: #f59e0b !important;
+    color: #d97706 !important;
+}
+.action-btn.btn-warning:hover {
+    background: #f59e0b !important;
+    color: white !important;
+}
+.action-btn.btn-warning i {
+    color: inherit !important;
+}
+
+/* Danger Button - Red */
+.action-btn.btn-danger {
+    background: #fee2e2 !important;
+    border-color: #ef4444 !important;
+    color: #dc2626 !important;
+}
+.action-btn.btn-danger:hover {
+    background: #ef4444 !important;
+    color: white !important;
+}
+.action-btn.btn-danger i {
+    color: inherit !important;
+}
+
+/* Placeholder Button - Hidden */
+.action-btn.btn-placeholder {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    cursor: default !important;
+    visibility: hidden;
+}
+
+/* Reply Button */
+.action-btn.btn-reply {
+    background: #dcfce7 !important;
+    border-color: #22c55e !important;
+    color: #16a34a !important;
+}
+.action-btn.btn-reply:hover {
+    background: #22c55e !important;
+    color: white !important;
+}
+.action-btn.btn-reply i {
+    color: inherit !important;
 }

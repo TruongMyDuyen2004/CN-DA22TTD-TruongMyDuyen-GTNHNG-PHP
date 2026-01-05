@@ -7,7 +7,6 @@ if (!isset($_SESSION['customer_id'])) {
 $db = new Database();
 $conn = $db->connect();
 
-// Kiểm tra và thêm cột order_id nếu chưa có
 try {
     $conn->query("SELECT order_id FROM reviews LIMIT 1");
 } catch (PDOException $e) {
@@ -17,7 +16,6 @@ try {
 
 $order_id = $_GET['order_id'] ?? 0;
 
-// Kiểm tra đơn hàng
 $stmt = $conn->prepare("SELECT * FROM orders WHERE id = ? AND customer_id = ? AND status = 'completed'");
 $stmt->execute([$order_id, $_SESSION['customer_id']]);
 $order = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -27,7 +25,6 @@ if (!$order) {
     exit;
 }
 
-// Lấy món ăn trong đơn
 $stmt = $conn->prepare("
     SELECT oi.*, m.name, m.image 
     FROM order_items oi 
@@ -37,7 +34,6 @@ $stmt = $conn->prepare("
 $stmt->execute([$order_id]);
 $items = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-// Kiểm tra đã đánh giá chưa
 $existing_review = null;
 if (!empty($items)) {
     $stmt = $conn->prepare("SELECT * FROM reviews WHERE customer_id = ? AND menu_item_id = ?");
@@ -48,7 +44,6 @@ if (!empty($items)) {
 $success = '';
 $error = '';
 
-// Xử lý đánh giá
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $rating = intval($_POST['rating'] ?? 0);
     $comment = trim($_POST['comment'] ?? '');
@@ -84,759 +79,253 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 <section class="rv-page">
     <div class="rv-wrapper">
-        <!-- Header Card -->
-        <div class="rv-header-card">
-            <a href="?page=orders" class="rv-back">
-                <i class="fas fa-chevron-left"></i>
+        <div class="rv-header">
+            <a href="?page=orders" class="rv-back-btn">
+                <i class="fas fa-arrow-left"></i>
             </a>
-            <div class="rv-header-info">
-                <div class="rv-header-icon">
-                    <i class="fas fa-star"></i>
-                </div>
-                <div>
-                    <h1>Đánh giá đơn hàng</h1>
-                    <span class="rv-order-id">#<?php echo htmlspecialchars($order['order_number']); ?></span>
-                </div>
+            <div class="rv-header-content">
+                <h1>Đánh giá đơn hàng</h1>
+                <span class="rv-order-code"><?php echo htmlspecialchars($order['order_number']); ?></span>
             </div>
         </div>
 
         <?php if ($error): ?>
-        <div class="rv-alert error">
-            <i class="fas fa-exclamation-triangle"></i>
-            <span><?php echo $error; ?></span>
+        <div class="rv-alert rv-alert-error">
+            <i class="fas fa-exclamation-circle"></i>
+            <?php echo $error; ?>
         </div>
         <?php endif; ?>
         
         <?php if ($success): ?>
-        <div class="rv-alert success">
+        <div class="rv-alert rv-alert-success">
             <i class="fas fa-check-circle"></i>
-            <span><?php echo $success; ?></span>
+            <?php echo $success; ?>
         </div>
         <?php endif; ?>
 
-        <!-- Order Items Preview -->
         <?php if (!empty($items)): ?>
-        <div class="rv-items-preview" onclick="toggleItemsDetail()" style="cursor: pointer;">
-            <div class="rv-items-label">
-                <i class="fas fa-utensils"></i>
-                <span>Món đã đặt (<?php echo count($items); ?>)</span>
-                <i class="fas fa-chevron-down rv-toggle-icon" style="margin-left: auto; font-size: 0.8rem; color: #9ca3af; transition: transform 0.3s;"></i>
+        <div class="rv-order-items">
+            <div class="rv-section-title">
+                <span>Món đã đặt</span>
+                <span class="rv-item-count"><?php echo count($items); ?> món</span>
             </div>
-            <div class="rv-items-list">
-                <?php foreach (array_slice($items, 0, 4) as $item): 
-                    // Xử lý đường dẫn hình ảnh
+            <div class="rv-items-grid">
+                <?php foreach ($items as $item): 
                     $img_src = '';
                     if (!empty($item['image'])) {
-                        // Nếu đường dẫn đã có uploads/ thì giữ nguyên, nếu không thì thêm
-                        if (strpos($item['image'], 'uploads/') === 0) {
-                            $img_src = $item['image'];
-                        } else {
-                            $img_src = 'uploads/menu/' . $item['image'];
-                        }
+                        $img_src = strpos($item['image'], 'uploads/') === 0 ? $item['image'] : 'uploads/menu/' . $item['image'];
                     }
                 ?>
-                <div class="rv-item-thumb">
-                    <?php if (!empty($img_src)): ?>
-                    <img src="<?php echo htmlspecialchars($img_src); ?>" alt="<?php echo htmlspecialchars($item['name']); ?>" onerror="this.style.display='none'; this.parentElement.innerHTML='<i class=\'fas fa-utensils\'></i>';">
-                    <?php else: ?>
-                    <i class="fas fa-utensils"></i>
-                    <?php endif; ?>
+                <div class="rv-item-card">
+                    <div class="rv-item-img">
+                        <?php if (!empty($img_src)): ?>
+                        <img src="<?php echo htmlspecialchars($img_src); ?>" alt="<?php echo htmlspecialchars($item['name']); ?>">
+                        <?php else: ?>
+                        <i class="fas fa-utensils"></i>
+                        <?php endif; ?>
+                    </div>
+                    <div class="rv-item-info">
+                        <span class="rv-item-name"><?php echo htmlspecialchars($item['name']); ?></span>
+                        <span class="rv-item-qty">SL: <?php echo $item['quantity']; ?></span>
+                    </div>
                 </div>
                 <?php endforeach; ?>
-                <?php if (count($items) > 4): ?>
-                <div class="rv-item-more">+<?php echo count($items) - 4; ?></div>
-                <?php endif; ?>
             </div>
-        </div>
-        
-        <!-- Items Detail (Hidden by default) -->
-        <div class="rv-items-detail" id="itemsDetail" style="display: none;">
-            <?php foreach ($items as $item): 
-                $img_src = '';
-                if (!empty($item['image'])) {
-                    if (strpos($item['image'], 'uploads/') === 0) {
-                        $img_src = $item['image'];
-                    } else {
-                        $img_src = 'uploads/menu/' . $item['image'];
-                    }
-                }
-            ?>
-            <div class="rv-item-detail-row">
-                <div class="rv-item-detail-img">
-                    <?php if (!empty($img_src)): ?>
-                    <img src="<?php echo htmlspecialchars($img_src); ?>" alt="<?php echo htmlspecialchars($item['name']); ?>">
-                    <?php else: ?>
-                    <i class="fas fa-utensils"></i>
-                    <?php endif; ?>
-                </div>
-                <div class="rv-item-detail-info">
-                    <span class="rv-item-detail-name"><?php echo htmlspecialchars($item['name']); ?></span>
-                    <span class="rv-item-detail-qty">x<?php echo $item['quantity']; ?></span>
-                </div>
-                <div class="rv-item-detail-price">
-                    <?php echo number_format($item['price'] * $item['quantity'], 0, ',', '.'); ?>đ
-                </div>
-            </div>
-            <?php endforeach; ?>
         </div>
         <?php endif; ?>
 
-        <!-- Main Review Card -->
-        <div class="rv-main-card">
+        <div class="rv-review-card">
             <?php if ($existing_review): ?>
-            <!-- Already Reviewed -->
-            <div class="rv-done">
-                <div class="rv-done-icon">
-                    <i class="fas fa-heart"></i>
+            <div class="rv-completed">
+                <div class="rv-completed-icon">
+                    <i class="fas fa-check"></i>
                 </div>
-                <h2>Cảm ơn bạn!</h2>
-                <p>Đánh giá của bạn đã được ghi nhận</p>
+                <h2>Đã đánh giá</h2>
+                <p>Cảm ơn bạn đã chia sẻ trải nghiệm</p>
                 
-                <div class="rv-done-stars">
+                <div class="rv-completed-rating">
                     <?php for ($i = 1; $i <= 5; $i++): ?>
-                    <i class="fas fa-star <?php echo $i <= $existing_review['rating'] ? 'active' : ''; ?>"></i>
+                    <i class="fas fa-star <?php echo $i <= $existing_review['rating'] ? 'filled' : ''; ?>"></i>
                     <?php endfor; ?>
+                    <span><?php echo $existing_review['rating']; ?>/5</span>
                 </div>
                 
                 <?php if ($existing_review['comment']): ?>
-                <div class="rv-done-comment">
-                    <i class="fas fa-quote-left"></i>
-                    <?php echo htmlspecialchars($existing_review['comment']); ?>
+                <div class="rv-completed-comment">
+                    "<?php echo htmlspecialchars($existing_review['comment']); ?>"
                 </div>
                 <?php endif; ?>
                 
-                <div class="rv-done-time">
-                    <i class="far fa-clock"></i>
-                    <?php echo date('d/m/Y - H:i', strtotime($existing_review['created_at'])); ?>
+                <div class="rv-completed-date">
+                    <?php echo date('d/m/Y, H:i', strtotime($existing_review['created_at'])); ?>
                 </div>
             </div>
             <?php else: ?>
-            <!-- Review Form -->
             <form method="POST" class="rv-form">
-                <div class="rv-form-header">
-                    <div class="rv-emoji" id="rvEmoji">🤔</div>
-                    <h2 id="rvTitle">Bạn thấy đơn hàng thế nào?</h2>
+                <div class="rv-form-title">
+                    <h2>Trải nghiệm của bạn thế nào?</h2>
+                    <p>Đánh giá giúp chúng tôi phục vụ tốt hơn</p>
                 </div>
 
-                <!-- Star Rating -->
-                <div class="rv-stars-wrap">
-                    <div class="rv-stars">
+                <div class="rv-rating-section">
+                    <div class="rv-stars-container">
                         <?php for ($i = 1; $i <= 5; $i++): ?>
                         <input type="radio" name="rating" value="<?php echo $i; ?>" id="star<?php echo $i; ?>" required>
-                        <label for="star<?php echo $i; ?>" data-value="<?php echo $i; ?>">
-                            <i class="fas fa-star" style="color: #fde68a;"></i>
+                        <label for="star<?php echo $i; ?>" class="rv-star" data-value="<?php echo $i; ?>">
+                            <i class="fas fa-star"></i>
                         </label>
                         <?php endfor; ?>
                     </div>
-                    <div class="rv-rating-text" id="rvText">Chọn số sao</div>
+                    <div class="rv-rating-label" id="ratingLabel">Chọn đánh giá</div>
                 </div>
 
-                <div class="rv-comment-wrap">
-                    <label>
-                        <i class="fas fa-pen"></i>
-                        <span>Chia sẻ trải nghiệm của bạn</span>
-                    </label>
-                    <textarea name="comment" rows="3" placeholder="Món ăn ngon, giao hàng nhanh..."></textarea>
+                <div class="rv-comment-section">
+                    <label>Nhận xét của bạn</label>
+                    <textarea name="comment" placeholder="Chia sẻ trải nghiệm của bạn về món ăn, dịch vụ..." rows="4"></textarea>
                 </div>
 
-                <!-- Quick Tags -->
-                <div class="rv-tags">
-                    <span class="rv-tag" data-text="Món ăn ngon">😋 Ngon</span>
-                    <span class="rv-tag" data-text="Giao hàng nhanh">🚀 Nhanh</span>
-                    <span class="rv-tag" data-text="Đóng gói cẩn thận">📦 Đẹp</span>
-                    <span class="rv-tag" data-text="Giá hợp lý">💰 Rẻ</span>
-                    <span class="rv-tag" data-text="Sẽ đặt lại">❤️ Quay lại</span>
+                <div class="rv-quick-tags">
+                    <span class="rv-quick-tag" data-text="Món ăn ngon">Ngon</span>
+                    <span class="rv-quick-tag" data-text="Giao hàng nhanh">Nhanh</span>
+                    <span class="rv-quick-tag" data-text="Đóng gói đẹp">Đóng gói tốt</span>
+                    <span class="rv-quick-tag" data-text="Giá hợp lý">Giá tốt</span>
+                    <span class="rv-quick-tag" data-text="Sẽ quay lại">Sẽ quay lại</span>
                 </div>
 
-                <button type="submit" class="rv-submit">
-                    <i class="fas fa-paper-plane"></i>
-                    Gửi đánh giá
-                </button>
+                <button type="submit" class="rv-submit-btn">Gửi đánh giá</button>
             </form>
             <?php endif; ?>
         </div>
-
-        <!-- Back Link -->
-        <a href="?page=orders" class="rv-back-link">
-            <i class="fas fa-arrow-left"></i>
-            Quay lại đơn hàng
-        </a>
     </div>
 </section>
 
 <style>
-.rv-page {
-    min-height: 100vh;
-    padding: 1.5rem 0 3rem;
-    background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
-}
-.rv-wrapper {
-    max-width: 500px;
-    margin: 0 auto;
-    padding: 0 1rem;
-}
+.rv-page { min-height: 100vh; background: #e9ecef; padding: 0; }
+.rv-wrapper { max-width: 520px; margin: 0 auto; padding: 1.5rem 1rem 3rem; }
 
-/* Header */
-.rv-header-card {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    padding: 1.25rem;
-    background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
-    border-radius: 20px;
-    margin-bottom: 1rem;
-    box-shadow: 0 8px 30px rgba(34, 197, 94, 0.3);
-}
-.rv-back {
-    width: 40px;
-    height: 40px;
-    background: rgba(255,255,255,0.2);
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    text-decoration: none;
-    transition: all 0.2s;
-}
-.rv-back:hover { background: rgba(255,255,255,0.3); }
-.rv-header-info {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-}
-.rv-header-icon {
-    width: 44px;
-    height: 44px;
-    background: rgba(255,255,255,0.2);
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #fbbf24;
-    font-size: 1.25rem;
-}
-.rv-header-info h1 {
-    margin: 0;
-    font-size: 1.2rem;
-    color: white;
-    font-weight: 700;
-}
-.rv-order-id {
-    font-size: 0.85rem;
-    color: rgba(255,255,255,0.85);
-}
+.rv-header { display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 1px solid #dee2e6; }
+.rv-back-btn { width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; background: #fff; border: 1px solid #dee2e6; border-radius: 10px; color: #495057; text-decoration: none; transition: all 0.2s; box-shadow: 0 2px 4px rgba(0,0,0,0.06); }
+.rv-back-btn:hover { background: #f8f9fa; border-color: #adb5bd; }
+.rv-header-content h1 { margin: 0; font-size: 1.25rem; font-weight: 600; color: #212529; }
+.rv-order-code { font-size: 0.8rem; color: #6c757d; font-family: 'SF Mono', Monaco, monospace; }
 
-/* Alert */
-.rv-alert {
-    display: flex;
-    align-items: center;
-    gap: 0.6rem;
-    padding: 0.85rem 1rem;
-    border-radius: 12px;
-    margin-bottom: 1rem;
-    font-size: 0.9rem;
-    font-weight: 500;
-}
-.rv-alert.error {
-    background: #fef2f2;
-    color: #dc2626;
-    border: 1px solid #fecaca;
-}
-.rv-alert.success {
-    background: #f0fdf4;
-    color: #16a34a;
-    border: 1px solid #bbf7d0;
-}
+.rv-alert { display: flex; align-items: center; gap: 0.75rem; padding: 0.875rem 1rem; border-radius: 10px; margin-bottom: 1rem; font-size: 0.875rem; font-weight: 500; }
+.rv-alert-error { background: #fff5f5; color: #c92a2a; border: 1px solid #ffc9c9; }
+.rv-alert-success { background: #ebfbee; color: #2b8a3e; border: 1px solid #b2f2bb; }
 
-/* Items Preview */
-.rv-items-preview {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0.85rem 1rem;
-    background: white;
-    border-radius: 14px;
-    margin-bottom: 0;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.06);
-    border: 2px solid #e5e7eb;
-    transition: all 0.3s ease;
-}
-.rv-items-preview:hover {
-    border-color: #22c55e;
-}
-.rv-items-preview.expanded {
-    border-radius: 14px 14px 0 0;
-    border-bottom: none;
-}
-.rv-items-preview.expanded .rv-toggle-icon {
-    transform: rotate(180deg);
-}
+.rv-order-items { background: #fff; border-radius: 12px; padding: 1rem; margin-bottom: 1rem; border: 2px solid #22c55e; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+.rv-section-title { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem; font-size: 0.875rem; font-weight: 600; color: #495057; }
+.rv-item-count { font-weight: 400; color: #868e96; }
+.rv-items-grid { display: flex; gap: 0.5rem; overflow-x: auto; padding-bottom: 0.25rem; }
+.rv-item-card { flex-shrink: 0; display: flex; align-items: center; gap: 0.625rem; padding: 0.5rem; background: #f1f3f5; border-radius: 8px; min-width: 140px; border: 1px solid #e9ecef; }
+.rv-item-img { width: 40px; height: 40px; border-radius: 8px; overflow: hidden; background: #e9ecef; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.rv-item-img img { width: 100%; height: 100%; object-fit: cover; }
+.rv-item-img i { color: #adb5bd; font-size: 1rem; }
+.rv-item-info { display: flex; flex-direction: column; gap: 0.125rem; min-width: 0; }
+.rv-item-name { font-size: 0.8rem; font-weight: 500; color: #212529; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.rv-item-qty { font-size: 0.7rem; color: #868e96; }
 
-/* Items Detail */
-.rv-items-detail {
-    background: white;
-    border: 2px solid #e5e7eb;
-    border-top: 1px dashed #e5e7eb;
-    border-radius: 0 0 14px 14px;
-    padding: 0.75rem;
-    margin-bottom: 1rem;
-    animation: slideDown 0.3s ease;
-}
-@keyframes slideDown {
-    from { opacity: 0; transform: translateY(-10px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-.rv-item-detail-row {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    padding: 0.6rem;
-    border-radius: 10px;
-    transition: background 0.2s;
-}
-.rv-item-detail-row:hover {
-    background: #f9fafb;
-}
-.rv-item-detail-img {
-    width: 50px;
-    height: 50px;
-    border-radius: 10px;
-    overflow: hidden;
-    background: #f3f4f6;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-}
-.rv-item-detail-img img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-.rv-item-detail-img i {
-    color: #9ca3af;
-    font-size: 1.2rem;
-}
-.rv-item-detail-info {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 0.15rem;
-}
-.rv-item-detail-name {
-    font-size: 0.9rem;
-    font-weight: 600;
-    color: #1f2937;
-}
-.rv-item-detail-qty {
-    font-size: 0.8rem;
-    color: #6b7280;
-}
-.rv-item-detail-price {
-    font-size: 0.9rem;
-    font-weight: 700;
-    color: #22c55e;
-}
-.rv-items-label {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    font-size: 0.85rem;
-    color: #6b7280;
-    font-weight: 500;
-}
-.rv-items-label i { color: #22c55e; }
-.rv-items-list {
-    display: flex;
-    gap: 0.35rem;
-}
-.rv-item-thumb {
-    width: 36px;
-    height: 36px;
-    border-radius: 10px;
-    overflow: hidden;
-    background: #f3f4f6;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #9ca3af;
-    font-size: 0.9rem;
-}
-.rv-item-thumb img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-.rv-item-more {
-    width: 36px;
-    height: 36px;
-    border-radius: 10px;
-    background: #22c55e;
-    color: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 0.75rem;
-    font-weight: 700;
-}
+.rv-review-card { background: #fff; border-radius: 16px; padding: 1.5rem; border: 2px solid #22c55e; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
 
-/* Main Card */
-.rv-main-card {
-    background: white;
-    border-radius: 24px;
-    padding: 2rem 1.75rem;
-    margin-bottom: 1.5rem;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-    border: 2px solid #22c55e;
-}
+.rv-completed { text-align: center; padding: 1rem 0; }
+.rv-completed-icon { width: 56px; height: 56px; background: #ebfbee; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; }
+.rv-completed-icon i { font-size: 1.5rem; color: #2b8a3e; }
+.rv-completed h2 { margin: 0 0 0.25rem; font-size: 1.125rem; font-weight: 600; color: #212529; }
+.rv-completed > p { margin: 0 0 1.25rem; font-size: 0.875rem; color: #868e96; }
+.rv-completed-rating { display: flex; align-items: center; justify-content: center; gap: 0.25rem; margin-bottom: 1rem; }
+.rv-completed-rating i { font-size: 1.25rem; color: #dee2e6; }
+.rv-completed-rating i.filled { color: #fab005; }
+.rv-completed-rating span { margin-left: 0.5rem; font-size: 0.875rem; font-weight: 600; color: #495057; }
+.rv-completed-comment { background: #f8f9fa; padding: 1rem; border-radius: 10px; font-size: 0.875rem; color: #495057; font-style: italic; margin-bottom: 1rem; line-height: 1.5; }
+.rv-completed-date { font-size: 0.75rem; color: #adb5bd; }
 
-/* Done State */
-.rv-done {
-    text-align: center;
-}
-.rv-done-icon {
-    width: 70px;
-    height: 70px;
-    background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 0 auto 1rem;
-    font-size: 1.75rem;
-    color: #f59e0b;
-    animation: pulse 2s infinite;
-}
-@keyframes pulse {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.05); }
-}
-.rv-done h2 {
-    margin: 0 0 0.25rem;
-    font-size: 1.35rem;
-    color: #1f2937;
-}
-.rv-done > p {
-    margin: 0 0 1.25rem;
-    color: #6b7280;
-    font-size: 0.9rem;
-}
-.rv-done-stars {
-    display: flex;
-    justify-content: center;
-    gap: 0.4rem;
-    margin-bottom: 1rem;
-}
-.rv-page .rv-done-stars i.fa-star,
-.rv-done-stars i.fa-star {
-    font-size: 1.5rem;
-    color: #fde68a !important; /* Vàng nhạt */
-}
-.rv-page .rv-done-stars i.fa-star.active,
-.rv-done-stars i.fa-star.active {
-    color: #f59e0b !important; /* Vàng đậm */
-}
-.rv-done-comment {
-    background: #f9fafb;
-    padding: 1rem;
-    border-radius: 12px;
-    color: #374151;
-    font-style: italic;
-    margin-bottom: 1rem;
-    position: relative;
-}
-.rv-done-comment i {
-    color: #d1d5db;
-    margin-right: 0.5rem;
-}
-.rv-done-time {
-    font-size: 0.8rem;
-    color: #9ca3af;
-}
-.rv-done-time i { margin-right: 0.3rem; }
+.rv-form-title { text-align: center; margin-bottom: 1.5rem; }
+.rv-form-title h2 { margin: 0 0 0.25rem; font-size: 1.125rem; font-weight: 600; color: #212529; }
+.rv-form-title p { margin: 0; font-size: 0.875rem; color: #868e96; }
 
-/* Form */
-.rv-form-header {
-    text-align: center;
-    margin-bottom: 1.5rem;
-}
-.rv-emoji {
-    font-size: 3rem;
-    margin-bottom: 0.5rem;
-    transition: all 0.3s;
-}
-.rv-form-header h2 {
-    margin: 0;
-    font-size: 1.1rem;
-    color: #1f2937;
-    font-weight: 600;
-    transition: all 0.3s;
-}
+.rv-rating-section { text-align: center; margin-bottom: 1.5rem; padding: 1.25rem; background: #f1f3f5; border-radius: 12px; border: 1px solid #dee2e6; }
+.rv-stars-container { display: flex; justify-content: center; gap: 0.5rem; margin-bottom: 0.75rem; }
+.rv-stars-container input { display: none; }
+.rv-star { cursor: pointer; font-size: 2rem; transition: all 0.15s ease; display: inline-block; }
+.rv-star i { color: #86efac !important; transition: color 0.15s ease; -webkit-text-fill-color: #86efac !important; }
+.rv-star:hover i { color: #22c55e !important; -webkit-text-fill-color: #22c55e !important; }
+.rv-star.active i { color: #22c55e !important; -webkit-text-fill-color: #22c55e !important; }
+.rv-star:hover { transform: scale(1.1); }
+.rv-rating-label { font-size: 0.875rem; color: #868e96; font-weight: 500; transition: all 0.2s; }
 
-/* Stars */
-.rv-stars-wrap {
-    text-align: center;
-    margin-bottom: 1.5rem;
-}
-.rv-stars {
-    display: flex;
-    justify-content: center;
-    gap: 0.5rem;
-    margin-bottom: 0.6rem;
-}
-.rv-stars input { display: none; }
-.rv-stars label {
-    cursor: pointer;
-    font-size: 2.25rem;
-    transition: all 0.2s;
-}
-.rv-page .rv-stars label i.fa-star,
-.rv-stars label i.fa-star {
-    color: #fde68a !important; /* Vàng nhạt cho sao chưa chọn */
-}
-.rv-page .rv-stars label:hover i.fa-star,
-.rv-page .rv-stars label.active i.fa-star,
-.rv-stars label:hover i.fa-star,
-.rv-stars label.active i.fa-star {
-    color: #f59e0b !important; /* Vàng đậm cho sao đã chọn */
-}
-.rv-stars label:hover,
-.rv-stars label.active {
-    transform: scale(1.15);
-}
-.rv-rating-text {
-    font-size: 0.9rem;
-    color: #6b7280;
-    font-weight: 500;
-}
+.rv-comment-section { margin-bottom: 1rem; }
+.rv-comment-section label { display: block; font-size: 0.875rem; font-weight: 500; color: #495057; margin-bottom: 0.5rem; }
+.rv-comment-section textarea { width: 100%; padding: 0.875rem 1rem; border: 1px solid #dee2e6; border-radius: 10px; font-size: 0.875rem; font-family: inherit; resize: none; transition: all 0.2s; background: #fff; color: #212529; }
+.rv-comment-section textarea:focus { outline: none; border-color: #228be6; box-shadow: 0 0 0 3px rgba(34, 139, 230, 0.1); }
+.rv-comment-section textarea::placeholder { color: #adb5bd; }
 
-/* Comment */
-.rv-comment-wrap {
-    margin-bottom: 1rem;
-}
-.rv-comment-wrap label {
-    display: flex;
-    align-items: center;
-    font-size: 0.9rem;
-    color: #1f2937;
-    font-weight: 600;
-    margin-bottom: 0.6rem;
-    gap: 0.5rem;
-}
-.rv-comment-wrap label i {
-    color: #22c55e;
-    font-size: 0.85rem;
-    width: 18px;
-    text-align: center;
-}
-.rv-comment-wrap textarea {
-    width: 100%;
-    padding: 0.9rem 1rem;
-    border: 2px solid #e5e7eb;
-    border-radius: 14px;
-    font-size: 0.9rem;
-    resize: none;
-    transition: all 0.2s;
-    font-family: inherit;
-    background: #f9fafb;
-}
-.rv-comment-wrap textarea:focus {
-    outline: none;
-    border-color: #22c55e;
-    background: white;
-    box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.1);
-}
+.rv-quick-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1.5rem; }
+.rv-quick-tag { padding: 0.5rem 0.875rem; background: #f1f3f4; border: 1px solid #e9ecef; border-radius: 20px; font-size: 0.8rem; color: #495057; cursor: pointer; transition: all 0.2s; user-select: none; }
+.rv-quick-tag:hover { background: #e9ecef; border-color: #dee2e6; }
+.rv-quick-tag.selected { background: #228be6; border-color: #228be6; color: #fff; }
 
-/* Tags */
-.rv-tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-    margin-bottom: 1.5rem;
-    justify-content: center;
-}
-.rv-tag {
-    padding: 0.5rem 0.9rem;
-    background: #f3f4f6;
-    border-radius: 20px;
-    font-size: 0.85rem;
-    color: #4b5563;
-    cursor: pointer;
-    transition: all 0.2s;
-    user-select: none;
-}
-.rv-tag:hover {
-    background: #dcfce7;
-    color: #15803d;
-}
-.rv-tag.selected {
-    background: #22c55e;
-    color: white;
-}
+.rv-submit-btn { width: 100%; padding: 0.875rem 1.5rem; background: #22c55e; border: none; border-radius: 10px; color: #fff; font-size: 0.9375rem; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+.rv-submit-btn:hover { background: #16a34a; }
+.rv-submit-btn:active { transform: scale(0.98); }
 
-/* Submit */
-.rv-submit {
-    width: 100%;
-    padding: 1rem;
-    background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
-    border: none;
-    border-radius: 14px;
-    color: white;
-    font-size: 1rem;
-    font-weight: 700;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-    transition: all 0.3s;
-}
-.rv-submit:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(34, 197, 94, 0.4);
-}
-
-/* Back Link */
-.rv-back-link {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-    padding: 0.85rem;
-    background: white;
-    border-radius: 12px;
-    color: #6b7280;
-    text-decoration: none;
-    font-size: 0.9rem;
-    font-weight: 500;
-    transition: all 0.2s;
-}
-.rv-back-link:hover {
-    color: #22c55e;
-}
-
-/* Responsive */
 @media (max-width: 480px) {
-    .rv-stars label { font-size: 1.85rem; }
-    .rv-emoji { font-size: 2.5rem; }
+    .rv-wrapper { padding: 1rem 0.875rem 2rem; }
+    .rv-star { font-size: 1.75rem; }
+    .rv-review-card { padding: 1.25rem; }
 }
 
-/* Override Dark Theme - Force Light Theme for Review Page */
-body.dark-theme .rv-page,
-.dark-theme .rv-page {
-    background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%) !important;
-}
-
-body.dark-theme .rv-main-card,
-.dark-theme .rv-main-card {
-    background: white !important;
-    border: 2px solid #22c55e !important;
-}
-
-body.dark-theme .rv-items-preview,
-.dark-theme .rv-items-preview {
-    background: white !important;
-    border: 2px solid #e5e7eb !important;
-}
-
-body.dark-theme .rv-form-header h2,
-.dark-theme .rv-form-header h2 {
-    color: #1f2937 !important;
-}
-
-body.dark-theme .rv-comment-wrap textarea,
-.dark-theme .rv-comment-wrap textarea {
-    background: #f9fafb !important;
-    color: #1f2937 !important;
-    border-color: #e5e7eb !important;
-}
-
-body.dark-theme .rv-tag,
-.dark-theme .rv-tag {
-    background: #f3f4f6 !important;
-    color: #4b5563 !important;
-}
-
-body.dark-theme .rv-tag.selected,
-.dark-theme .rv-tag.selected {
-    background: #22c55e !important;
-    color: white !important;
-}
-
-body.dark-theme .rv-back-link,
-.dark-theme .rv-back-link {
-    background: white !important;
-    color: #6b7280 !important;
-    border: 2px solid #e5e7eb !important;
-}
+body.dark-theme .rv-page, .dark-theme .rv-page { background: #e9ecef !important; }
+body.dark-theme .rv-review-card, .dark-theme .rv-review-card { background: #fff !important; border-color: #22c55e !important; }
+body.dark-theme .rv-order-items, .dark-theme .rv-order-items { background: #fff !important; border-color: #dee2e6 !important; }
+body.dark-theme .rv-header-content h1, .dark-theme .rv-header-content h1, body.dark-theme .rv-form-title h2, .dark-theme .rv-form-title h2 { color: #212529 !important; }
+body.dark-theme .rv-comment-section textarea, .dark-theme .rv-comment-section textarea { background: #fff !important; color: #212529 !important; border-color: #dee2e6 !important; }
+body.dark-theme .rv-quick-tag, .dark-theme .rv-quick-tag { background: #f1f3f4 !important; color: #495057 !important; border-color: #dee2e6 !important; }
+body.dark-theme .rv-quick-tag.selected, .dark-theme .rv-quick-tag.selected { background: #228be6 !important; color: #fff !important; border-color: #228be6 !important; }
+body.dark-theme .rv-rating-section, .dark-theme .rv-rating-section { background: #f1f3f5 !important; border-color: #dee2e6 !important; }
+body.dark-theme .rv-item-card, .dark-theme .rv-item-card { background: #f1f3f5 !important; border-color: #e9ecef !important; }
 </style>
 
 <script>
-// Toggle items detail
-function toggleItemsDetail() {
-    const detail = document.getElementById('itemsDetail');
-    const preview = document.querySelector('.rv-items-preview');
-    
-    if (detail.style.display === 'none') {
-        detail.style.display = 'block';
-        preview.classList.add('expanded');
-    } else {
-        detail.style.display = 'none';
-        preview.classList.remove('expanded');
-    }
-}
-
-const ratingData = {
-    1: { emoji: '😞', text: 'Rất tệ', title: 'Rất tiếc bạn không hài lòng' },
-    2: { emoji: '😕', text: 'Tệ', title: 'Chúng tôi sẽ cải thiện' },
-    3: { emoji: '😐', text: 'Bình thường', title: 'Cảm ơn phản hồi của bạn' },
-    4: { emoji: '😊', text: 'Tốt', title: 'Rất vui bạn hài lòng!' },
-    5: { emoji: '😍', text: 'Tuyệt vời!', title: 'Cảm ơn bạn rất nhiều!' }
-};
-
-const stars = document.querySelectorAll('.rv-stars label');
-const inputs = document.querySelectorAll('.rv-stars input');
+const ratingLabels = { 1: 'Rất không hài lòng', 2: 'Không hài lòng', 3: 'Bình thường', 4: 'Hài lòng', 5: 'Rất hài lòng' };
+const stars = document.querySelectorAll('.rv-star');
+const ratingLabel = document.getElementById('ratingLabel');
 
 stars.forEach(star => {
     star.addEventListener('click', function() {
-        const val = this.dataset.value;
-        
-        // Update stars - đổi màu
+        const val = parseInt(this.dataset.value);
         stars.forEach(s => {
-            const icon = s.querySelector('i');
-            if (s.dataset.value <= val) {
-                s.classList.add('active');
-                icon.style.color = '#f59e0b'; // Vàng đậm khi chọn
+            const sVal = parseInt(s.dataset.value);
+            s.classList.toggle('active', sVal <= val);
+        });
+        if (ratingLabel) { ratingLabel.textContent = ratingLabels[val]; ratingLabel.style.color = '#212529'; }
+        document.getElementById('star' + val).checked = true;
+    });
+    
+    star.addEventListener('mouseenter', function() {
+        const val = parseInt(this.dataset.value);
+        stars.forEach(s => { if (parseInt(s.dataset.value) <= val) s.querySelector('i').style.color = '#22c55e'; });
+    });
+    
+    star.addEventListener('mouseleave', function() {
+        stars.forEach(s => { 
+            if (!s.classList.contains('active')) {
+                s.querySelector('i').style.color = '#86efac';
             } else {
-                s.classList.remove('active');
-                icon.style.color = '#fde68a'; // Vàng nhạt khi chưa chọn
+                s.querySelector('i').style.color = '#22c55e';
             }
         });
-        
-        // Update emoji & text
-        const data = ratingData[val];
-        document.getElementById('rvEmoji').textContent = data.emoji;
-        document.getElementById('rvTitle').textContent = data.title;
-        document.getElementById('rvText').textContent = data.text;
-        document.getElementById('rvText').style.color = '#f59e0b';
-        
-        // Check radio
-        document.getElementById('star' + val).checked = true;
     });
 });
 
-// Quick tags
-document.querySelectorAll('.rv-tag').forEach(tag => {
+document.querySelectorAll('.rv-quick-tag').forEach(tag => {
     tag.addEventListener('click', function() {
         this.classList.toggle('selected');
-        const textarea = document.querySelector('.rv-comment-wrap textarea');
+        const textarea = document.querySelector('.rv-comment-section textarea');
         const text = this.dataset.text;
-        
         if (this.classList.contains('selected')) {
-            textarea.value = textarea.value ? textarea.value + ', ' + text : text;
+            textarea.value = textarea.value ? textarea.value + '. ' + text : text;
         } else {
-            textarea.value = textarea.value.replace(text + ', ', '').replace(', ' + text, '').replace(text, '');
+            textarea.value = textarea.value.replace(text + '. ', '').replace('. ' + text, '').replace(text, '');
         }
     });
 });

@@ -26,19 +26,22 @@ try {
 if (isset($_GET['action']) && $_GET['action'] == 'update_status') {
     $order_id = $_GET['id'] ?? 0;
     $status = $_GET['status'] ?? '';
+    $scroll = $_GET['scroll'] ?? 0;
     
     if ($order_id && $status) {
         $stmt = $conn->prepare("UPDATE orders SET status = ? WHERE id = ?");
         $stmt->execute([$status, $order_id]);
     }
     
-    echo '<script>window.location.href = "orders.php";</script>';
+    // Redirect với scroll position
+    echo '<script>window.location.href = "orders.php?scroll=' . $scroll . '";</script>';
     exit;
 }
 
 // Xử lý xác nhận thanh toán chuyển khoản
 if (isset($_GET['action']) && $_GET['action'] == 'confirm_payment') {
     $order_id = $_GET['id'] ?? 0;
+    $scroll = $_GET['scroll'] ?? 0;
     
     if ($order_id) {
         // Kiểm tra cột payment_status có tồn tại không
@@ -58,19 +61,45 @@ if (isset($_GET['action']) && $_GET['action'] == 'confirm_payment') {
         }
     }
     
-    echo '<script>window.location.href = "orders.php";</script>';
+    echo '<script>window.location.href = "orders.php?scroll=' . $scroll . '";</script>';
+    exit;
+}
+
+// Xử lý xóa đơn hàng
+if (isset($_GET['action']) && $_GET['action'] == 'delete') {
+    $order_id = $_GET['id'] ?? 0;
+    $scroll = $_GET['scroll'] ?? 0;
+    
+    if ($order_id) {
+        try {
+            // Xóa order_items trước
+            $conn->prepare("DELETE FROM order_items WHERE order_id = ?")->execute([$order_id]);
+            // Xóa order
+            $conn->prepare("DELETE FROM orders WHERE id = ?")->execute([$order_id]);
+        } catch (Exception $e) {
+            // Bỏ qua lỗi
+        }
+    }
+    
+    echo '<script>window.location.href = "orders.php?scroll=' . $scroll . '";</script>';
     exit;
 }
 
 // Lọc
 $status_filter = $_GET['status'] ?? 'all';
 $payment_filter = $_GET['payment'] ?? 'all';
+$search_query = trim($_GET['search'] ?? '');
+
 $where = "1=1";
 if ($status_filter != 'all') {
     $where .= " AND o.status = '$status_filter'";
 }
 if ($payment_filter != 'all') {
     $where .= " AND o.payment_method = '$payment_filter'";
+}
+if (!empty($search_query)) {
+    $search_escaped = addslashes($search_query);
+    $where .= " AND (o.order_number LIKE '%$search_escaped%' OR c.full_name LIKE '%$search_escaped%' OR c.phone LIKE '%$search_escaped%' OR o.delivery_phone LIKE '%$search_escaped%' OR o.delivery_address LIKE '%$search_escaped%')";
 }
 
 // Lấy danh sách đơn hàng
@@ -102,6 +131,8 @@ $stats = $conn->query("
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quản lý đơn hàng - Admin</title>
+    <link rel="icon" type="image/jpeg" href="../assets/images/logo.jpg">
+    <link rel="shortcut icon" type="image/jpeg" href="../assets/images/logo.jpg">
     <link rel="stylesheet" href="../assets/css/admin-dark-modern.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -300,6 +331,49 @@ $stats = $conn->query("
         color: #dc2626;
     }
     
+    /* Search Input */
+    .search-input {
+        padding: 0.85rem 1rem;
+        border: 2px solid #e5e7eb;
+        border-radius: 12px;
+        font-size: 0.95rem;
+        color: #374151;
+        background: white;
+        transition: all 0.2s;
+        font-weight: 500;
+        width: 100%;
+    }
+    .search-input:hover {
+        border-color: #22c55e;
+    }
+    .search-input:focus {
+        outline: none;
+        border-color: #22c55e;
+        box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.15);
+    }
+    .search-input::placeholder {
+        color: #9ca3af;
+    }
+    
+    /* Search Button */
+    .search-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.85rem 1.5rem;
+        background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+        border: none;
+        border-radius: 12px;
+        color: white;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+    .search-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(34, 197, 94, 0.4);
+    }
+    
     /* Orders Table Card */
     .orders-card {
         background: white;
@@ -397,6 +471,10 @@ $stats = $conn->query("
     .payment-transfer {
         background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%);
         color: #15803d;
+    }
+    .payment-card {
+        background: linear-gradient(135deg, #ede9fe 0%, #ddd6fe 100%);
+        color: #7c3aed;
     }
     
     /* Status Badges */
@@ -532,48 +610,122 @@ $stats = $conn->query("
         gap: 0.5rem;
     }
     .action-btn {
-        width: 34px;
-        height: 34px;
-        border-radius: 10px;
-        border: none;
+        width: 36px;
+        height: 36px;
+        border-radius: 8px;
+        border: 2px solid;
         cursor: pointer;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 0.85rem;
+        font-size: 0.9rem;
         transition: all 0.2s;
         text-decoration: none;
     }
     .action-btn:hover {
-        transform: scale(1.1);
+        transform: translateY(-2px);
     }
+    .action-btn i {
+        font-size: 0.9rem;
+    }
+    
+    /* Nút xác nhận - Xanh lá */
     .btn-confirm {
-        background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+        background: #dcfce7;
+        border-color: #22c55e;
+        color: #16a34a;
+    }
+    .btn-confirm:hover {
+        background: #22c55e;
         color: white;
     }
+    
+    /* Nút chuẩn bị - Tím */
     .btn-prepare {
-        background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+        background: #ede9fe;
+        border-color: #8b5cf6;
+        color: #7c3aed;
+    }
+    .btn-prepare:hover {
+        background: #8b5cf6;
         color: white;
     }
+    
+    /* Nút giao hàng - Xanh dương */
     .btn-deliver {
-        background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);
+        background: #cffafe;
+        border-color: #06b6d4;
+        color: #0891b2;
+    }
+    .btn-deliver:hover {
+        background: #06b6d4;
         color: white;
     }
+    
+    /* Nút hoàn thành - Xanh lá đậm */
     .btn-complete {
-        background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+        background: #dcfce7;
+        border-color: #22c55e;
+        color: #16a34a;
+    }
+    .btn-complete:hover {
+        background: #22c55e;
         color: white;
     }
+    
+    /* Nút xem chi tiết - Xanh dương */
     .btn-view {
-        background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+        background: #dbeafe;
+        border-color: #3b82f6;
+        color: #2563eb;
+    }
+    .btn-view:hover {
+        background: #3b82f6;
         color: white;
     }
+    
+    /* Nút hủy - Xám */
     .btn-cancel {
-        background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+        background: #f3f4f6;
+        border-color: #9ca3af;
+        color: #6b7280;
+    }
+    .btn-cancel:hover {
+        background: #ef4444;
+        border-color: #ef4444;
         color: white;
     }
-    .btn-payment {
-        background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+    
+    /* Nút xóa - Đỏ nhạt */
+    .btn-delete {
+        background: #fee2e2;
+        border-color: #f87171;
+        color: #dc2626;
+    }
+    .btn-delete:hover {
+        background: #ef4444;
+        border-color: #ef4444;
         color: white;
+    }
+    
+    /* Nút thanh toán - Vàng */
+    .btn-payment {
+        background: #fef3c7;
+        border-color: #f59e0b;
+        color: #d97706;
+    }
+    .btn-payment:hover {
+        background: #f59e0b;
+        color: white;
+    }
+    
+    /* Placeholder ẩn */
+    .btn-placeholder {
+        background: transparent !important;
+        border: none !important;
+        box-shadow: none !important;
+        cursor: default !important;
+        visibility: hidden;
     }
     
     /* Payment Status Badge */
@@ -662,6 +814,10 @@ $stats = $conn->query("
             <!-- Bộ lọc - Modern Design -->
             <div class="filter-card">
                 <form method="GET" class="filter-form">
+                    <div class="filter-group" style="flex: 2;">
+                        <label><i class="fas fa-search"></i> Tìm kiếm</label>
+                        <input type="text" name="search" value="<?php echo htmlspecialchars($search_query); ?>" placeholder="Mã đơn, tên khách, SĐT, địa chỉ..." class="search-input">
+                    </div>
                     <div class="filter-group">
                         <label><i class="fas fa-filter"></i> Trạng thái</label>
                         <select name="status" onchange="this.form.submit()">
@@ -680,9 +836,11 @@ $stats = $conn->query("
                             <option value="all">💳 Tất cả</option>
                             <option value="cash" <?php echo $payment_filter == 'cash' ? 'selected' : ''; ?>>💵 Tiền mặt (COD)</option>
                             <option value="transfer" <?php echo $payment_filter == 'transfer' ? 'selected' : ''; ?>>🏦 Chuyển khoản</option>
+                            <option value="card" <?php echo $payment_filter == 'card' ? 'selected' : ''; ?>>💳 Thẻ thành viên</option>
                         </select>
                     </div>
                     <div class="filter-actions">
+                        <button type="submit" class="search-btn"><i class="fas fa-search"></i> Tìm</button>
                         <a href="orders.php" class="reset-btn"><i class="fas fa-redo"></i> Đặt lại</a>
                     </div>
                 </form>
@@ -705,7 +863,7 @@ $stats = $conn->query("
                                     <th>Thanh toán</th>
                                     <th>Trạng thái</th>
                                     <th>Ngày đặt</th>
-                                    <th>Thao tác</th>
+                                    <th style="text-align: right;">Thao tác</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -735,6 +893,13 @@ $stats = $conn->query("
                                                 <i class="fas fa-check-circle"></i> Đã xác nhận
                                             </span>
                                             <?php endif; ?>
+                                        <?php elseif ($order['payment_method'] == 'card'): ?>
+                                            <span class="payment-badge payment-card">
+                                                <i class="fas fa-credit-card"></i> Thẻ thành viên
+                                            </span>
+                                            <span class="payment-status-badge paid">
+                                                <i class="fas fa-check-circle"></i> Đã thanh toán
+                                            </span>
                                         <?php else: ?>
                                             <span class="payment-badge payment-cash">
                                                 <i class="fas fa-money-bill-wave"></i> Tiền mặt (COD)
@@ -799,41 +964,58 @@ $stats = $conn->query("
                                     </td>
                                     <td><?php echo date('d/m/Y H:i', strtotime($order['created_at'])); ?></td>
                                     <td>
-                                        <div class="action-buttons" style="display: flex; gap: 6px; flex-wrap: wrap;">
+                                        <div class="action-buttons" style="display: flex; gap: 6px; justify-content: flex-end;">
                                             <?php 
-                                            // Nút xác nhận thanh toán cho đơn chuyển khoản chưa xác nhận
                                             $payment_status = $order['payment_status'] ?? 'pending';
-                                            if ($order['payment_method'] == 'transfer' && $payment_status === 'pending'): ?>
-                                            <a href="?action=confirm_payment&id=<?php echo $order['id']; ?>" class="action-btn btn-payment" title="Xác nhận thanh toán" onclick="return confirm('Xác nhận đã nhận được tiền chuyển khoản?')">
+                                            $show_payment_btn = ($order['payment_method'] == 'transfer' && $payment_status === 'pending');
+                                            ?>
+                                            
+                                            <!-- 1. Nút xác nhận thanh toán (chỉ hiện khi cần) -->
+                                            <?php if($show_payment_btn): ?>
+                                            <a href="javascript:void(0)" onclick="doAction('?action=confirm_payment&id=<?php echo $order['id']; ?>', 'Xác nhận đã nhận được tiền chuyển khoản?')" class="action-btn btn-payment" title="Xác nhận thanh toán">
                                                 <i class="fas fa-dollar-sign"></i>
                                             </a>
                                             <?php endif; ?>
                                             
+                                            <!-- 2. Nút chuyển trạng thái (luôn chiếm 1 vị trí) -->
                                             <?php if($order['status'] == 'pending'): ?>
-                                            <a href="?action=update_status&id=<?php echo $order['id']; ?>&status=confirmed" class="action-btn btn-confirm" title="Xác nhận đơn">
+                                            <a href="javascript:void(0)" onclick="doAction('?action=update_status&id=<?php echo $order['id']; ?>&status=confirmed')" class="action-btn btn-confirm" title="Xác nhận đơn">
                                                 <i class="fas fa-check"></i>
                                             </a>
                                             <?php elseif($order['status'] == 'confirmed'): ?>
-                                            <a href="?action=update_status&id=<?php echo $order['id']; ?>&status=preparing" class="action-btn btn-prepare" title="Bắt đầu chuẩn bị">
+                                            <a href="javascript:void(0)" onclick="doAction('?action=update_status&id=<?php echo $order['id']; ?>&status=preparing')" class="action-btn btn-prepare" title="Bắt đầu chuẩn bị">
                                                 <i class="fas fa-utensils"></i>
                                             </a>
                                             <?php elseif($order['status'] == 'preparing'): ?>
-                                            <a href="?action=update_status&id=<?php echo $order['id']; ?>&status=delivering" class="action-btn btn-deliver" title="Giao hàng">
+                                            <a href="javascript:void(0)" onclick="doAction('?action=update_status&id=<?php echo $order['id']; ?>&status=delivering')" class="action-btn btn-deliver" title="Giao hàng">
                                                 <i class="fas fa-motorcycle"></i>
                                             </a>
                                             <?php elseif($order['status'] == 'delivering'): ?>
-                                            <a href="?action=update_status&id=<?php echo $order['id']; ?>&status=completed" class="action-btn btn-complete" title="Hoàn thành">
+                                            <a href="javascript:void(0)" onclick="doAction('?action=update_status&id=<?php echo $order['id']; ?>&status=completed')" class="action-btn btn-complete" title="Hoàn thành">
                                                 <i class="fas fa-check-double"></i>
                                             </a>
+                                            <?php else: ?>
+                                            <span class="action-btn btn-placeholder"></span>
                                             <?php endif; ?>
+                                            
+                                            <!-- 3. Nút xem chi tiết (luôn hiện) -->
                                             <button onclick="viewOrderDetail(<?php echo $order['id']; ?>)" class="action-btn btn-view" title="Chi tiết">
                                                 <i class="fas fa-eye"></i>
                                             </button>
+                                            
+                                            <!-- 4. Nút hủy đơn (luôn chiếm 1 vị trí) -->
                                             <?php if($order['status'] != 'completed' && $order['status'] != 'cancelled'): ?>
-                                            <a href="?action=update_status&id=<?php echo $order['id']; ?>&status=cancelled" class="action-btn btn-cancel" title="Hủy đơn" onclick="return confirm('Bạn có chắc muốn hủy đơn hàng này?')">
+                                            <a href="javascript:void(0)" onclick="doAction('?action=update_status&id=<?php echo $order['id']; ?>&status=cancelled', 'Bạn có chắc muốn hủy đơn hàng này?')" class="action-btn btn-cancel" title="Hủy đơn">
                                                 <i class="fas fa-times"></i>
                                             </a>
+                                            <?php else: ?>
+                                            <span class="action-btn btn-placeholder"></span>
                                             <?php endif; ?>
+                                            
+                                            <!-- 5. Nút xóa (luôn hiện) -->
+                                            <a href="javascript:void(0)" onclick="doAction('?action=delete&id=<?php echo $order['id']; ?>', 'Bạn có chắc muốn XÓA VĨNH VIỄN đơn hàng #<?php echo htmlspecialchars($order['order_number']); ?>?\n\nHành động này không thể hoàn tác!')" class="action-btn btn-delete" title="Xóa đơn hàng">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </a>
                                         </div>
                                     </td>
                                 </tr>
@@ -1073,14 +1255,54 @@ $stats = $conn->query("
     .payment-cash i {
         color: #16a34a;
     }
+    
+    .payment-card {
+        background: linear-gradient(135deg, #ede9fe 0%, #ddd6fe 100%);
+        color: #7c3aed;
+        border: 1px solid #c4b5fd;
+    }
+    
+    .payment-card i {
+        color: #8b5cf6;
+    }
     </style>
     
     <script>
     // Lưu trữ dữ liệu đơn hàng
     const ordersData = <?php echo json_encode($orders); ?>;
     
+    // Khôi phục scroll position khi trang load
+    document.addEventListener('DOMContentLoaded', function() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const scrollPos = urlParams.get('scroll');
+        if (scrollPos && parseInt(scrollPos) > 0) {
+            window.scrollTo(0, parseInt(scrollPos));
+            // Xóa scroll param khỏi URL
+            urlParams.delete('scroll');
+            const newUrl = window.location.pathname + (urlParams.toString() ? '?' + urlParams.toString() : '');
+            window.history.replaceState({}, '', newUrl);
+        }
+    });
+    
+    // Hàm thực hiện action với scroll position
+    function doAction(url, confirmMsg) {
+        if (confirmMsg && !confirm(confirmMsg)) {
+            return false;
+        }
+        const scrollPos = window.scrollY || document.documentElement.scrollTop;
+        const separator = url.includes('?') ? '&' : '?';
+        window.location.href = url + separator + 'scroll=' + scrollPos;
+        return false;
+    }
+    
     async function viewOrderDetail(orderId) {
         document.getElementById('orderDetailModal').style.display = 'flex';
+        document.getElementById('orderModalBody').innerHTML = `
+            <div style="text-align: center; padding: 2rem;">
+                <i class="fas fa-spinner fa-spin" style="font-size: 2rem; color: #22c55e;"></i>
+                <p style="margin-top: 1rem; color: #6b7280;">Đang tải...</p>
+            </div>
+        `;
         
         // Tìm đơn hàng trong dữ liệu
         const order = ordersData.find(o => o.id == orderId);
@@ -1095,19 +1317,69 @@ $stats = $conn->query("
             return;
         }
         
-        const paymentMethods = {
-            'cash': 'Tiền mặt',
-            'transfer': 'Chuyển khoản',
-            'card': 'Thẻ'
-        };
+        // Lấy chi tiết các món từ API
+        let itemsHtml = '';
+        try {
+            const response = await fetch('api/get-order-items.php?order_id=' + orderId);
+            const data = await response.json();
+            
+            if (data.success && data.items.length > 0) {
+                itemsHtml = `
+                    <div class="order-info-section">
+                        <h4><i class="fas fa-utensils"></i> Danh sách món (${data.items.length} món)</h4>
+                        <table class="order-items-table">
+                            <thead>
+                                <tr>
+                                    <th style="width: 50px;">Ảnh</th>
+                                    <th>Tên món</th>
+                                    <th style="text-align: center;">SL</th>
+                                    <th style="text-align: right;">Đơn giá</th>
+                                    <th style="text-align: right;">Thành tiền</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${data.items.map(item => `
+                                    <tr>
+                                        <td>
+                                            ${item.image 
+                                                ? `<img src="../${item.image}" style="width: 40px; height: 40px; object-fit: cover; border-radius: 8px;">` 
+                                                : `<div style="width: 40px; height: 40px; background: #f3f4f6; border-radius: 8px; display: flex; align-items: center; justify-content: center;"><i class="fas fa-utensils" style="color: #9ca3af;"></i></div>`
+                                            }
+                                        </td>
+                                        <td><strong>${item.name || 'Món đã xóa'}</strong></td>
+                                        <td style="text-align: center;">${item.quantity}</td>
+                                        <td style="text-align: right;">${Number(item.price).toLocaleString('vi-VN')}đ</td>
+                                        <td style="text-align: right; color: #22c55e; font-weight: 600;">${Number(item.price * item.quantity).toLocaleString('vi-VN')}đ</td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                `;
+            } else {
+                itemsHtml = `
+                    <div class="order-info-section">
+                        <h4><i class="fas fa-utensils"></i> Danh sách món</h4>
+                        <p style="color: #6b7280; text-align: center; padding: 1rem;">Không có thông tin chi tiết món</p>
+                    </div>
+                `;
+            }
+        } catch (e) {
+            itemsHtml = `
+                <div class="order-info-section">
+                    <h4><i class="fas fa-utensils"></i> Danh sách món</h4>
+                    <p style="color: #ef4444; text-align: center; padding: 1rem;">Lỗi khi tải danh sách món</p>
+                </div>
+            `;
+        }
         
         const statuses = {
-            'pending': '<span class="badge badge-warning">Chờ xác nhận</span>',
-            'confirmed': '<span class="badge badge-info">Đã xác nhận</span>',
-            'preparing': '<span class="badge badge-primary">Đang chuẩn bị</span>',
-            'delivering': '<span class="badge badge-info">Đang giao</span>',
-            'completed': '<span class="badge badge-success">Hoàn thành</span>',
-            'cancelled': '<span class="badge badge-danger">Đã hủy</span>'
+            'pending': '<span style="background: #fef3c7; color: #92400e; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 600;">Chờ xác nhận</span>',
+            'confirmed': '<span style="background: #dcfce7; color: #15803d; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 600;">Đã xác nhận</span>',
+            'preparing': '<span style="background: #e0e7ff; color: #5b21b6; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 600;">Đang chuẩn bị</span>',
+            'delivering': '<span style="background: #cffafe; color: #0e7490; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 600;">Đang giao</span>',
+            'completed': '<span style="background: #dcfce7; color: #15803d; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 600;">Hoàn thành</span>',
+            'cancelled': '<span style="background: #fee2e2; color: #b91c1c; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 600;">Đã hủy</span>'
         };
         
         const html = `
@@ -1116,7 +1388,7 @@ $stats = $conn->query("
                 <div class="info-grid">
                     <div class="info-item">
                         <label>Mã đơn hàng</label>
-                        <span><strong>${order.order_number || '#' + order.id}</strong></span>
+                        <span><strong style="color: #22c55e; font-size: 1.1rem;">${order.order_number || '#' + order.id}</strong></span>
                     </div>
                     <div class="info-item">
                         <label>Trạng thái</label>
@@ -1130,6 +1402,8 @@ $stats = $conn->query("
                         <label>Thanh toán</label>
                         <span>${order.payment_method === 'transfer' 
                             ? '<span class="payment-badge payment-transfer"><i class="fas fa-university"></i> Chuyển khoản</span>' 
+                            : order.payment_method === 'card'
+                            ? '<span class="payment-badge payment-card"><i class="fas fa-credit-card"></i> Thẻ thành viên</span>'
                             : '<span class="payment-badge payment-cash"><i class="fas fa-money-bill-wave"></i> Tiền mặt (COD)</span>'}</span>
                     </div>
                 </div>
@@ -1158,6 +1432,8 @@ $stats = $conn->query("
                     ` : ''}
                 </div>
             </div>
+            
+            ${itemsHtml}
             
             <div class="order-total">
                 <span>Tổng tiền: </span>

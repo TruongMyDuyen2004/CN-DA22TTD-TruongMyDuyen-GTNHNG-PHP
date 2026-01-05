@@ -32,6 +32,9 @@ $title = 'Ngon Gallery - ' . __('menu_subtitle');
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo $title; ?></title>
+    <link rel="icon" type="image/jpeg" href="assets/images/logo.jpg">
+    <link rel="shortcut icon" type="image/jpeg" href="assets/images/logo.jpg">
+    <link rel="apple-touch-icon" href="assets/images/logo.jpg">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;500;600;700&family=Great+Vibes&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&display=swap" rel="stylesheet">
@@ -96,6 +99,9 @@ $title = 'Ngon Gallery - ' . __('menu_subtitle');
             case 'promotions':
                 include 'pages/promotions.php';
                 break;
+            case 'help':
+                include 'pages/help.php';
+                break;
             case 'menu-item-detail':
                 include 'pages/menu-item-detail.php';
                 break;
@@ -104,6 +110,12 @@ $title = 'Ngon Gallery - ' . __('menu_subtitle');
                 break;
             case 'news-detail':
                 include 'pages/news-detail.php';
+                break;
+            case 'vouchers':
+                include 'pages/vouchers.php';
+                break;
+            case 'my-points':
+                include 'pages/my-points.php';
                 break;
             default:
                 include 'pages/home.php';

@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Poster - Website Ngon Gallery</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Be Vietnam Pro', sans-serif;
+            background: #f0f0f0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            padding: 20px;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        .poster {
+            width: 1200px;
+            background: #ffffff;
+            padding: 30px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+
+        /* Header */
+        .poster-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #9b5a8a;
+            margin-bottom: 20px;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo-tvu {
+            width: 70px;
+            height: 70px;
+            border: 3px solid #1565C0;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            font-weight: 700;
+            color: #1565C0;
+            text-align: center;
+        }
+
+        .university-info h1 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #1565C0;
+            text-transform: uppercase;
+        }
+
+        .university-info h2 {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #9b5a8a;
+            text-transform: uppercase;
+        }
+
+        .header-right {
+            text-align: right;
+            color: #333;
+        }
+
+        .header-right .dept {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #1565C0;
+        }
+
+        .header-right .project {
+            font-size: 1rem;
+            font-weight: 700;
+            color: #9b5a8a;
+        }
+
+        /* Title Section */
+        .title-section {
+            text-align: center;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 2px solid #e6cae1;
+            background: #fdf8fc;
+        }
+
+        .main-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #9b5a8a;
+            text-transform: uppercase;
+            line-height: 1.4;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: center;
+            gap: 60px;
+            margin-top: 15px;
+            font-size: 1rem;
+            color: #333;
+        }
+
+        .info-row strong {
+            color: #9b5a8a;
+            font-weight: 700;
+        }
+
+        /* Main Content */
+        .main-content {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 25px;
+        }
+
+        /* Section */
+        .section {
+            padding: 0;
+        }
+
+        .section-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #e6cae1;
+        }
+
+        .section-title .bullet {
+            width: 12px;
+            height: 12px;
+            background: #9b5a8a;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .section-title h3 {
+            font-size: 1rem;
+            font-weight: 700;
+            color: #9b5a8a;
+            text-transform: uppercase;
+        }
+
+        .section-content {
+            font-size: 0.9rem;
+            line-height: 1.7;
+            color: #333;
+        }
+
+        /* Spans */
+        .span-2 { grid-column: span 2; }
+        .span-3 { grid-column: span 3; }
+        .span-4 { grid-column: span 4; }
+
+        /* Simple List */
+        .simple-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .simple-list li {
+            padding: 6px 0;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .simple-list li:last-child {
+            border-bottom: none;
+        }
+
+        .simple-list .num {
+            width: 22px;
+            height: 22px;
+            background: #9b5a8a;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+
+        .simple-list li i {
+            color: #9b5a8a;
+            width: 18px;
+            margin-top: 2px;
+        }
+
+        /* Table */
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+        }
+
+        .data-table th {
+            background: #9b5a8a;
+            color: white;
+            padding: 10px 8px;
+            text-align: center;
+            font-weight: 600;
+            border: 1px solid #9b5a8a;
+        }
+
+        .data-table td {
+            padding: 8px;
+            border: 1px solid #ddd;
+            text-align: center;
+        }
+
+        .data-table td:first-child {
+            text-align: center;
+            font-weight: 600;
+            color: #9b5a8a;
+            width: 30px;
+        }
+
+        .data-table td:nth-child(2) {
+            text-align: left;
+        }
+
+        .data-table tr:nth-child(even) {
+            background: #fdf8fc;
+        }
+
+        .data-table .check {
+            color: #2e7d32;
+            font-weight: bold;
+        }
+
+        /* Architecture */
+        .arch-diagram {
+            text-align: center;
+            padding: 15px;
+            background: #fdf8fc;
+            border: 1px solid #e6cae1;
+            border-radius: 8px;
+        }
+
+        .arch-row {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 8px 0;
+        }
+
+        .arch-box {
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            border: 2px solid;
+        }
+
+        .arch-box.user { background: #e3f2fd; border-color: #1565C0; color: #1565C0; }
+        .arch-box.frontend { background: #fff3e0; border-color: #e65100; color: #e65100; }
+        .arch-box.backend { background: #e8f5e9; border-color: #2e7d32; color: #2e7d32; }
+        .arch-box.db { background: #f3e5f5; border-color: #7b1fa2; color: #7b1fa2; }
+        .arch-box.service { background: #e0f2f1; border-color: #00695c; color: #00695c; }
+
+        .arch-arrow {
+            color: #9b5a8a;
+            font-size: 1.2rem;
+            margin: 5px 0;
+        }
+
+        /* DB Schema */
+        .db-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+
+        .db-table {
+            background: #e6cae1;
+            color: #5a3d52;
+            padding: 8px 12px;
+            border-radius: 5px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-align: center;
+            border: 1px solid #9b5a8a;
+        }
+
+        /* Results */
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+
+        .result-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+            background: #fdf8fc;
+            border-radius: 6px;
+            border: 1px solid #e6cae1;
+        }
+
+        .result-item i {
+            color: #9b5a8a;
+            font-size: 1.2rem;
+        }
+
+        .result-item span {
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: #333;
+        }
+
+        /* Screenshots */
+        .screenshots-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 15px;
+        }
+
+        .screenshot-item {
+            text-align: center;
+        }
+
+        .screenshot-box {
+            height: 100px;
+            background: #fdf8fc;
+            border: 2px solid #e6cae1;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 8px;
+        }
+
+        .screenshot-box i {
+            font-size: 2rem;
+            color: #9b5a8a;
+            margin-bottom: 5px;
+        }
+
+        .screenshot-box span {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #5a3d52;
+        }
+
+        .screenshot-item p {
+            font-size: 0.75rem;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="poster">
+        <!-- Header -->
+        <div class="poster-header">
+            <div class="header-left">
+                <div class="logo-tvu">ĐẠI HỌC<br>TRÀ VINH</div>
+                <div class="university-info">
+                    <h1>Trường Đại học Trà Vinh</h1>
+                    <h2>Trường Kỹ thuật và Công nghệ</h2>
+                </div>
+            </div>
+            <div class="header-right">
+                <div class="dept">Khoa Công nghệ Thông tin</div>
+                <div class="project">Đồ án chuyên ngành khóa 2022</div>
+            </div>
+        </div>
+
+        <!-- Title -->
+        <div class="title-section">
+            <h1 class="main-title">Xây dựng website giới thiệu nhà hàng<br>NGON GALLERY</h1>
+            <div class="info-row">
+                <div><strong>GVHD:</strong> TS. Đoàn Phước Miền</div>
+                <div><strong>SVTH:</strong> Trương Mỹ Duyên - 110122064 - DA22TTD</div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Row 1: 4 cột -->
+            <div class="section">
+                <div class="section-title">
+                    <span class="bullet"></span>
+                    <h3>Mục tiêu</h3>
+                </div>
+                <div class="section-content">
+                    <p>Website giới thiệu nhà hàng Ngon Gallery với giao diện chuyên nghiệp, thông tin rõ ràng và hình ảnh trực quan nhằm quảng bá thương hiệu. Qua việc sử dụng PHP – MySQL, đề tài rèn luyện kỹ năng lập trình, quản lý dữ liệu và hiểu biết về vận hành website.</p>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-title">
+                    <span class="bullet"></span>
+                    <h3>Tính năng chính</h3>
+                </div>
+                <div class="section-content">
+                    <ul class="simple-list">
+                        <li><span class="num">1</span> Quản lý thực đơn, khuyến mãi</li>
+                        <li><span class="num">2</span> Đặt bàn & đánh giá món ăn</li>
+                        <li><span class="num">3</span> Giỏ hàng & thanh toán (SePay)</li>
+                        <li><span class="num">4</span> Hệ thống thành viên & điểm thưởng</li>
+                        <li><span class="num">5</span> Đăng nhập Google OAuth 2.0</li>
+                        <li><span class="num">6</span> Chatbot AI hỗ trợ 24/7</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-title">
+                    <span class="bullet"></span>
+                    <h3>Quy trình đặt bàn</h3>
+                </div>
+                <div class="section-content">
+                    <ul class="simple-list">
+                        <li><span class="num">1</span> Khám phá thực đơn</li>
+                        <li><span class="num">2</span> Đăng ký tài khoản</li>
+                        <li><span class="num">3</span> Chọn bàn & thời gian</li>
+                        <li><span class="num">4</span> Xác nhận đặt bàn</li>
+                        <li><span class="num">5</span> Trải nghiệm tại nhà hàng</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-title">
+                    <span class="bullet"></span>
+                    <h3>Công nghệ sử dụng</h3>
+                </div>
+                <div class="section-content">
+                    <ul class="simple-list">
+                        <li><i class="fab fa-php"></i> PHP 8.x</li>
+                        <li><i class="fas fa-database"></i> MySQL Database</li>
+                        <li><i class="fab fa-js"></i> JavaScript</li>
+                        <li><i class="fab fa-bootstrap"></i> Bootstrap 5</li>
+                        <li><i class="fas fa-credit-card"></i> SePay Payment</li>
+                        <li><i class="fab fa-google"></i> Google OAuth 2.0</li>
+                    </ul>
+                </div>
+            </div>

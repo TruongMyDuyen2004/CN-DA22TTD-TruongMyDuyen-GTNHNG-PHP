@@ -1,4 +1,4 @@
-<header id="header">
+<header id="header" class="header-green">
     <div class="header-container">
         <div class="logo">
             <a href="index.php">
@@ -6,7 +6,7 @@
                     <img src="assets/images/logo.jpg" alt="Ngon Gallery Logo" class="logo-image">
                 </div>
                 <div class="logo-text">
-                    <span class="logo-name">Ngon Gallery</span>
+                    <span class="logo-name">NGON GALLERY</span>
                     <span class="logo-subtitle">VIETNAMESE</span>
                 </div>
             </a>
@@ -14,31 +14,30 @@
         <nav class="main-nav">
             <ul class="nav-menu">
                 <li><a href="index.php?page=home" class="nav-link <?php echo ($page == 'home') ? 'active' : ''; ?>">
-                    <i class="fas fa-home"></i> <?php echo __('home'); ?>
+                    <?php echo __('home'); ?>
                 </a></li>
                 <li><a href="index.php?page=about" class="nav-link <?php echo ($page == 'about') ? 'active' : ''; ?>">
-                    <i class="fas fa-info-circle"></i> <?php echo __('about'); ?>
+                    <?php echo __('about'); ?>
                 </a></li>
                 <li><a href="index.php?page=menu" class="nav-link <?php echo ($page == 'menu') ? 'active' : ''; ?>">
-                    <i class="fas fa-utensils"></i> <?php echo __('menu'); ?>
+                    <?php echo __('menu'); ?>
                 </a></li>
                 <li><a href="index.php?page=contact" class="nav-link <?php echo ($page == 'contact') ? 'active' : ''; ?>">
-                    <i class="fas fa-envelope"></i> <?php echo __('contact'); ?>
+                    <?php echo __('contact'); ?>
                 </a></li>
                 <li><a href="index.php?page=news" class="nav-link <?php echo ($page == 'news') ? 'active' : ''; ?>">
-                    <i class="fas fa-newspaper"></i> <?php echo __('news'); ?>
+                    <?php echo __('news'); ?>
                 </a></li>
                 <li><a href="index.php?page=all-reviews" class="nav-link <?php echo ($page == 'all-reviews') ? 'active' : ''; ?>">
-                    <i class="fas fa-star"></i> <?php echo __('reviews'); ?>
+                    <?php echo __('reviews'); ?>
                 </a></li>
-                <li><a href="index.php?page=promotions" class="nav-link <?php echo ($page == 'promotions') ? 'active' : ''; ?>" style="color: #ef4444;">
-                    <i class="fas fa-ticket-alt"></i> Khuyến mãi
+                <li><a href="index.php?page=promotions" class="nav-link nav-promo <?php echo ($page == 'promotions') ? 'active' : ''; ?>">
+                    Khuyến mãi
                 </a></li>
             </ul>
         </nav>
         
         <div class="header-actions">
-            <?php include 'includes/language-switcher.php'; ?>
             
             <?php if (isset($_SESSION['customer_id'])): 
                 // Lấy số lượng món trong giỏ và avatar
@@ -75,7 +74,7 @@
                 }
             ?>
                 <a href="index.php?page=reservation" class="btn-reservation">
-                    <i class="fas fa-calendar-alt"></i> <?php echo __('reservation'); ?>
+                    <i class="fas fa-calendar-alt"></i> ĐẶT BÀN
                 </a>
                 
                 <a href="index.php?page=cart" class="cart-icon" title="<?php echo __('cart'); ?>">
@@ -87,6 +86,10 @@
                 
                 <a href="index.php?page=orders" class="icon-btn" title="<?php echo __('orders'); ?>">
                     <i class="fas fa-box"></i>
+                </a>
+                
+                <a href="index.php?page=help" class="icon-btn" title="Trợ giúp">
+                    <i class="fas fa-question-circle"></i>
                 </a>
                 
                 <!-- Thông báo tin nhắn - Dropdown Chat -->
@@ -293,6 +296,14 @@
                             <a href="index.php?page=member-card" class="menu-item-modern">
                                 <div class="menu-icon-wrapper"><i class="fas fa-credit-card"></i></div>
                                 <span>Thẻ thành viên</span>
+                            </a>
+                            <a href="index.php?page=my-points" class="menu-item-modern">
+                                <div class="menu-icon-wrapper"><i class="fas fa-star"></i></div>
+                                <span>Điểm tích lũy</span>
+                            </a>
+                            <a href="index.php?page=vouchers" class="menu-item-modern">
+                                <div class="menu-icon-wrapper"><i class="fas fa-ticket-alt"></i></div>
+                                <span>Voucher của tôi</span>
                             </a>
                             <a href="index.php?page=favorites" class="menu-item-modern">
                                 <div class="menu-icon-wrapper"><i class="fas fa-heart"></i></div>

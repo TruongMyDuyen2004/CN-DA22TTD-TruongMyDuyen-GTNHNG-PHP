@@ -83,7 +83,15 @@ $cat_name = $current_lang === 'en' && !empty($item['category_name_en']) ? $item[
                     <span class="rating-count">(<?php echo $total_reviews; ?> <?php echo $current_lang === 'en' ? 'reviews' : 'đánh giá'; ?>)</span>
                 </div>
 
-                <p class="description"><?php echo htmlspecialchars($item_desc); ?></p>
+                <p class="description"><?php 
+                    // Tách mô tả và thành phần xuống dòng
+                    $desc_formatted = $item_desc;
+                    // Xuống dòng trước "Thành phần:" - chỉ 1 lần
+                    $desc_formatted = preg_replace('/\.\s*(Thành phần:)/iu', ".<br><strong>$1</strong>", $desc_formatted);
+                    // Nếu không có dấu chấm trước Thành phần
+                    $desc_formatted = preg_replace('/([^<])(Thành phần:)/iu', "$1<br><strong>$2</strong>", $desc_formatted);
+                    echo $desc_formatted; 
+                ?></p>
 
                 <!-- Price Box -->
                 <?php 
@@ -112,7 +120,7 @@ $cat_name = $current_lang === 'en' && !empty($item['category_name_en']) ? $item[
                     <span><?php echo $current_lang === 'en' ? 'Quantity' : 'Số lượng'; ?>:</span>
                     <div class="qty-control">
                         <button onclick="changeQty(-1)"><i class="fas fa-minus"></i></button>
-                        <input type="text" id="qty" value="1" readonly>
+                        <input type="number" id="qty" value="1" min="1" max="99" onchange="updateQty(this.value)" onkeyup="updateQty(this.value)">
                         <button onclick="changeQty(1)"><i class="fas fa-plus"></i></button>
                     </div>
                     <span class="subtotal" id="subtotal"><?php echo number_format($item['price'], 0, ',', '.'); ?>đ</span>
@@ -173,20 +181,32 @@ $cat_name = $current_lang === 'en' && !empty($item['category_name_en']) ? $item[
 
             <?php if(count($reviews) > 0): ?>
             <div class="reviews-list">
-                <?php foreach($reviews as $r): ?>
-                <div class="review-item">
+                <?php foreach($reviews as $r): 
+                    $is_owner = isset($_SESSION['customer_id']) && $r['customer_id'] == $_SESSION['customer_id'];
+                ?>
+                <div class="review-item" data-review-id="<?php echo $r['id']; ?>">
                     <div class="avatar"><?php echo strtoupper(substr($r['customer_name'], 0, 1)); ?></div>
                     <div class="review-body">
                         <div class="review-top">
                             <strong><?php echo htmlspecialchars($r['customer_name']); ?></strong>
-                            <div class="review-stars">
+                            <div class="review-stars" data-rating="<?php echo $r['rating']; ?>">
                                 <?php for($i = 1; $i <= 5; $i++): ?>
                                     <i class="<?php echo $i <= $r['rating'] ? 'fas' : 'far'; ?> fa-star"></i>
                                 <?php endfor; ?>
                             </div>
                             <span class="date"><?php echo date('d/m/Y', strtotime($r['created_at'])); ?></span>
+                            <?php if($is_owner): ?>
+                            <div class="review-actions">
+                                <button class="review-action-btn edit-btn" onclick="editReview(<?php echo $r['id']; ?>, <?php echo $r['rating']; ?>, '<?php echo addslashes(htmlspecialchars($r['comment'])); ?>')" title="Sửa đánh giá">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="review-action-btn delete-btn" onclick="deleteReview(<?php echo $r['id']; ?>)" title="Xóa đánh giá">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </div>
+                            <?php endif; ?>
                         </div>
-                        <p><?php echo htmlspecialchars($r['comment']); ?></p>
+                        <p class="review-comment"><?php echo htmlspecialchars($r['comment']); ?></p>
                     </div>
                 </div>
                 <?php endforeach; ?>
@@ -263,6 +283,59 @@ $cat_name = $current_lang === 'en' && !empty($item['category_name_en']) ? $item[
                 <button type="button" onclick="closeReviewModal()" class="btn-cancel"><?php echo $current_lang === 'en' ? 'Cancel' : 'Hủy'; ?></button>
             </div>
         </form>
+    </div>
+</div>
+
+<!-- Edit Review Modal -->
+<div id="editReviewModal" class="modal-overlay">
+    <div class="modal-box">
+        <button class="modal-close" onclick="closeEditReviewModal()"><i class="fas fa-times"></i></button>
+        <h3><i class="fas fa-edit"></i> <?php echo $current_lang === 'en' ? 'Edit review' : 'Sửa đánh giá'; ?></h3>
+        <p class="modal-subtitle"><?php echo htmlspecialchars($item_name); ?></p>
+        
+        <form id="editReviewForm" onsubmit="submitEditReview(event)">
+            <input type="hidden" name="review_id" id="editReviewId">
+            
+            <div class="form-field">
+                <label><?php echo $current_lang === 'en' ? 'Rating' : 'Đánh giá'; ?></label>
+                <div class="star-input" id="editStarInput">
+                    <i class="far fa-star" data-r="1"></i>
+                    <i class="far fa-star" data-r="2"></i>
+                    <i class="far fa-star" data-r="3"></i>
+                    <i class="far fa-star" data-r="4"></i>
+                    <i class="far fa-star" data-r="5"></i>
+                </div>
+                <input type="hidden" name="rating" id="editRatingVal">
+            </div>
+            
+            <div class="form-field">
+                <label><?php echo $current_lang === 'en' ? 'Comment' : 'Nhận xét'; ?></label>
+                <textarea name="comment" id="editCommentVal" required placeholder="<?php echo $current_lang === 'en' ? 'Share your experience...' : 'Chia sẻ trải nghiệm...'; ?>"></textarea>
+            </div>
+            
+            <div class="form-btns">
+                <button type="submit" class="btn-submit"><i class="fas fa-save"></i> <?php echo $current_lang === 'en' ? 'Save' : 'Lưu thay đổi'; ?></button>
+                <button type="button" onclick="closeEditReviewModal()" class="btn-cancel"><?php echo $current_lang === 'en' ? 'Cancel' : 'Hủy'; ?></button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Delete Confirm Modal -->
+<div id="deleteConfirmModal" class="modal-overlay">
+    <div class="modal-box delete-confirm-box">
+        <div class="delete-confirm-icon">
+            <i class="fas fa-exclamation-triangle"></i>
+        </div>
+        <h3><?php echo $current_lang === 'en' ? 'Delete review?' : 'Xóa đánh giá?'; ?></h3>
+        <p><?php echo $current_lang === 'en' ? 'This action cannot be undone.' : 'Hành động này không thể hoàn tác.'; ?></p>
+        <input type="hidden" id="deleteReviewId">
+        <div class="form-btns">
+            <button type="button" class="btn-delete-confirm" onclick="confirmDeleteReview()">
+                <i class="fas fa-trash-alt"></i> <?php echo $current_lang === 'en' ? 'Delete' : 'Xóa'; ?>
+            </button>
+            <button type="button" onclick="closeDeleteConfirmModal()" class="btn-cancel"><?php echo $current_lang === 'en' ? 'Cancel' : 'Hủy'; ?></button>
+        </div>
     </div>
 </div>
 
@@ -445,6 +518,16 @@ $cat_name = $current_lang === 'en' && !empty($item['category_name_en']) ? $item[
     border: none;
     color: #1e293b;
     font-weight: 600;
+    -moz-appearance: textfield;
+}
+.qty-control input::-webkit-outer-spin-button,
+.qty-control input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+.qty-control input:focus {
+    outline: none;
+    background: rgba(34, 197, 94, 0.1);
 }
 .subtotal { color: #22c55e; font-weight: 700; font-size: 1.1rem; }
 
@@ -596,6 +679,44 @@ $cat_name = $current_lang === 'en' && !empty($item['category_name_en']) ? $item[
 .date { color: #94a3b8; font-size: 0.75rem; }
 .review-body p { color: #475569; font-size: 0.9rem; line-height: 1.6; margin: 0; }
 
+/* Review Actions - Edit/Delete buttons */
+.review-actions {
+    display: flex;
+    gap: 0.5rem;
+    margin-left: auto;
+}
+.review-action-btn {
+    width: 32px;
+    height: 32px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    font-size: 0.85rem;
+}
+.review-action-btn.edit-btn {
+    background: rgba(59, 130, 246, 0.1);
+    color: #3b82f6;
+}
+.review-action-btn.edit-btn:hover {
+    background: rgba(59, 130, 246, 0.2);
+    transform: scale(1.05);
+}
+.review-action-btn.delete-btn {
+    background: rgba(239, 68, 68, 0.1);
+    color: #ef4444;
+}
+.review-action-btn.delete-btn:hover {
+    background: rgba(239, 68, 68, 0.2);
+    transform: scale(1.05);
+}
+.review-top {
+    flex-wrap: wrap;
+}
+
 /* Nút viết đánh giá */
 .write-review-btn {
     margin-bottom: 1.5rem;
@@ -721,13 +842,13 @@ $cat_name = $current_lang === 'en' && !empty($item['category_name_en']) ? $item[
     box-shadow: 0 6px 20px rgba(34, 197, 94, 0.4);
 }
 
-/* Modal - Modern Design */
+/* Modal - Premium Modern Design */
 .modal-overlay {
     position: fixed;
     top: 0; left: 0; right: 0; bottom: 0;
-    background: rgba(0,0,0,0.6);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
+    background: rgba(15, 23, 42, 0.75);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
     z-index: 10000;
     display: none;
     align-items: center;
@@ -748,12 +869,12 @@ $cat_name = $current_lang === 'en' && !empty($item['category_name_en']) ? $item[
     background: #ffffff;
     border-radius: 24px;
     padding: 0;
-    max-width: 420px;
+    max-width: 480px;
     width: 100%;
     position: relative;
-    border: 2px solid rgba(34, 197, 94, 0.2);
-    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-    animation: slideUp 0.4s ease;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.2);
+    animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
     overflow: hidden;
 }
 .modal-box::before {
@@ -763,53 +884,58 @@ $cat_name = $current_lang === 'en' && !empty($item['category_name_en']) ? $item[
     left: 0;
     right: 0;
     height: 4px;
-    background: linear-gradient(90deg, #22c55e, #16a34a, #22c55e);
+    background: linear-gradient(90deg, #22c55e, #16a34a);
 }
 .modal-close {
     position: absolute;
     top: 1.25rem; right: 1.25rem;
-    background: #f1f5f9;
-    border: none;
+    background: #f8fafc;
+    border: 2px solid #e2e8f0;
     color: #64748b;
-    font-size: 1rem;
+    font-size: 0.9rem;
     cursor: pointer;
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
+    width: 38px;
+    height: 38px;
+    border-radius: 12px;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: all 0.3s;
+    transition: all 0.2s;
     z-index: 10;
 }
 .modal-close:hover {
-    background: #fee2e2;
+    background: #fef2f2;
+    border-color: #fecaca;
     color: #ef4444;
     transform: rotate(90deg);
 }
 .modal-box h3 {
-    color: #1e293b;
+    color: #0f172a;
     margin: 0;
-    font-size: 1.5rem;
+    font-size: 1.35rem;
     font-weight: 700;
-    padding: 2rem 2rem 0.5rem;
+    padding: 2rem 2rem 0.75rem;
     display: flex;
     align-items: center;
     gap: 0.75rem;
+    letter-spacing: -0.02em;
+}
+.modal-box h3 i {
+    color: #22c55e;
+    font-size: 1.1rem;
 }
 .modal-box h3::before {
-    content: '✨';
-    font-size: 1.25rem;
+    display: none;
 }
 .modal-subtitle {
     color: #22c55e;
     margin: 0;
     padding: 0 2rem 1.5rem;
     font-size: 0.95rem;
-    font-weight: 500;
-    border-bottom: 1px solid #e2e8f0;
+    font-weight: 600;
+    border-bottom: 2px solid #f1f5f9;
 }
-#reviewForm {
+#reviewForm, #editReviewForm {
     padding: 1.5rem 2rem 2rem;
 }
 .form-field {
@@ -817,75 +943,79 @@ $cat_name = $current_lang === 'en' && !empty($item['category_name_en']) ? $item[
 }
 .form-field label {
     display: block;
-    color: #1e293b;
+    color: #374151;
     font-size: 0.9rem;
     font-weight: 600;
     margin-bottom: 0.75rem;
-    letter-spacing: 0.5px;
+    letter-spacing: 0.01em;
 }
 .star-input {
     display: flex;
-    gap: 0.5rem;
-    font-size: 2.25rem;
-    padding: 1rem;
-    background: #fef3c7;
-    border-radius: 16px;
+    gap: 0.75rem;
+    font-size: 1.75rem;
+    padding: 1rem 1.25rem;
+    background: #f8fafc;
+    border-radius: 12px;
     justify-content: center;
-    border: 2px solid #fcd34d;
-    transition: all 0.3s;
+    border: 2px solid #e2e8f0;
+    transition: all 0.2s ease;
 }
 .star-input:hover {
-    border-color: #f59e0b;
+    border-color: #22c55e;
+    background: #f0fdf4;
 }
 .star-input i {
-    color: #fcd34d;
+    color: #cbd5e1;
     cursor: pointer;
-    transition: all 0.2s;
+    transition: all 0.2s ease;
 }
 .star-input i.fas {
     color: #f59e0b;
-    text-shadow: 0 0 20px rgba(251, 191, 36, 0.5);
+    filter: drop-shadow(0 2px 4px rgba(245, 158, 11, 0.3));
 }
 .star-input i:hover {
-    transform: scale(1.3) rotate(-10deg);
-    color: #f59e0b;
+    transform: scale(1.2);
+    color: #fbbf24;
 }
 .form-field textarea {
     width: 100%;
     padding: 1rem 1.25rem;
     background: #f8fafc;
     border: 2px solid #e2e8f0;
-    border-radius: 16px;
-    color: #1e293b;
+    border-radius: 12px;
+    color: #1e293b !important;
     min-height: 120px;
     resize: vertical;
-    font-size: 0.95rem;
+    font-size: 1rem;
     line-height: 1.6;
-    transition: all 0.3s;
+    transition: all 0.2s ease;
+    font-family: inherit;
 }
 .form-field textarea:focus {
     outline: none;
     border-color: #22c55e;
-    background: #ffffff;
+    background: #ffffff !important;
     box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.1);
 }
 .form-field textarea::placeholder {
-    color: #94a3b8;
+    color: #94a3b8 !important;
 }
 .form-btns {
     display: flex;
     gap: 1rem;
-    margin-top: 0.5rem;
+    margin-top: 1.5rem;
+    padding-top: 1.25rem;
+    border-top: 2px solid #f1f5f9;
 }
 .btn-submit, .btn-cancel {
     flex: 1;
     padding: 1rem 1.5rem;
     border-radius: 14px;
-    font-weight: 700;
+    font-weight: 600;
     cursor: pointer;
     border: none;
-    font-size: 0.95rem;
-    transition: all 0.3s;
+    font-size: 1rem;
+    transition: all 0.25s ease;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -894,23 +1024,315 @@ $cat_name = $current_lang === 'en' && !empty($item['category_name_en']) ? $item[
 .btn-submit {
     background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
     color: #ffffff;
-    box-shadow: 0 4px 15px rgba(34, 197, 94, 0.3);
+    box-shadow: 0 4px 14px rgba(34, 197, 94, 0.35);
 }
 .btn-submit:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(34, 197, 94, 0.4);
+    box-shadow: 0 8px 24px rgba(34, 197, 94, 0.45);
 }
 .btn-submit:active {
     transform: translateY(0);
 }
 .btn-cancel {
-    background: #f1f5f9;
+    background: #f8fafc;
     color: #64748b;
-    border: 1px solid #e2e8f0;
+    border: 2px solid #e2e8f0;
 }
 .btn-cancel:hover {
+    background: #f1f5f9;
+    border-color: #cbd5e1;
+    color: #475569;
+}
+
+/* Delete Confirm Modal */
+.delete-confirm-box {
+    text-align: center;
+    padding: 2rem 1.75rem !important;
+}
+.delete-confirm-box h3 {
+    padding: 0 !important;
+    margin-bottom: 0.5rem !important;
+}
+.delete-confirm-box h3::before {
+    display: none !important;
+}
+.delete-confirm-box p {
+    color: #64748b;
+    margin-bottom: 1.5rem;
+}
+.delete-confirm-icon {
+    width: 70px;
+    height: 70px;
+    background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1.25rem;
+}
+.delete-confirm-icon i {
+    font-size: 2rem;
+    color: #ef4444;
+}
+.btn-delete-confirm {
+    flex: 1;
+    padding: 0.875rem 1.25rem;
+    border-radius: 10px;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    font-size: 0.9rem;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+    color: #ffffff;
+    box-shadow: 0 2px 8px rgba(239, 68, 68, 0.3);
+}
+.btn-delete-confirm:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 16px rgba(239, 68, 68, 0.4);
+}
+
+/* Override dark theme for review modal */
+.modal-box .form-field textarea,
+body.dark-theme .modal-box .form-field textarea {
+    background: #ffffff !important;
+    color: #1e293b !important;
+    border-color: #e2e8f0 !important;
+}
+body.dark-theme .modal-box .form-field textarea::placeholder {
+    color: #9ca3af !important;
+}
+body.dark-theme .modal-box .form-field textarea:focus {
+    background: #ffffff !important;
+    border-color: #22c55e !important;
+}
+
+/* Thank You Message - Premium Design */
+.thank-you-message {
+    padding: 2.5rem 2rem 2rem;
+    text-align: center;
+    background: linear-gradient(180deg, #f0fdf4 0%, #ffffff 50%);
+    min-height: 320px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.thank-you-animation {
+    position: relative;
+    width: 100px;
+    height: 100px;
+    margin-bottom: 1.5rem;
+}
+
+.circle-bg {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100px;
+    height: 100px;
+    background: linear-gradient(135deg, rgba(34, 197, 94, 0.15) 0%, rgba(16, 185, 129, 0.1) 100%);
+    border-radius: 50%;
+    animation: pulseRing 2s ease-out infinite;
+}
+
+@keyframes pulseRing {
+    0% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+    100% { transform: translate(-50%, -50%) scale(1.4); opacity: 0; }
+}
+
+.checkmark-circle {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80px;
+    height: 80px;
+}
+
+.checkmark {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    display: block;
+    stroke-width: 3;
+    stroke: #22c55e;
+    stroke-miterlimit: 10;
+    box-shadow: 0 8px 30px rgba(34, 197, 94, 0.3);
+    animation: scaleUp 0.4s ease-in-out 0.2s both;
+}
+
+@keyframes scaleUp {
+    0% { transform: scale(0); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+
+.checkmark-circle-bg {
+    stroke: #22c55e;
+    fill: #22c55e;
+    stroke-dasharray: 166;
+    stroke-dashoffset: 166;
+    animation: strokeCircle 0.6s cubic-bezier(0.65, 0, 0.45, 1) forwards;
+}
+
+@keyframes strokeCircle {
+    100% { stroke-dashoffset: 0; }
+}
+
+.checkmark-check {
+    stroke: #ffffff;
+    stroke-width: 4;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-dasharray: 48;
+    stroke-dashoffset: 48;
+    animation: strokeCheck 0.3s cubic-bezier(0.65, 0, 0.45, 1) 0.5s forwards;
+}
+
+@keyframes strokeCheck {
+    100% { stroke-dashoffset: 0; }
+}
+
+/* Confetti */
+.confetti {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+.confetti-piece {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    top: 50%;
+    left: 50%;
+    opacity: 0;
+    animation: confettiFall 1s ease-out 0.6s forwards;
+}
+
+.confetti-piece:nth-child(1) { background: #f59e0b; border-radius: 50%; animation-delay: 0.6s; }
+.confetti-piece:nth-child(2) { background: #22c55e; border-radius: 2px; animation-delay: 0.7s; }
+.confetti-piece:nth-child(3) { background: #3b82f6; border-radius: 50%; animation-delay: 0.8s; }
+.confetti-piece:nth-child(4) { background: #ef4444; border-radius: 2px; animation-delay: 0.65s; }
+.confetti-piece:nth-child(5) { background: #8b5cf6; border-radius: 50%; animation-delay: 0.75s; }
+.confetti-piece:nth-child(6) { background: #ec4899; border-radius: 2px; animation-delay: 0.85s; }
+
+@keyframes confettiFall {
+    0% { transform: translate(0, 0) rotate(0deg) scale(0); opacity: 1; }
+    100% { opacity: 0; }
+}
+
+.confetti-piece:nth-child(1) { animation-name: confetti1; }
+.confetti-piece:nth-child(2) { animation-name: confetti2; }
+.confetti-piece:nth-child(3) { animation-name: confetti3; }
+.confetti-piece:nth-child(4) { animation-name: confetti4; }
+.confetti-piece:nth-child(5) { animation-name: confetti5; }
+.confetti-piece:nth-child(6) { animation-name: confetti6; }
+
+@keyframes confetti1 { 0% { transform: translate(0,0) scale(0); opacity:1; } 100% { transform: translate(-50px,-60px) rotate(180deg) scale(1); opacity:0; } }
+@keyframes confetti2 { 0% { transform: translate(0,0) scale(0); opacity:1; } 100% { transform: translate(50px,-50px) rotate(-120deg) scale(1); opacity:0; } }
+@keyframes confetti3 { 0% { transform: translate(0,0) scale(0); opacity:1; } 100% { transform: translate(-40px,50px) rotate(90deg) scale(1); opacity:0; } }
+@keyframes confetti4 { 0% { transform: translate(0,0) scale(0); opacity:1; } 100% { transform: translate(45px,45px) rotate(-90deg) scale(1); opacity:0; } }
+@keyframes confetti5 { 0% { transform: translate(0,0) scale(0); opacity:1; } 100% { transform: translate(-60px,20px) rotate(150deg) scale(1); opacity:0; } }
+@keyframes confetti6 { 0% { transform: translate(0,0) scale(0); opacity:1; } 100% { transform: translate(55px,-30px) rotate(-150deg) scale(1); opacity:0; } }
+
+.thank-you-message h3 {
+    color: #0f172a;
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin: 0 0 0.5rem;
+    padding: 0;
+    animation: fadeInUp 0.5s ease 0.3s both;
+}
+
+.thank-you-message h3::before {
+    display: none;
+}
+
+.thank-you-message p {
+    color: #64748b;
+    font-size: 0.95rem;
+    margin: 0 0 1.25rem;
+    line-height: 1.5;
+    animation: fadeInUp 0.5s ease 0.4s both;
+}
+
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.thank-you-stars {
+    display: flex;
+    gap: 0.35rem;
+    justify-content: center;
+    margin-bottom: 1.5rem;
+    animation: fadeInUp 0.5s ease 0.5s both;
+}
+
+.thank-you-stars i {
+    color: #f59e0b;
+    font-size: 1.25rem;
+    animation: starPop 0.3s ease both;
+}
+
+.thank-you-stars i:nth-child(1) { animation-delay: 0.6s; }
+.thank-you-stars i:nth-child(2) { animation-delay: 0.7s; }
+.thank-you-stars i:nth-child(3) { animation-delay: 0.8s; }
+.thank-you-stars i:nth-child(4) { animation-delay: 0.9s; }
+.thank-you-stars i:nth-child(5) { animation-delay: 1s; }
+
+@keyframes starPop {
+    0% { transform: scale(0); }
+    50% { transform: scale(1.3); }
+    100% { transform: scale(1); }
+}
+
+.thank-you-footer {
+    width: 100%;
+    animation: fadeInUp 0.5s ease 0.6s both;
+}
+
+.countdown-bar {
+    width: 100%;
+    height: 4px;
     background: #e2e8f0;
-    color: #1e293b;
+    border-radius: 2px;
+    overflow: hidden;
+    margin-bottom: 0.75rem;
+}
+
+.countdown-progress {
+    height: 100%;
+    background: linear-gradient(90deg, #22c55e, #10b981);
+    border-radius: 2px;
+    animation: countdownBar 5s linear forwards;
+}
+
+@keyframes countdownBar {
+    from { width: 100%; }
+    to { width: 0%; }
+}
+
+.countdown-text {
+    color: #94a3b8;
+    font-size: 0.8rem;
+}
+
+.countdown-text strong {
+    color: #22c55e;
+    font-weight: 700;
 }
 
 /* Responsive */
@@ -966,6 +1388,14 @@ function changeQty(delta) {
     document.getElementById('subtotal').textContent = (itemPrice * qty).toLocaleString('vi-VN') + 'đ';
 }
 
+function updateQty(value) {
+    let newQty = parseInt(value) || 1;
+    newQty = Math.max(1, Math.min(99, newQty));
+    qty = newQty;
+    document.getElementById('qty').value = qty;
+    document.getElementById('subtotal').textContent = (itemPrice * qty).toLocaleString('vi-VN') + 'đ';
+}
+
 function toggleReviews() {
     const reviewsBlock = document.getElementById('reviewsBlock');
     if (reviewsBlock.style.display === 'none') {
@@ -1009,15 +1439,69 @@ async function submitReview(e) {
         const res = await fetch('api/submit-review.php', { method: 'POST', body: formData });
         const data = await res.json();
         if (data.success) {
-            alert('Cảm ơn bạn đã đánh giá!');
-            closeReviewModal();
-            location.reload();
+            // Hiện thông báo cảm ơn trong modal
+            showThankYouMessage();
         } else {
             alert(data.message || 'Có lỗi xảy ra');
         }
     } catch (err) {
         alert('Có lỗi xảy ra');
     }
+}
+
+// Hiện thông báo cảm ơn sau khi đánh giá
+function showThankYouMessage() {
+    const modalBox = document.querySelector('#reviewModal .modal-box');
+    modalBox.innerHTML = `
+        <div class="thank-you-message">
+            <div class="thank-you-animation">
+                <div class="circle-bg"></div>
+                <div class="checkmark-circle">
+                    <svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+                        <circle class="checkmark-circle-bg" cx="26" cy="26" r="25" fill="none"/>
+                        <path class="checkmark-check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
+                    </svg>
+                </div>
+                <div class="confetti">
+                    <div class="confetti-piece"></div>
+                    <div class="confetti-piece"></div>
+                    <div class="confetti-piece"></div>
+                    <div class="confetti-piece"></div>
+                    <div class="confetti-piece"></div>
+                    <div class="confetti-piece"></div>
+                </div>
+            </div>
+            <h3>Cảm ơn bạn!</h3>
+            <p>Đánh giá của bạn rất có giá trị với chúng tôi</p>
+            <div class="thank-you-stars">
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+            </div>
+            <div class="thank-you-footer">
+                <div class="countdown-bar">
+                    <div class="countdown-progress"></div>
+                </div>
+                <span class="countdown-text">Tự động đóng sau <strong id="countdownTimer">5</strong>s</span>
+            </div>
+        </div>
+    `;
+    
+    // Đếm ngược 5 giây
+    let countdown = 5;
+    const timer = setInterval(() => {
+        countdown--;
+        const timerEl = document.getElementById('countdownTimer');
+        if (timerEl) timerEl.textContent = countdown;
+        
+        if (countdown <= 0) {
+            clearInterval(timer);
+            closeReviewModal();
+            location.reload();
+        }
+    }, 1000);
 }
 
 async function addToCartWithQty(itemId, showAlert = true) {
@@ -1076,4 +1560,116 @@ function buyNow(itemId) {
     sessionStorage.setItem('buyNowItem', JSON.stringify(buyNowData));
     window.location.href = 'index.php?page=checkout&mode=buynow';
 }
+
+// ========== EDIT/DELETE REVIEW FUNCTIONS ==========
+
+let editSelectedRating = 0;
+
+// Initialize edit star rating
+document.querySelectorAll('#editStarInput i').forEach(star => {
+    star.addEventListener('click', () => {
+        editSelectedRating = parseInt(star.dataset.r);
+        document.getElementById('editRatingVal').value = editSelectedRating;
+        document.querySelectorAll('#editStarInput i').forEach((s, i) => {
+            s.className = i < editSelectedRating ? 'fas fa-star' : 'far fa-star';
+        });
+    });
+});
+
+// Open edit review modal
+function editReview(reviewId, rating, comment) {
+    document.getElementById('editReviewId').value = reviewId;
+    document.getElementById('editRatingVal').value = rating;
+    document.getElementById('editCommentVal').value = comment;
+    
+    // Set stars
+    editSelectedRating = rating;
+    document.querySelectorAll('#editStarInput i').forEach((s, i) => {
+        s.className = i < rating ? 'fas fa-star' : 'far fa-star';
+    });
+    
+    document.getElementById('editReviewModal').classList.add('active');
+}
+
+// Close edit review modal
+function closeEditReviewModal() {
+    document.getElementById('editReviewModal').classList.remove('active');
+}
+
+// Submit edit review
+async function submitEditReview(e) {
+    e.preventDefault();
+    
+    if (!editSelectedRating) {
+        alert('Vui lòng chọn số sao');
+        return;
+    }
+    
+    const formData = new FormData(e.target);
+    
+    try {
+        const res = await fetch('api/update-review.php', { method: 'POST', body: formData });
+        const data = await res.json();
+        
+        if (data.success) {
+            showToast('Đã cập nhật đánh giá!', 'success');
+            closeEditReviewModal();
+            setTimeout(() => location.reload(), 1000);
+        } else {
+            alert(data.message || 'Có lỗi xảy ra');
+        }
+    } catch (err) {
+        alert('Có lỗi xảy ra');
+    }
+}
+
+// Open delete confirm modal
+function deleteReview(reviewId) {
+    document.getElementById('deleteReviewId').value = reviewId;
+    document.getElementById('deleteConfirmModal').classList.add('active');
+}
+
+// Close delete confirm modal
+function closeDeleteConfirmModal() {
+    document.getElementById('deleteConfirmModal').classList.remove('active');
+}
+
+// Confirm delete review
+async function confirmDeleteReview() {
+    const reviewId = document.getElementById('deleteReviewId').value;
+    
+    const formData = new FormData();
+    formData.append('review_id', reviewId);
+    
+    try {
+        const res = await fetch('api/delete-review.php', { method: 'POST', body: formData });
+        const data = await res.json();
+        
+        if (data.success) {
+            showToast('Đã xóa đánh giá!', 'success');
+            closeDeleteConfirmModal();
+            
+            // Remove review item from DOM
+            const reviewItem = document.querySelector(`.review-item[data-review-id="${reviewId}"]`);
+            if (reviewItem) {
+                reviewItem.style.transition = 'all 0.3s';
+                reviewItem.style.opacity = '0';
+                reviewItem.style.transform = 'translateX(-20px)';
+                setTimeout(() => reviewItem.remove(), 300);
+            }
+        } else {
+            alert(data.message || 'Có lỗi xảy ra');
+        }
+    } catch (err) {
+        alert('Có lỗi xảy ra');
+    }
+}
+
+// Close modals when clicking outside
+document.getElementById('editReviewModal')?.addEventListener('click', function(e) {
+    if (e.target === this) closeEditReviewModal();
+});
+document.getElementById('deleteConfirmModal')?.addEventListener('click', function(e) {
+    if (e.target === this) closeDeleteConfirmModal();
+});
 </script>

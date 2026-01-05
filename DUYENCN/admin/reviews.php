@@ -118,6 +118,8 @@ $reviews = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quản lý đánh giá - Admin</title>
+    <link rel="icon" type="image/jpeg" href="../assets/images/logo.jpg">
+    <link rel="shortcut icon" type="image/jpeg" href="../assets/images/logo.jpg">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="../assets/css/admin-dark-modern.css">
     <link rel="stylesheet" href="../assets/css/admin-green-override.css">
@@ -451,6 +453,10 @@ $reviews = $stmt->fetchAll(PDO::FETCH_ASSOC);
             border-radius: 8px;
             border-left: 3px solid #22c55e;
             line-height: 1.6;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            max-height: none;
+            overflow: visible;
         }
         .comments-list { margin-top: 1rem; }
         .comment-item {
@@ -486,18 +492,18 @@ $reviews = $stmt->fetchAll(PDO::FETCH_ASSOC);
         
         <!-- Stats Cards -->
         <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 1.25rem;">
-            <div style="background: white; border-radius: 12px; padding: 1rem 1.25rem; display: flex; align-items: center; gap: 1rem; border: 2px solid #d1d5db; transition: all 0.2s;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 20px rgba(0,0,0,0.12)'; this.style.borderColor='#f97316';" onmouseout="this.style.transform='none'; this.style.boxShadow='none'; this.style.borderColor='#d1d5db';">
+            <a href="?filter=all&rating=<?php echo $rating_filter; ?>" style="text-decoration: none; background: white; border-radius: 12px; padding: 1rem 1.25rem; display: flex; align-items: center; gap: 1rem; border: 2px solid <?php echo $filter === 'all' ? '#f97316' : '#d1d5db'; ?>; transition: all 0.2s; cursor: pointer;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 20px rgba(0,0,0,0.12)'; this.style.borderColor='#f97316';" onmouseout="this.style.transform='none'; this.style.boxShadow='none'; this.style.borderColor='<?php echo $filter === 'all' ? '#f97316' : '#d1d5db'; ?>';">
                 <div style="width: 50px; height: 50px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.25rem; color: white; background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);"><i class="fas fa-comments"></i></div>
                 <div><h3 style="font-size: 1.5rem; font-weight: 800; color: #1f2937; margin: 0;"><?php echo number_format($stats['total'] ?? 0); ?></h3><p style="color: #6b7280; margin: 0; font-size: 0.8rem;">Tổng đánh giá</p></div>
-            </div>
-            <div style="background: white; border-radius: 12px; padding: 1rem 1.25rem; display: flex; align-items: center; gap: 1rem; border: 2px solid #d1d5db; transition: all 0.2s;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 20px rgba(0,0,0,0.12)'; this.style.borderColor='#22c55e';" onmouseout="this.style.transform='none'; this.style.boxShadow='none'; this.style.borderColor='#d1d5db';">
+            </a>
+            <a href="?filter=approved&rating=<?php echo $rating_filter; ?>" style="text-decoration: none; background: white; border-radius: 12px; padding: 1rem 1.25rem; display: flex; align-items: center; gap: 1rem; border: 2px solid <?php echo $filter === 'approved' ? '#22c55e' : '#d1d5db'; ?>; transition: all 0.2s; cursor: pointer;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 20px rgba(0,0,0,0.12)'; this.style.borderColor='#22c55e';" onmouseout="this.style.transform='none'; this.style.boxShadow='none'; this.style.borderColor='<?php echo $filter === 'approved' ? '#22c55e' : '#d1d5db'; ?>';">
                 <div style="width: 50px; height: 50px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.25rem; color: white; background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);"><i class="fas fa-check-circle"></i></div>
                 <div><h3 style="font-size: 1.5rem; font-weight: 800; color: #1f2937; margin: 0;"><?php echo number_format($stats['approved'] ?? 0); ?></h3><p style="color: #6b7280; margin: 0; font-size: 0.8rem;">Đã duyệt</p></div>
-            </div>
-            <div style="background: white; border-radius: 12px; padding: 1rem 1.25rem; display: flex; align-items: center; gap: 1rem; border: 2px solid #d1d5db; transition: all 0.2s;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 20px rgba(0,0,0,0.12)'; this.style.borderColor='#f59e0b';" onmouseout="this.style.transform='none'; this.style.boxShadow='none'; this.style.borderColor='#d1d5db';">
+            </a>
+            <a href="?filter=pending&rating=<?php echo $rating_filter; ?>" style="text-decoration: none; background: white; border-radius: 12px; padding: 1rem 1.25rem; display: flex; align-items: center; gap: 1rem; border: 2px solid <?php echo $filter === 'pending' ? '#f59e0b' : '#d1d5db'; ?>; transition: all 0.2s; cursor: pointer;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 20px rgba(0,0,0,0.12)'; this.style.borderColor='#f59e0b';" onmouseout="this.style.transform='none'; this.style.boxShadow='none'; this.style.borderColor='<?php echo $filter === 'pending' ? '#f59e0b' : '#d1d5db'; ?>';">
                 <div style="width: 50px; height: 50px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.25rem; color: white; background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);"><i class="fas fa-clock"></i></div>
                 <div><h3 style="font-size: 1.5rem; font-weight: 800; color: #1f2937; margin: 0;"><?php echo number_format($stats['pending'] ?? 0); ?></h3><p style="color: #6b7280; margin: 0; font-size: 0.8rem;">Chờ duyệt</p></div>
-            </div>
+            </a>
             <div style="background: white; border-radius: 12px; padding: 1rem 1.25rem; display: flex; align-items: center; gap: 1rem; border: 2px solid #d1d5db; transition: all 0.2s;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 20px rgba(0,0,0,0.12)'; this.style.borderColor='#f97316';" onmouseout="this.style.transform='none'; this.style.boxShadow='none'; this.style.borderColor='#d1d5db';">
                 <div style="width: 50px; height: 50px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.25rem; color: white; background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);"><i class="fas fa-star"></i></div>
                 <div><h3 style="font-size: 1.5rem; font-weight: 800; color: #1f2937; margin: 0;"><?php echo number_format($stats['avg_rating'] ?? 0, 1); ?> <i class="fas fa-star" style="font-size: 0.9rem; color: #f59e0b;"></i></h3><p style="color: #6b7280; margin: 0; font-size: 0.8rem;">Đánh giá TB</p></div>
@@ -620,6 +626,31 @@ $reviews = $stmt->fetchAll(PDO::FETCH_ASSOC);
             stars += `<i class="${i <= review.rating ? 'fas' : 'far'} fa-star" style="color: ${i <= review.rating ? '#f59e0b' : '#e5e7eb'};"></i>`;
         }
         
+        // Format ngày tạo
+        let createdDate = new Date(review.created_at).toLocaleString('vi-VN');
+        
+        // Format ngày sửa và nội dung gốc (nếu có)
+        let updatedInfo = '';
+        let originalContent = '';
+        
+        if (review.updated_at && review.updated_at !== review.created_at) {
+            let updatedDate = new Date(review.updated_at).toLocaleString('vi-VN');
+            updatedInfo = `
+            <div class="detail-row">
+                <span class="detail-label">Đã sửa lúc:</span>
+                <span class="detail-value" style="color: #f59e0b;"><i class="fas fa-edit" style="margin-right: 5px;"></i>${updatedDate}</span>
+            </div>`;
+            
+            // Hiển thị nội dung gốc nếu có
+            if (review.original_comment) {
+                originalContent = `
+            <div class="detail-row" style="flex-direction: column; gap: 0.5rem;">
+                <span class="detail-label" style="color: #9ca3af;"><i class="fas fa-history" style="margin-right: 5px;"></i>Nội dung gốc (trước khi sửa):</span>
+                <div class="full-comment">${review.original_comment}</div>
+            </div>`;
+            }
+        }
+        
         document.getElementById('modalBody').innerHTML = `
             <div class="detail-row">
                 <span class="detail-label">Món ăn:</span>
@@ -630,24 +661,22 @@ $reviews = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <span class="detail-value">${review.customer_name || 'Ẩn danh'} (${review.customer_email || ''})</span>
             </div>
             <div class="detail-row">
-                <span class="detail-label">Đánh giá:</span>
+                <span class="detail-label">Đánh giá hiện tại:</span>
                 <span class="detail-value">${stars} (${review.rating}/5)</span>
             </div>
             <div class="detail-row">
-                <span class="detail-label">Ngày:</span>
-                <span class="detail-value">${new Date(review.created_at).toLocaleString('vi-VN')}</span>
+                <span class="detail-label">Ngày đánh giá:</span>
+                <span class="detail-value"><i class="fas fa-calendar-alt" style="color: #22c55e; margin-right: 5px;"></i>${createdDate}</span>
             </div>
+            ${updatedInfo}
             <div class="detail-row">
                 <span class="detail-label">Trạng thái:</span>
                 <span class="detail-value"><span class="status-badge ${review.is_approved ? 'approved' : 'pending'}">${review.is_approved ? '✓ Đã duyệt' : '⏳ Chờ duyệt'}</span></span>
             </div>
+            ${originalContent}
             <div class="detail-row" style="flex-direction: column; gap: 0.5rem;">
-                <span class="detail-label">Nội dung:</span>
+                <span class="detail-label"><i class="fas fa-comment-alt" style="margin-right: 5px; color: #22c55e;"></i>Nội dung ${review.updated_at ? 'hiện tại' : ''}:</span>
                 <div class="full-comment">${review.comment || 'Không có nội dung'}</div>
-            </div>
-            <div class="detail-row">
-                <span class="detail-label">Tương tác:</span>
-                <span class="detail-value"><i class="fas fa-heart" style="color: #ef4444;"></i> ${review.likes_count} lượt thích &nbsp; <i class="fas fa-comment" style="color: #22c55e;"></i> ${review.comments_count} bình luận</span>
             </div>
         `;
         
